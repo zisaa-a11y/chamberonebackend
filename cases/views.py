@@ -1,0 +1,200 @@
+from rest_framework import generics, permissions, status, filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.db.models import Q
+
+from .models import Case, CaseDocument, CaseTimeline, CaseNote
+from .serializers import (
+    CaseSerializer,
+    CaseCreateSerializer,
+    CaseListSerializer,
+    CaseDocumentSerializer,
+    CaseTimelineSerializer,
+    CaseNoteSerializer,
+)
+
+
+class IsOwnerOrLawyer(permissions.BasePermission):
+    """Allow access only to case owner or assigned lawyer."""
+    def has_object_permission(self, request, view, obj):
+        return (
+            obj.client == request.user or 
+            (obj.lawyer and obj.lawyer.user == request.user) or
+            request.user.is_staff
+        )
+
+
+# Case Views
+class CaseListCreateView(generics.ListCreateAPIView):
+    """API endpoint to list and create cases."""
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'case_number', 'court_name']
+    ordering_fields = ['created_at', 'next_hearing_date', 'status']
+    ordering = ['-created_at']
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CaseCreateSerializer
+        return CaseListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Case.objects.select_related(
+            'client', 'lawyer', 'lawyer__user', 'practice_area'
+        )
+        
+        if user.is_staff:
+            return queryset
+        
+        if hasattr(user, 'lawyer_profile'):
+            queryset = queryset.filter(lawyer=user.lawyer_profile)
+        else:
+            queryset = queryset.filter(client=user)
+        
+        # Optional filters
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        return queryset
+
+
+class CaseDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for case detail."""
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrLawyer]
+    queryset = Case.objects.select_related(
+        'client', 'lawyer', 'lawyer__user', 'practice_area'
+    ).prefetch_related('documents', 'timeline')
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return CaseCreateSerializer
+        return CaseSerializer
+
+
+# Case Document Views
+class CaseDocumentListCreateView(generics.ListCreateAPIView):
+    """API endpoint to list and upload case documents."""
+    serializer_class = CaseDocumentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        case_id = self.kwargs.get('case_id')
+        return CaseDocument.objects.filter(
+            case_id=case_id
+        ).select_related('uploaded_by')
+
+    def perform_create(self, serializer):
+        case_id = self.kwargs.get('case_id')
+        serializer.save(
+            case_id=case_id,
+            uploaded_by=self.request.user
+        )
+
+
+class CaseDocumentDetailView(generics.RetrieveDestroyAPIView):
+    """API endpoint for case document detail."""
+    serializer_class = CaseDocumentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = CaseDocument.objects.all()
+
+
+# Case Timeline Views
+class CaseTimelineListCreateView(generics.ListCreateAPIView):
+    """API endpoint to list and create timeline events."""
+    serializer_class = CaseTimelineSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        case_id = self.kwargs.get('case_id')
+        return CaseTimeline.objects.filter(
+            case_id=case_id
+        ).select_related('created_by')
+
+    def perform_create(self, serializer):
+        case_id = self.kwargs.get('case_id')
+        serializer.save(
+            case_id=case_id,
+            created_by=self.request.user
+        )
+
+
+class CaseTimelineDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for timeline event detail."""
+    serializer_class = CaseTimelineSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = CaseTimeline.objects.all()
+
+
+# Case Notes Views
+class CaseNoteListCreateView(generics.ListCreateAPIView):
+    """API endpoint to list and create case notes."""
+    serializer_class = CaseNoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        case_id = self.kwargs.get('case_id')
+        user = self.request.user
+        queryset = CaseNote.objects.filter(
+            case_id=case_id
+        ).select_related('author')
+        
+        # Non-lawyers can't see private notes
+        if not (hasattr(user, 'lawyer_profile') or user.is_staff):
+            queryset = queryset.filter(is_private=False)
+        
+        return queryset
+
+    def perform_create(self, serializer):
+        case_id = self.kwargs.get('case_id')
+        serializer.save(
+            case_id=case_id,
+            author=self.request.user
+        )
+
+
+class CaseNoteDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for case note detail."""
+    serializer_class = CaseNoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = CaseNote.objects.all()
+
+
+class CaseStatusUpdateView(APIView):
+    """API endpoint to update case status."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            case = Case.objects.get(pk=pk)
+        except Case.DoesNotExist:
+            return Response(
+                {'error': 'Case not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        user = request.user
+        if not (
+            case.client == user or 
+            (case.lawyer and case.lawyer.user == user) or 
+            user.is_staff
+        ):
+            return Response(
+                {'error': 'Permission denied.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        new_status = request.data.get('status')
+        if new_status not in dict(Case.Status.choices):
+            return Response(
+                {'error': 'Invalid status.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        case.status = new_status
+        case.save()
+        
+        return Response(CaseListSerializer(case).data)
