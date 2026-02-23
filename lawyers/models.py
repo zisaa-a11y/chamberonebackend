@@ -28,6 +28,7 @@ class LawyerProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='lawyer_profile'
     )
+    profession = models.CharField(max_length=100, default='Lawyer', blank=True)
     practice_areas = models.ManyToManyField(
         PracticeArea,
         related_name='lawyers',

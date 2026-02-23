@@ -72,3 +72,172 @@ class LawyerProfileListSerializer(serializers.ModelSerializer):
             'practice_areas', 'years_experience', 'consultancy_fees',
             'rating', 'is_available', 'chamber_info'
         ]
+
+
+class LawyerCreateUpdateSerializer(serializers.Serializer):
+    """
+    Serializer for creating/updating lawyer with camelCase fields.
+    
+    Expected JSON format:
+    {
+        "fullName": "John Doe",
+        "profession": "Senior Advocate",
+        "bio": "Experienced lawyer...",
+        "practiceAreas": ["Criminal Law", "Family Law"],
+        "email": "john@example.com",
+        "phone": "+8801712345678",
+        "yearsExperience": 15,
+        "casesSolved": 500,
+        "profileImage": "<base64 string or null>"
+    }
+    """
+    fullName = serializers.CharField(max_length=200)
+    profession = serializers.CharField(max_length=100, required=False, default='Lawyer')
+    bio = serializers.CharField(required=False, allow_blank=True, default='')
+    practiceAreas = serializers.ListField(
+        child=serializers.CharField(max_length=100),
+        required=False,
+        default=[]
+    )
+    email = serializers.EmailField()
+    phone = serializers.CharField(max_length=20, required=False, allow_blank=True, default='')
+    yearsExperience = serializers.IntegerField(min_value=0, default=0)
+    casesSolved = serializers.IntegerField(min_value=0, default=0)
+    profileImage = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    
+    def validate_practiceAreas(self, value):
+        """Validate practice areas exist or create them."""
+        return value
+    
+    def create(self, validated_data):
+        from accounts.models import User
+        import base64
+        from django.core.files.base import ContentFile
+        
+        # Split full name
+        full_name = validated_data.get('fullName', '')
+        name_parts = full_name.strip().split(' ', 1)
+        first_name = name_parts[0] if name_parts else ''
+        last_name = name_parts[1] if len(name_parts) > 1 else ''
+        
+        # Create or get user
+        email = validated_data['email']
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                'first_name': first_name,
+                'last_name': last_name,
+                'phone': validated_data.get('phone', ''),
+                'role': User.Role.LAWYER,
+            }
+        )
+        
+        if not created:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.phone = validated_data.get('phone', '')
+            user.save()
+        
+        # Handle profile image
+        profile_image_data = validated_data.get('profileImage')
+        if profile_image_data and profile_image_data.startswith('data:image'):
+            # Parse base64 image
+            format, imgstr = profile_image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            user.profile_photo = ContentFile(
+                base64.b64decode(imgstr), 
+                name=f'profile_{user.id}.{ext}'
+            )
+            user.save()
+        
+        # Create or update lawyer profile
+        lawyer_profile, _ = LawyerProfile.objects.get_or_create(user=user)
+        lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
+        lawyer_profile.bio = validated_data.get('bio', '')
+        lawyer_profile.years_experience = validated_data.get('yearsExperience', 0)
+        lawyer_profile.solved_cases = validated_data.get('casesSolved', 0)
+        lawyer_profile.save()
+        
+        # Handle practice areas
+        practice_area_names = validated_data.get('practiceAreas', [])
+        if practice_area_names:
+            practice_areas = []
+            for name in practice_area_names:
+                pa, _ = PracticeArea.objects.get_or_create(name=name)
+                practice_areas.append(pa)
+            lawyer_profile.practice_areas.set(practice_areas)
+        
+        return lawyer_profile
+    
+    def update(self, instance, validated_data):
+        from accounts.models import User
+        import base64
+        from django.core.files.base import ContentFile
+        
+        user = instance.user
+        
+        # Update name
+        full_name = validated_data.get('fullName', '')
+        if full_name:
+            name_parts = full_name.strip().split(' ', 1)
+            user.first_name = name_parts[0] if name_parts else ''
+            user.last_name = name_parts[1] if len(name_parts) > 1 else ''
+        
+        # Update phone
+        if 'phone' in validated_data:
+            user.phone = validated_data['phone']
+        
+        # Handle profile image
+        profile_image_data = validated_data.get('profileImage')
+        if profile_image_data and profile_image_data.startswith('data:image'):
+            format, imgstr = profile_image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            user.profile_photo = ContentFile(
+                base64.b64decode(imgstr), 
+                name=f'profile_{user.id}.{ext}'
+            )
+        
+        user.save()
+        
+        # Update lawyer profile
+        if 'profession' in validated_data:
+            instance.profession = validated_data['profession']
+        if 'bio' in validated_data:
+            instance.bio = validated_data['bio']
+        if 'yearsExperience' in validated_data:
+            instance.years_experience = validated_data['yearsExperience']
+        if 'casesSolved' in validated_data:
+            instance.solved_cases = validated_data['casesSolved']
+        
+        instance.save()
+        
+        # Handle practice areas
+        practice_area_names = validated_data.get('practiceAreas')
+        if practice_area_names is not None:
+            practice_areas = []
+            for name in practice_area_names:
+                pa, _ = PracticeArea.objects.get_or_create(name=name)
+                practice_areas.append(pa)
+            instance.practice_areas.set(practice_areas)
+        
+        return instance
+    
+    def to_representation(self, instance):
+        """Convert LawyerProfile to camelCase JSON format."""
+        practice_areas = [pa.name for pa in instance.practice_areas.all()]
+        
+        return {
+            'id': instance.id,
+            'fullName': instance.user.full_name,
+            'profession': instance.profession,
+            'bio': instance.bio,
+            'practiceAreas': practice_areas,
+            'email': instance.user.email,
+            'phone': instance.user.phone or '',
+            'yearsExperience': instance.years_experience,
+            'casesSolved': instance.solved_cases,
+            'profileImage': instance.user.profile_photo.url if instance.user.profile_photo else None,
+            'rating': float(instance.rating),
+            'isAvailable': instance.is_available,
+        }
+

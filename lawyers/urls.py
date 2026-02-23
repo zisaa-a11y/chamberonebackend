@@ -9,6 +9,10 @@ from .views import (
     LawyerAvailabilityListCreateView,
     LawyerAvailabilityDetailView,
     PublicLawyerAvailabilityView,
+    LawyerCreateView,
+    LawyerUpdateView,
+    LawyerCamelCaseDetailView,
+    LawyerCamelCaseListView,
 )
 
 app_name = 'lawyers'
@@ -23,6 +27,12 @@ urlpatterns = [
     path('<int:pk>/', LawyerDetailView.as_view(), name='lawyer_detail'),
     path('profile/', LawyerProfileUpdateView.as_view(), name='lawyer_profile'),
     path('by-practice-area/<int:practice_area_id>/', LawyersByPracticeAreaView.as_view(), name='lawyers_by_practice_area'),
+    
+    # CamelCase API (for Flutter frontend)
+    path('create/', LawyerCreateView.as_view(), name='lawyer_create'),
+    path('<int:pk>/update/', LawyerUpdateView.as_view(), name='lawyer_update'),
+    path('<int:pk>/camelcase/', LawyerCamelCaseDetailView.as_view(), name='lawyer_camelcase_detail'),
+    path('list/camelcase/', LawyerCamelCaseListView.as_view(), name='lawyer_camelcase_list'),
     
     # Availability
     path('availability/', LawyerAvailabilityListCreateView.as_view(), name='availability_list'),

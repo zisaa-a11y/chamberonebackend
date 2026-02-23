@@ -9,6 +9,7 @@ from .serializers import (
     LawyerProfileSerializer,
     LawyerProfileListSerializer,
     LawyerAvailabilitySerializer,
+    LawyerCreateUpdateSerializer,
 )
 
 
@@ -39,12 +40,12 @@ class PracticeAreaDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # Lawyer Profile Views
 class LawyerListView(generics.ListAPIView):
-    """API endpoint to list all active lawyers."""
+    """API endpoint to list all active lawyers in camelCase format."""
     queryset = LawyerProfile.objects.filter(
         user__is_active=True,
         is_available=True
     ).select_related('user').prefetch_related('practice_areas')
-    serializer_class = LawyerProfileListSerializer
+    serializer_class = LawyerCreateUpdateSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = [
@@ -56,11 +57,11 @@ class LawyerListView(generics.ListAPIView):
 
 
 class LawyerDetailView(generics.RetrieveAPIView):
-    """API endpoint for lawyer detail."""
+    """API endpoint for lawyer detail in camelCase format."""
     queryset = LawyerProfile.objects.select_related('user').prefetch_related(
         'practice_areas', 'availabilities'
     )
-    serializer_class = LawyerProfileSerializer
+    serializer_class = LawyerCreateUpdateSerializer
     permission_classes = [permissions.AllowAny]
 
 
@@ -71,6 +72,95 @@ class LawyerProfileUpdateView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return LawyerProfile.objects.get(user=self.request.user)
+
+
+class LawyerCreateView(generics.CreateAPIView):
+    """
+    API endpoint to create a new lawyer (admin only).
+    
+    POST /api/lawyers/create/
+    
+    Request body (camelCase JSON):
+    {
+        "fullName": "John Doe",
+        "profession": "Senior Advocate",
+        "bio": "Experienced lawyer...",
+        "practiceAreas": ["Criminal Law", "Family Law"],
+        "email": "john@example.com",
+        "phone": "+8801712345678",
+        "yearsExperience": 15,
+        "casesSolved": 500,
+        "profileImage": "data:image/jpeg;base64,..."
+    }
+    """
+    serializer_class = LawyerCreateUpdateSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class LawyerUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint to update a lawyer profile (admin or self).
+    
+    PUT/PATCH /api/lawyers/<id>/update/
+    """
+    serializer_class = LawyerCreateUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = LawyerProfile.objects.all()
+    
+    def get_object(self):
+        lawyer_id = self.kwargs.get('pk')
+        lawyer = LawyerProfile.objects.get(pk=lawyer_id)
+        
+        # Allow admin or the lawyer themselves
+        if not self.request.user.is_staff and lawyer.user != self.request.user:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("You can only update your own profile.")
+        
+        return lawyer
+
+
+class LawyerCamelCaseDetailView(generics.RetrieveAPIView):
+    """
+    API endpoint to get lawyer detail in camelCase format.
+    
+    GET /api/lawyers/<id>/camelcase/
+    
+    Response:
+    {
+        "id": 1,
+        "fullName": "John Doe",
+        "profession": "Senior Advocate",
+        "bio": "...",
+        "practiceAreas": ["Criminal Law"],
+        "email": "john@example.com",
+        "phone": "+8801712345678",
+        "yearsExperience": 15,
+        "casesSolved": 500,
+        "profileImage": "/media/profiles/...",
+        "rating": 4.8,
+        "isAvailable": true
+    }
+    """
+    serializer_class = LawyerCreateUpdateSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = LawyerProfile.objects.select_related('user').prefetch_related('practice_areas')
+
+
+class LawyerCamelCaseListView(generics.ListAPIView):
+    """
+    API endpoint to list all lawyers in camelCase format.
+    
+    GET /api/lawyers/list/camelcase/
+    """
+    serializer_class = LawyerCreateUpdateSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = LawyerProfile.objects.filter(
+        user__is_active=True,
+        is_available=True
+    ).select_related('user').prefetch_related('practice_areas')
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['user__first_name', 'user__last_name', 'practice_areas__name']
+    ordering = ['-rating']
 
 
 class LawyersByPracticeAreaView(generics.ListAPIView):
