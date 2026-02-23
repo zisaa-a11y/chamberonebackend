@@ -90,24 +90,75 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         "casesSolved": 500,
         "profileImage": "<base64 string or null>"
     }
+    
+    For HTML form, practiceAreas can be comma-separated: "Criminal Law, Family Law"
     """
-    fullName = serializers.CharField(max_length=200)
-    profession = serializers.CharField(max_length=100, required=False, default='Lawyer')
-    bio = serializers.CharField(required=False, allow_blank=True, default='')
-    practiceAreas = serializers.ListField(
-        child=serializers.CharField(max_length=100),
-        required=False,
-        default=[]
+    fullName = serializers.CharField(
+        max_length=200, 
+        help_text="Full name of the lawyer",
+        style={'placeholder': 'e.g. John Doe'}
     )
-    email = serializers.EmailField()
-    phone = serializers.CharField(max_length=20, required=False, allow_blank=True, default='')
-    yearsExperience = serializers.IntegerField(min_value=0, default=0)
-    casesSolved = serializers.IntegerField(min_value=0, default=0)
-    profileImage = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    profession = serializers.CharField(
+        max_length=100, 
+        required=False, 
+        default='Lawyer',
+        help_text="e.g. Senior Advocate, Barrister"
+    )
+    bio = serializers.CharField(
+        required=False, 
+        allow_blank=True, 
+        default='',
+        style={'base_template': 'textarea.html'},
+        help_text="Short biography"
+    )
+    practiceAreas = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        help_text="Comma-separated: Criminal Law, Family Law, Corporate Law"
+    )
+    email = serializers.EmailField(
+        help_text="Email address (will be used as username)"
+    )
+    phone = serializers.CharField(
+        max_length=20, 
+        required=False, 
+        allow_blank=True, 
+        default='',
+        help_text="+8801XXXXXXXXX"
+    )
+    yearsExperience = serializers.IntegerField(
+        min_value=0, 
+        default=0,
+        help_text="Years of experience"
+    )
+    casesSolved = serializers.IntegerField(
+        min_value=0, 
+        default=0,
+        help_text="Number of cases solved"
+    )
+    profileImage = serializers.CharField(
+        required=False, 
+        allow_null=True, 
+        allow_blank=True,
+        help_text="Base64 image or leave blank"
+    )
+    password = serializers.CharField(
+        write_only=True,
+        required=False,
+        allow_blank=True,
+        style={'input_type': 'password'},
+        help_text="Password for new lawyer account (optional)"
+    )
     
     def validate_practiceAreas(self, value):
-        """Validate practice areas exist or create them."""
-        return value
+        """Convert comma-separated string to list or accept list."""
+        if isinstance(value, list):
+            return value
+        if isinstance(value, str):
+            if not value.strip():
+                return []
+            return [area.strip() for area in value.split(',') if area.strip()]
+        return []
     
     def create(self, validated_data):
         from accounts.models import User
@@ -122,6 +173,8 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         
         # Create or get user
         email = validated_data['email']
+        password = validated_data.get('password', '')
+        
         user, created = User.objects.get_or_create(
             email=email,
             defaults={
@@ -132,7 +185,10 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
             }
         )
         
-        if not created:
+        if created and password:
+            user.set_password(password)
+            user.save()
+        elif not created:
             user.first_name = first_name
             user.last_name = last_name
             user.phone = validated_data.get('phone', '')
