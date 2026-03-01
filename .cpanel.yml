@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/hasansajib/backend.thechamberone.com
+    - /bin/cp -R * $DEPLOYPATH/
+    - cd $DEPLOYPATH && source /home/hasansajib/virtualenv/backend.thechamberone.com/3.9/bin/activate && python manage.py collectstatic --noinput
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt
