@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production-please!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# TEMPORARY: Set to True to debug 500 error - change back to False after fixing
-DEBUG = config('DEBUG', default=True, cast=bool)
+# TEMPORARY: HARDCODED True to debug 500 error - CHANGE BACK after fixing!
+DEBUG = True  # config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,backend.thechamberone.com,thechamberone.com,www.thechamberone.com').split(',')
 
