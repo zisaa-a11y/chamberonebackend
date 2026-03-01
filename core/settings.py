@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production-please!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# TEMPORARY: Set to True to debug 500 error - change back to False after fixing
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,backend.thechamberone.com,thechamberone.com,www.thechamberone.com').split(',')
@@ -91,6 +92,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DB_ENGINE = config('DB_ENGINE', default='django.db.backends.sqlite3')
 
+# Build database ENGINE string
+if DB_ENGINE and 'django.db.backends' not in DB_ENGINE:
+    DB_ENGINE = f'django.db.backends.{DB_ENGINE}'
+
 DATABASES = {
     'default': {
         'ENGINE': DB_ENGINE,
@@ -98,7 +103,7 @@ DATABASES = {
         'USER': config('DB_USER', default=''),
         'PASSWORD': config('DB_PASSWORD', default=''),
         'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='3306'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
@@ -142,7 +147,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files
 MEDIA_URL = 'media/'
