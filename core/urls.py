@@ -67,7 +67,9 @@ urlpatterns = [
     path('api/landing/', include('landing.urls')),
 ]
 
-# Serve media files in development
+# Serve media files (both development and production)
+# Media files need to be served via Django since WhiteNoise only handles static files
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
