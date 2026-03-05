@@ -94,7 +94,7 @@ class LawyerCreateView(generics.CreateAPIView):
     }
     """
     serializer_class = LawyerCreateUpdateSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class LawyerUpdateView(generics.UpdateAPIView):

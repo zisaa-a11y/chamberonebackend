@@ -280,20 +280,44 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
     
     def to_representation(self, instance):
         """Convert LawyerProfile to camelCase JSON format."""
-        practice_areas = [pa.name for pa in instance.practice_areas.all()]
-        
-        return {
-            'id': instance.id,
-            'fullName': instance.user.full_name,
-            'profession': instance.profession,
-            'bio': instance.bio,
-            'practiceAreas': practice_areas,
-            'email': instance.user.email,
-            'phone': instance.user.phone or '',
-            'yearsExperience': instance.years_experience,
-            'casesSolved': instance.solved_cases,
-            'profileImage': instance.user.profile_photo.url if instance.user.profile_photo else None,
-            'rating': float(instance.rating),
-            'isAvailable': instance.is_available,
-        }
+        try:
+            practice_areas = [pa.name for pa in instance.practice_areas.all()]
+            user = instance.user
+            
+            profile_image = None
+            try:
+                if user.profile_photo:
+                    profile_image = user.profile_photo.url
+            except Exception:
+                profile_image = None
+            
+            return {
+                'id': instance.id,
+                'fullName': user.full_name,
+                'profession': getattr(instance, 'profession', 'Lawyer'),
+                'bio': instance.bio or '',
+                'practiceAreas': practice_areas,
+                'email': user.email,
+                'phone': user.phone or '',
+                'yearsExperience': instance.years_experience,
+                'casesSolved': instance.solved_cases,
+                'profileImage': profile_image,
+                'rating': float(instance.rating) if instance.rating else 0.0,
+                'isAvailable': instance.is_available,
+            }
+        except Exception as e:
+            return {
+                'id': instance.id,
+                'fullName': 'Unknown',
+                'profession': 'Lawyer',
+                'bio': '',
+                'practiceAreas': [],
+                'email': '',
+                'phone': '',
+                'yearsExperience': 0,
+                'casesSolved': 0,
+                'profileImage': None,
+                'rating': 0.0,
+                'isAvailable': False,
+            }
 
