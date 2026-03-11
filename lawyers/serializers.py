@@ -104,6 +104,13 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         default='Lawyer',
         help_text="e.g. Senior Advocate, Barrister"
     )
+    specialization = serializers.CharField(
+        max_length=255,
+        required=False,
+        allow_blank=True,
+        default='',
+        help_text="e.g. Civil Law, Criminal Law"
+    )
     bio = serializers.CharField(
         required=False, 
         allow_blank=True, 
@@ -209,6 +216,7 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         # Create or update lawyer profile
         lawyer_profile, _ = LawyerProfile.objects.get_or_create(user=user)
         lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
+        lawyer_profile.specialization = validated_data.get('specialization', '')
         lawyer_profile.bio = validated_data.get('bio', '')
         lawyer_profile.years_experience = validated_data.get('yearsExperience', 0)
         lawyer_profile.solved_cases = validated_data.get('casesSolved', 0)
@@ -258,6 +266,8 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         # Update lawyer profile
         if 'profession' in validated_data:
             instance.profession = validated_data['profession']
+        if 'specialization' in validated_data:
+            instance.specialization = validated_data['specialization']
         if 'bio' in validated_data:
             instance.bio = validated_data['bio']
         if 'yearsExperience' in validated_data:
@@ -297,7 +307,7 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 'profession': getattr(instance, 'profession', 'Lawyer'),
                 'bio': instance.bio or '',
                 'practiceAreas': practice_areas,
-                'specialization': ', '.join(practice_areas) if practice_areas else '',
+                'specialization': instance.specialization or '',
                 'email': user.email,
                 'phone': user.phone or '',
                 'yearsExperience': instance.years_experience,
@@ -313,7 +323,7 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 'profession': 'Lawyer',
                 'bio': '',
                 'practiceAreas': [],
-                'specialization': '',
+                'specialization': getattr(instance, 'specialization', ''),
                 'email': '',
                 'phone': '',
                 'yearsExperience': 0,

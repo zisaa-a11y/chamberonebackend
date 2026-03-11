@@ -29,6 +29,7 @@ class LawyerProfile(models.Model):
         related_name='lawyer_profile'
     )
     profession = models.CharField(max_length=100, default='Lawyer', blank=True)
+    specialization = models.CharField(max_length=255, blank=True, default='')
     practice_areas = models.ManyToManyField(
         PracticeArea,
         related_name='lawyers',
