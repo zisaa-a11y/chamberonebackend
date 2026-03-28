@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Invoice, InvoiceItem, Payment
+from .models import Invoice, InvoiceItem, Payment, Subscription
 from accounts.serializers import UserSerializer
 from cases.serializers import CaseListSerializer
 
@@ -111,4 +111,28 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['client'] = self.context['request'].user
+        return super().create(validated_data)
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    """Serializer for Subscription model."""
+
+    class Meta:
+        model = Subscription
+        fields = [
+            'id', 'plan', 'status', 'payment_url',
+            'metadata', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'status', 'payment_url', 'created_at', 'updated_at']
+
+
+class SubscriptionCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating subscriptions."""
+
+    class Meta:
+        model = Subscription
+        fields = ['plan']
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)

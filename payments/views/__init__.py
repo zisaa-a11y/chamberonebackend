@@ -10,6 +10,7 @@ from .base_views import (
     PaymentStatusUpdateView,
     InvoicePaymentsView,
     PaymentSummaryView,
+    SubscriptionCreateView,
 )
 
 # Gateway views
@@ -36,6 +37,7 @@ __all__ = [
     'PaymentStatusUpdateView',
     'InvoicePaymentsView',
     'PaymentSummaryView',
+    'SubscriptionCreateView',
     # Gateway views
     'BkashCreatePaymentView',
     'BkashCallbackView',

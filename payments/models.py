@@ -156,3 +156,42 @@ class Payment(models.Model):
     @property
     def client_name(self):
         return self.client.full_name
+
+
+class Subscription(models.Model):
+    """Model for client subscription plans."""
+
+    class Plan(models.TextChoices):
+        BASIC = 'basic_plan', 'Basic Plan'
+        PREMIUM = 'premium_plan', 'Premium Plan'
+        ENTERPRISE = 'enterprise_plan', 'Enterprise Plan'
+
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        ACTIVE = 'active', 'Active'
+        CANCELLED = 'cancelled', 'Cancelled'
+        EXPIRED = 'expired', 'Expired'
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='subscriptions'
+    )
+    plan = models.CharField(max_length=20, choices=Plan.choices)
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING
+    )
+    payment_url = models.URLField(max_length=500, blank=True, null=True)
+    metadata = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Subscription'
+        verbose_name_plural = 'Subscriptions'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.email} - {self.plan}"

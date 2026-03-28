@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.utils import timezone
 from django.db.models import Sum
 
-from ..models import Invoice, InvoiceItem, Payment
+from ..models import Invoice, InvoiceItem, Payment, Subscription
 from ..serializers import (
     InvoiceSerializer,
     InvoiceCreateSerializer,
@@ -12,6 +12,8 @@ from ..serializers import (
     InvoiceItemSerializer,
     PaymentSerializer,
     PaymentCreateSerializer,
+    SubscriptionSerializer,
+    SubscriptionCreateSerializer,
 )
 
 
@@ -208,3 +210,26 @@ class PaymentSummaryView(APIView):
                 status=Invoice.Status.OVERDUE
             ).count(),
         })
+
+
+class SubscriptionCreateView(generics.CreateAPIView):
+    """API endpoint to create a subscription."""
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = SubscriptionCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            first_error = next(iter(serializer.errors.values()), ['Invalid request data.'])
+            if isinstance(first_error, list):
+                message = str(first_error[0]) if first_error else 'Invalid request data.'
+            else:
+                message = str(first_error)
+            return Response({'detail': message}, status=status.HTTP_400_BAD_REQUEST)
+
+        subscription = serializer.save()
+
+        # Keep payment_url in response even when redirect is not required.
+        data = SubscriptionSerializer(subscription).data
+        data.setdefault('payment_url', None)
+        return Response(data, status=status.HTTP_201_CREATED)

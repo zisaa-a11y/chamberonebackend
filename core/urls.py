@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from payments.views import SubscriptionCreateView
+from .api_views import StampVerifyView
 
 # Determine the API URL based on DEBUG setting
 if settings.DEBUG:
@@ -29,6 +31,21 @@ schema_view = get_schema_view(
 )
 
 
+def custom_404(request, exception=None):
+    """Return JSON for 404 errors instead of HTML."""
+    return JsonResponse({'detail': 'Not found.'}, status=404)
+
+
+def custom_500(request):
+    """Return JSON for 500 errors instead of HTML."""
+    return JsonResponse({'detail': 'Internal server error.'}, status=500)
+
+
+# Register custom error handlers (must be at module level)
+handler404 = custom_404
+handler500 = custom_500
+
+
 def api_root(request):
     """Root API endpoint showing available endpoints."""
     return JsonResponse({
@@ -40,6 +57,8 @@ def api_root(request):
             'appointments': '/api/appointments/',
             'cases': '/api/cases/',
             'payments': '/api/payments/',
+            'subscriptions': '/api/subscriptions/',
+            'stamps_verify': '/api/stamps/verify/',
             'blog': '/api/blog/',
             'landing': '/api/landing/',
         }
@@ -63,6 +82,8 @@ urlpatterns = [
     path('api/appointments/', include('appointments.urls')),
     path('api/cases/', include('cases.urls')),
     path('api/payments/', include('payments.urls')),
+    path('api/subscriptions/', SubscriptionCreateView.as_view(), name='subscription_create'),
+    path('api/stamps/verify/', StampVerifyView.as_view(), name='stamp_verify'),
     path('api/blog/', include('blog.urls')),
     path('api/landing/', include('landing.urls')),
 ]
