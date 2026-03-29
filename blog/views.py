@@ -56,14 +56,23 @@ class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Blog Post Views
-class BlogPostListView(generics.ListAPIView):
-    """API endpoint to list published blog posts."""
-    serializer_class = BlogPostListSerializer
+class BlogPostListView(generics.ListCreateAPIView):
+    """API endpoint to list published blog posts (GET) and create new posts (POST, admin only)."""
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content', 'excerpt', 'category__name', 'tags__name']
     ordering_fields = ['published_date', 'views_count', 'created_at']
     ordering = ['-published_date']
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAdminUser()]
+        return [permissions.AllowAny()]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return BlogPostCreateSerializer
+        return BlogPostListSerializer
 
     def get_queryset(self):
         queryset = BlogPost.objects.filter(
@@ -94,13 +103,24 @@ class BlogPostCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class BlogPostDetailView(generics.RetrieveAPIView):
-    """API endpoint for blog post detail (public)."""
-    serializer_class = BlogPostSerializer
+class BlogPostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for blog post detail (public GET, admin PATCH/DELETE)."""
     permission_classes = [permissions.AllowAny]
     lookup_field = 'slug'
 
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'PUT', 'DELETE']:
+            return [permissions.IsAdminUser()]
+        return [permissions.AllowAny()]
+
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH', 'PUT']:
+            return BlogPostCreateSerializer
+        return BlogPostSerializer
+
     def get_queryset(self):
+        if self.request.method in ['PATCH', 'PUT', 'DELETE']:
+            return BlogPost.objects.all().select_related('author', 'category').prefetch_related('tags', 'comments')
         return BlogPost.objects.filter(
             status=BlogPost.Status.PUBLISHED
         ).select_related('author', 'category').prefetch_related('tags', 'comments')

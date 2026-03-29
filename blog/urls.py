@@ -26,8 +26,9 @@ urlpatterns = [
     path('tags/', TagListCreateView.as_view(), name='tag_list'),
     path('tags/<slug:slug>/', TagDetailView.as_view(), name='tag_detail'),
     
-    # Posts (public)
+    # Posts (public GET, admin POST for create)
     path('posts/', BlogPostListView.as_view(), name='post_list'),
+    path('posts/create/', BlogPostCreateView.as_view(), name='post_create'),
     path('posts/featured/', FeaturedPostsView.as_view(), name='featured_posts'),
     path('posts/<slug:slug>/', BlogPostDetailView.as_view(), name='post_detail'),
     

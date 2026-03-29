@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     
     # Local apps
+    'core',
     'accounts',
     'lawyers',
     'appointments',

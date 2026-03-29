@@ -10,6 +10,7 @@ from .serializers import (
     LawyerProfileListSerializer,
     LawyerAvailabilitySerializer,
     LawyerCreateUpdateSerializer,
+    LawyerSnakeCaseCreateSerializer,
 )
 
 
@@ -40,12 +41,12 @@ class PracticeAreaDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # Lawyer Profile Views
 class LawyerListView(generics.ListAPIView):
-    """API endpoint to list all active lawyers in camelCase format."""
+    """API endpoint to list all active lawyers in snake_case format."""
     queryset = LawyerProfile.objects.filter(
         user__is_active=True,
         is_available=True
     ).select_related('user').prefetch_related('practice_areas')
-    serializer_class = LawyerCreateUpdateSerializer
+    serializer_class = LawyerProfileListSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = [
@@ -76,24 +77,12 @@ class LawyerProfileUpdateView(generics.RetrieveUpdateAPIView):
 
 class LawyerCreateView(generics.CreateAPIView):
     """
-    API endpoint to create a new lawyer (admin only).
+    API endpoint to create a new lawyer.
+    Accepts snake_case payload (per API contract).
     
     POST /api/lawyers/create/
-    
-    Request body (camelCase JSON):
-    {
-        "fullName": "John Doe",
-        "profession": "Senior Advocate",
-        "bio": "Experienced lawyer...",
-        "practiceAreas": ["Criminal Law", "Family Law"],
-        "email": "john@example.com",
-        "phone": "+8801712345678",
-        "yearsExperience": 15,
-        "casesSolved": 500,
-        "profileImage": "data:image/jpeg;base64,..."
-    }
     """
-    serializer_class = LawyerCreateUpdateSerializer
+    serializer_class = LawyerSnakeCaseCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 

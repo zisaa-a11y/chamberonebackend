@@ -23,6 +23,11 @@ class PracticeArea(models.Model):
 
 class LawyerProfile(models.Model):
     """Extended profile for lawyer users."""
+    
+    class Gender(models.TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+    
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -30,6 +35,12 @@ class LawyerProfile(models.Model):
     )
     profession = models.CharField(max_length=100, default='Lawyer', blank=True)
     specialization = models.CharField(max_length=255, blank=True, default='')
+    gender = models.CharField(
+        max_length=10,
+        choices=Gender.choices,
+        blank=True,
+        default='',
+    )
     practice_areas = models.ManyToManyField(
         PracticeArea,
         related_name='lawyers',
