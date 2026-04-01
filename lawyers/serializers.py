@@ -109,6 +109,17 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             val = data.get(camel, default)
         return val if val is not None else default
 
+    def _parse_practice_areas(self, validated_data):
+        """Normalize practice areas from list or comma-separated string."""
+        pa_list = validated_data.get('practice_areas', [])
+        pa_camel = validated_data.get('practiceAreas', '')
+        if not pa_list and pa_camel:
+            if isinstance(pa_camel, list):
+                pa_list = pa_camel
+            elif isinstance(pa_camel, str) and pa_camel.strip():
+                pa_list = [a.strip() for a in pa_camel.split(',') if a.strip()]
+        return pa_list
+
     def create(self, validated_data):
         from accounts.models import User
         import base64
@@ -165,13 +176,7 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         lawyer_profile.save()
 
         # Handle practice areas (accept list or comma-separated string)
-        pa_list = validated_data.get('practice_areas', [])
-        pa_camel = validated_data.get('practiceAreas', '')
-        if not pa_list and pa_camel:
-            if isinstance(pa_camel, list):
-                pa_list = pa_camel
-            elif isinstance(pa_camel, str) and pa_camel.strip():
-                pa_list = [a.strip() for a in pa_camel.split(',') if a.strip()]
+        pa_list = self._parse_practice_areas(validated_data)
         if pa_list:
             areas = []
             for name in pa_list:
@@ -180,6 +185,75 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             lawyer_profile.practice_areas.set(areas)
 
         return lawyer_profile
+
+    def update(self, instance, validated_data):
+        import base64
+        from django.core.files.base import ContentFile
+
+        user = instance.user
+
+        name = self._get(validated_data, 'full_name', 'fullName', '')
+        if name:
+            name_parts = name.strip().split(' ', 1)
+            user.first_name = name_parts[0] if name_parts else ''
+            user.last_name = name_parts[1] if len(name_parts) > 1 else ''
+
+        if 'email' in validated_data and validated_data.get('email'):
+            user.email = validated_data['email']
+
+        if 'phone' in validated_data:
+            user.phone = validated_data.get('phone', '')
+
+        img = self._get(validated_data, 'profile_image', 'profileImage', '')
+        if img and isinstance(img, str) and img.startswith('data:image'):
+            fmt, imgstr = img.split(';base64,')
+            ext = fmt.split('/')[-1]
+            user.profile_photo = ContentFile(
+                base64.b64decode(imgstr),
+                name=f'profile_{user.id}.{ext}'
+            )
+        user.save()
+
+        if 'profession' in validated_data:
+            instance.profession = validated_data.get('profession', instance.profession)
+        if 'specialization' in validated_data:
+            instance.specialization = validated_data.get('specialization', instance.specialization)
+        if 'bio' in validated_data:
+            instance.bio = validated_data.get('bio', instance.bio)
+
+        if 'years_experience' in validated_data or 'yearsExperience' in validated_data:
+            instance.years_experience = self._get(
+                validated_data,
+                'years_experience',
+                'yearsExperience',
+                instance.years_experience,
+            )
+
+        if 'cases_solved' in validated_data or 'casesSolved' in validated_data:
+            instance.solved_cases = self._get(
+                validated_data,
+                'cases_solved',
+                'casesSolved',
+                instance.solved_cases,
+            )
+
+        if 'consultancy_fees' in validated_data:
+            instance.consultancy_fees = validated_data.get('consultancy_fees', instance.consultancy_fees)
+
+        if 'is_available' in validated_data:
+            instance.is_available = validated_data.get('is_available', instance.is_available)
+
+        instance.save()
+
+        if 'practice_areas' in validated_data or 'practiceAreas' in validated_data:
+            pa_list = self._parse_practice_areas(validated_data)
+            areas = []
+            for name in pa_list:
+                pa, _ = PracticeArea.objects.get_or_create(name=name)
+                areas.append(pa)
+            instance.practice_areas.set(areas)
+
+        return instance
 
     def to_representation(self, instance):
         """Return created lawyer in snake_case format."""

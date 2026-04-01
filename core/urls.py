@@ -65,6 +65,11 @@ def api_root(request):
     })
 
 
+def api_not_found(request):
+    """Return JSON for unmatched API routes."""
+    return JsonResponse({'detail': 'Not found.'}, status=404)
+
+
 urlpatterns = [
     # Root API endpoint
     path('', api_root, name='api_root'),
@@ -86,6 +91,7 @@ urlpatterns = [
     path('api/stamps/verify/', StampVerifyView.as_view(), name='stamp_verify'),
     path('api/blog/', include('blog.urls')),
     path('api/landing/', include('landing.urls')),
+    re_path(r'^api/.*$', api_not_found, name='api_not_found'),
 ]
 
 # Serve media files (both development and production)

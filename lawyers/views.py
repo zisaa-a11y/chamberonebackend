@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import PracticeArea, LawyerProfile, LawyerAvailability
@@ -20,6 +21,20 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return request.user and request.user.is_staff
+
+
+class IsAdminOrSelfForLawyerWrite(permissions.BasePermission):
+    """Allow public read; only authenticated admin or owner can modify."""
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return bool(request.user and request.user.is_authenticated)
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return bool(request.user and (request.user.is_staff or obj.user == request.user))
 
 
 # Practice Area Views
@@ -57,13 +72,47 @@ class LawyerListView(generics.ListAPIView):
     ordering = ['-rating']
 
 
-class LawyerDetailView(generics.RetrieveAPIView):
-    """API endpoint for lawyer detail in camelCase format."""
+class LawyerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for lawyer detail and RESTful update/delete."""
     queryset = LawyerProfile.objects.select_related('user').prefetch_related(
         'practice_areas', 'availabilities'
     )
-    serializer_class = LawyerCreateUpdateSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminOrSelfForLawyerWrite]
+
+    def get_serializer_class(self):
+        # Keep existing camelCase response for GET and support snake_case/camelCase input for writes.
+        if self.request.method in permissions.SAFE_METHODS:
+            return LawyerCreateUpdateSerializer
+        return LawyerSnakeCaseCreateSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(
+            {
+                'success': True,
+                'data': serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {
+                'success': True,
+                'detail': 'Lawyer deleted successfully.',
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class LawyerProfileUpdateView(generics.RetrieveUpdateAPIView):
