@@ -55,6 +55,9 @@ class LawyerProfile(models.Model):
     )
     qualifications = models.TextField(blank=True)
     bio = models.TextField(blank=True)
+    location = models.CharField(max_length=150, default='', db_index=True)
+    city = models.CharField(max_length=100, blank=True, default='', db_index=True)
+    district = models.CharField(max_length=100, blank=True, default='', db_index=True)
     chamber_info = models.TextField(blank=True)
     rating = models.DecimalField(
         max_digits=3,
@@ -73,6 +76,12 @@ class LawyerProfile(models.Model):
     def __str__(self):
         return f"Lawyer: {self.user.full_name}"
 
+    def save(self, *args, **kwargs):
+        self.location = (self.location or '').strip()
+        self.city = (self.city or '').strip()
+        self.district = (self.district or '').strip()
+        super().save(*args, **kwargs)
+
     @property
     def full_name(self):
         return self.user.full_name
@@ -90,6 +99,10 @@ class LawyerProfile(models.Model):
         if self.user.profile_photo:
             return self.user.profile_photo.url
         return None
+
+    @property
+    def normalized_location(self):
+        return ' '.join((self.location or '').split()).title()
 
 
 class LawyerAvailability(models.Model):

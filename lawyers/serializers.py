@@ -50,7 +50,7 @@ class LawyerProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'practice_areas', 'practice_area_ids',
             'years_experience', 'solved_cases', 'consultancy_fees',
-            'qualifications', 'bio', 'chamber_info', 'rating',
+            'qualifications', 'bio', 'location', 'city', 'district', 'chamber_info', 'rating',
             'is_available', 'full_name', 'email', 'phone',
             'profile_photo_url', 'availabilities', 'gender',
             'created_at', 'updated_at'
@@ -64,6 +64,7 @@ class LawyerProfileListSerializer(serializers.ModelSerializer):
     email = serializers.ReadOnlyField()
     phone = serializers.ReadOnlyField()
     profile_photo_url = serializers.ReadOnlyField()
+    location = serializers.ReadOnlyField(source='normalized_location')
     practice_areas = PracticeAreaSerializer(many=True, read_only=True)
     
     class Meta:
@@ -73,6 +74,7 @@ class LawyerProfileListSerializer(serializers.ModelSerializer):
             'practice_areas', 'years_experience', 'consultancy_fees',
             'rating', 'is_available', 'bio', 'profession',
             'specialization', 'solved_cases', 'gender',
+            'location', 'city', 'district', 'chamber_info',
         ]
 
 
@@ -89,6 +91,10 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
     bio = serializers.CharField(required=False, allow_blank=True, default='')
     profession = serializers.CharField(max_length=100, required=False, default='Lawyer')
     specialization = serializers.CharField(max_length=255, required=False, allow_blank=True, default='')
+    location = serializers.CharField(required=True, allow_blank=False, error_messages={'required': 'This field is required.'})
+    city = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
+    district = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
+    chamber_info = serializers.CharField(required=False, allow_blank=True, default='')
     gender = serializers.ChoiceField(choices=['male', 'female', ''], required=False, default='')
     practice_areas = serializers.ListField(child=serializers.CharField(), required=False, default=list)
     practiceAreas = serializers.CharField(required=False, allow_blank=True, default='')
@@ -119,6 +125,20 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             elif isinstance(pa_camel, str) and pa_camel.strip():
                 pa_list = [a.strip() for a in pa_camel.split(',') if a.strip()]
         return pa_list
+
+    def validate_location(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('This field is required.')
+        return value
+
+    def validate(self, attrs):
+        location = attrs.get('location')
+        if self.instance is None and not location:
+            raise serializers.ValidationError({'location': ['This field is required.']})
+        if self.instance is not None and not location and not self.instance.location:
+            raise serializers.ValidationError({'location': ['This field is required.']})
+        return attrs
 
     def create(self, validated_data):
         from accounts.models import User
@@ -166,6 +186,10 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
         lawyer_profile.specialization = validated_data.get('specialization', '')
         lawyer_profile.bio = validated_data.get('bio', '')
+        lawyer_profile.location = validated_data.get('location', '')
+        lawyer_profile.city = validated_data.get('city', '')
+        lawyer_profile.district = validated_data.get('district', '')
+        lawyer_profile.chamber_info = validated_data.get('chamber_info', '')
         lawyer_profile.gender = validated_data.get('gender', '')
         lawyer_profile.years_experience = self._get(validated_data, 'years_experience', 'yearsExperience', 0)
         lawyer_profile.solved_cases = self._get(validated_data, 'cases_solved', 'casesSolved', 0)
@@ -220,6 +244,14 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             instance.specialization = validated_data.get('specialization', instance.specialization)
         if 'bio' in validated_data:
             instance.bio = validated_data.get('bio', instance.bio)
+        if 'location' in validated_data:
+            instance.location = validated_data.get('location', instance.location)
+        if 'city' in validated_data:
+            instance.city = validated_data.get('city', instance.city)
+        if 'district' in validated_data:
+            instance.district = validated_data.get('district', instance.district)
+        if 'chamber_info' in validated_data:
+            instance.chamber_info = validated_data.get('chamber_info', instance.chamber_info)
 
         if 'years_experience' in validated_data or 'yearsExperience' in validated_data:
             instance.years_experience = self._get(
@@ -281,6 +313,10 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             'specialization': instance.specialization or '',
             'solved_cases': instance.solved_cases,
             'gender': instance.gender or '',
+            'location': instance.normalized_location,
+            'city': instance.city or '',
+            'district': instance.district or '',
+            'chamber_info': instance.chamber_info or '',
         }
 
 
@@ -525,6 +561,10 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 'profileImage': profile_image,
                 'rating': float(instance.rating) if instance.rating else 0.0,
                 'isAvailable': instance.is_available,
+                'location': instance.normalized_location,
+                'city': instance.city or '',
+                'district': instance.district or '',
+                'chamberInfo': instance.chamber_info or '',
             }
         except Exception as e:
             return {
@@ -541,5 +581,9 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 'profileImage': None,
                 'rating': 0.0,
                 'isAvailable': False,
+                'location': '',
+                'city': '',
+                'district': '',
+                'chamberInfo': '',
             }
 

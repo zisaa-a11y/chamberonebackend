@@ -11,9 +11,6 @@ class Case(models.Model):
         IN_PROGRESS = 'in_progress', 'In Progress'
         PENDING = 'pending', 'Pending'
         CLOSED = 'closed', 'Closed'
-        WON = 'won', 'Won'
-        LOST = 'lost', 'Lost'
-        SETTLED = 'settled', 'Settled'
     
     title = models.CharField(max_length=255)
     case_number = models.CharField(max_length=50, unique=True, blank=True)
@@ -88,7 +85,7 @@ class CaseDocument(models.Model):
         on_delete=models.CASCADE,
         related_name='documents'
     )
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True)
     document_type = models.CharField(
         max_length=20,
         choices=DocumentType.choices,
@@ -101,6 +98,7 @@ class CaseDocument(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
+    original_name = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -119,7 +117,7 @@ class CaseTimeline(models.Model):
         on_delete=models.CASCADE,
         related_name='timeline'
     )
-    date = models.DateTimeField()
+    date = models.DateField()
     event = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(

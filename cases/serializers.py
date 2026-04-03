@@ -10,6 +10,7 @@ class CaseTimelineSerializer(serializers.ModelSerializer):
         source='created_by.full_name',
         read_only=True
     )
+    created_by = serializers.ReadOnlyField(source='created_by.id')
     
     class Meta:
         model = CaseTimeline
@@ -19,26 +20,69 @@ class CaseTimelineSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'created_by']
 
+    def validate_event(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('This field may not be blank.')
+        return value
+
 
 class CaseDocumentSerializer(serializers.ModelSerializer):
     """Serializer for CaseDocument model."""
+    document = serializers.FileField(write_only=True, required=False)
+    file_url = serializers.SerializerMethodField(read_only=True)
+    uploaded_at = serializers.DateTimeField(source='created_at', read_only=True)
+    uploaded_by = serializers.ReadOnlyField(source='uploaded_by.id')
     uploaded_by_name = serializers.CharField(
         source='uploaded_by.full_name',
         read_only=True
     )
-    document_type_display = serializers.CharField(
-        source='get_document_type_display',
-        read_only=True
-    )
-    
+
     class Meta:
         model = CaseDocument
         fields = [
             'id', 'case', 'title', 'document_type',
-            'document_type_display', 'file', 'description',
-            'uploaded_by', 'uploaded_by_name', 'created_at'
+            'document', 'file', 'file_url', 'original_name',
+            'description', 'uploaded_at', 'uploaded_by', 'uploaded_by_name', 'created_at'
         ]
         read_only_fields = ['id', 'created_at', 'uploaded_by']
+
+    def get_file_url(self, obj):
+        request = self.context.get('request')
+        if not obj.file:
+            return None
+        if request:
+            return request.build_absolute_uri(obj.file.url)
+        return obj.file.url
+
+    def validate(self, attrs):
+        uploaded = attrs.get('document') or attrs.get('file')
+        if self.instance is None and uploaded is None:
+            raise serializers.ValidationError({'document': ['This field is required.']})
+
+        if uploaded is not None:
+            allowed_extensions = {'.pdf', '.jpg', '.jpeg', '.png'}
+            file_name = uploaded.name.lower()
+            if not any(file_name.endswith(ext) for ext in allowed_extensions):
+                raise serializers.ValidationError({
+                    'document': ['Unsupported file type. Allowed types: pdf, jpg, jpeg, png.']
+                })
+
+            max_size = 10 * 1024 * 1024
+            if uploaded.size > max_size:
+                raise serializers.ValidationError({
+                    'document': ['File size exceeds 10MB limit.']
+                })
+
+        return attrs
+
+    def create(self, validated_data):
+        uploaded = validated_data.pop('document', None)
+        if uploaded is not None:
+            validated_data['file'] = uploaded
+            validated_data.setdefault('title', uploaded.name)
+            validated_data['original_name'] = uploaded.name
+        return super().create(validated_data)
 
 
 class CaseNoteSerializer(serializers.ModelSerializer):
@@ -100,16 +144,15 @@ class CaseCreateSerializer(serializers.ModelSerializer):
 
 
 class CaseListSerializer(serializers.ModelSerializer):
-    """Simplified serializer for listing cases."""
+    """Contract-focused serializer for listing cases."""
     client_name = serializers.ReadOnlyField()
-    lawyer_name = serializers.ReadOnlyField()
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    timeline = CaseTimelineSerializer(many=True, read_only=True)
+    documents = CaseDocumentSerializer(many=True, read_only=True)
     
     class Meta:
         model = Case
         fields = [
             'id', 'title', 'case_number', 'court_name',
-            'client_name', 'lawyer_name',
-            'status', 'status_display',
-            'next_hearing_date', 'created_at'
+            'status', 'next_hearing_date', 'client_name',
+            'timeline', 'documents'
         ]

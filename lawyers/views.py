@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 
 from .models import PracticeArea, LawyerProfile, LawyerAvailability
 from .serializers import (
@@ -70,6 +70,32 @@ class LawyerListView(generics.ListAPIView):
     ]
     ordering_fields = ['rating', 'years_experience', 'consultancy_fees']
     ordering = ['-rating']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        params = self.request.query_params
+
+        location = params.get('location')
+        city = params.get('city')
+        district = params.get('district')
+        practice_area = params.get('practice_area')
+        gender = params.get('gender')
+
+        if location:
+            queryset = queryset.filter(location__icontains=location.strip())
+        if city:
+            queryset = queryset.filter(city__icontains=city.strip())
+        if district:
+            queryset = queryset.filter(district__icontains=district.strip())
+        if practice_area:
+            queryset = queryset.filter(
+                Q(practice_areas__name__icontains=practice_area.strip()) |
+                Q(specialization__icontains=practice_area.strip())
+            )
+        if gender:
+            queryset = queryset.filter(gender__iexact=gender.strip())
+
+        return queryset.distinct()
 
 
 class LawyerDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -141,7 +167,7 @@ class LawyerUpdateView(generics.UpdateAPIView):
     
     PUT/PATCH /api/lawyers/<id>/update/
     """
-    serializer_class = LawyerCreateUpdateSerializer
+    serializer_class = LawyerSnakeCaseCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = LawyerProfile.objects.all()
     

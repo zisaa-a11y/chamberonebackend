@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from .models import Case, CaseDocument, CaseTimeline, CaseNote
 from .serializers import (
@@ -25,6 +25,24 @@ class IsOwnerOrLawyer(permissions.BasePermission):
         )
 
 
+class CaseAccessMixin:
+    """Utility mixin for checking case-level permission on nested resources."""
+
+    def get_case(self):
+        case = get_object_or_404(
+            Case.objects.select_related('lawyer', 'lawyer__user', 'client'),
+            pk=self.kwargs.get('case_id')
+        )
+        user = self.request.user
+        if not (
+            case.client == user or
+            (case.lawyer and case.lawyer.user == user) or
+            user.is_staff
+        ):
+            self.permission_denied(self.request, message='Permission denied for this case.')
+        return case
+
+
 # Case Views
 class CaseListCreateView(generics.ListCreateAPIView):
     """API endpoint to list and create cases."""
@@ -43,7 +61,7 @@ class CaseListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         queryset = Case.objects.select_related(
             'client', 'lawyer', 'lawyer__user', 'practice_area'
-        )
+        ).prefetch_related('timeline', 'documents')
         
         if user.is_staff:
             return queryset
@@ -75,22 +93,22 @@ class CaseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Case Document Views
-class CaseDocumentListCreateView(generics.ListCreateAPIView):
+class CaseDocumentListCreateView(CaseAccessMixin, generics.ListCreateAPIView):
     """API endpoint to list and upload case documents."""
     serializer_class = CaseDocumentSerializer
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
-        case_id = self.kwargs.get('case_id')
+        case = self.get_case()
         return CaseDocument.objects.filter(
-            case_id=case_id
+            case=case
         ).select_related('uploaded_by')
 
     def perform_create(self, serializer):
-        case_id = self.kwargs.get('case_id')
+        case = self.get_case()
         serializer.save(
-            case_id=case_id,
+            case=case,
             uploaded_by=self.request.user
         )
 
@@ -103,21 +121,21 @@ class CaseDocumentDetailView(generics.RetrieveDestroyAPIView):
 
 
 # Case Timeline Views
-class CaseTimelineListCreateView(generics.ListCreateAPIView):
+class CaseTimelineListCreateView(CaseAccessMixin, generics.ListCreateAPIView):
     """API endpoint to list and create timeline events."""
     serializer_class = CaseTimelineSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        case_id = self.kwargs.get('case_id')
+        case = self.get_case()
         return CaseTimeline.objects.filter(
-            case_id=case_id
+            case=case
         ).select_related('created_by')
 
     def perform_create(self, serializer):
-        case_id = self.kwargs.get('case_id')
+        case = self.get_case()
         serializer.save(
-            case_id=case_id,
+            case=case,
             created_by=self.request.user
         )
 
