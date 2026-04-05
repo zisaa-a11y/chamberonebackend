@@ -17,13 +17,14 @@ class PaymentSerializer(serializers.ModelSerializer):
     """Serializer for Payment model."""
     client = UserSerializer(read_only=True)
     client_name = serializers.ReadOnlyField()
+    invoice_number = serializers.CharField(source='invoice.invoice_number', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
     
     class Meta:
         model = Payment
         fields = [
-            'id', 'payment_id', 'invoice', 'client', 'client_name',
+            'id', 'payment_id', 'invoice', 'invoice_number', 'client', 'client_name',
             'amount', 'payment_method', 'method_display',
             'status', 'status_display', 'transaction_id',
             'payment_date', 'notes', 'created_at', 'updated_at'
@@ -104,6 +105,12 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating payments."""
+    payment_method = serializers.ChoiceField(
+        choices=Payment.PaymentMethod.choices,
+        required=False,
+        default=Payment.PaymentMethod.CARD,
+    )
+    notes = serializers.CharField(required=False, allow_blank=True, default='')
     
     class Meta:
         model = Payment

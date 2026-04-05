@@ -6,6 +6,7 @@ from .views import (
     TagDetailView,
     BlogPostListView,
     BlogPostCreateView,
+    BlogPostWriteDetailView,
     BlogPostDetailView,
     BlogPostAdminDetailView,
     BlogPostAdminListView,
@@ -30,6 +31,7 @@ urlpatterns = [
     path('posts/', BlogPostListView.as_view(), name='post_list'),
     path('posts/create/', BlogPostCreateView.as_view(), name='post_create'),
     path('posts/featured/', FeaturedPostsView.as_view(), name='featured_posts'),
+    path('posts/<int:pk>/', BlogPostWriteDetailView.as_view(), name='post_write_detail'),
     path('posts/<slug:slug>/', BlogPostDetailView.as_view(), name='post_detail'),
     
     # Posts (admin)

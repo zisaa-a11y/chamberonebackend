@@ -116,6 +116,14 @@ class PaymentListCreateView(generics.ListCreateAPIView):
         
         return queryset.filter(client=user)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        payment = serializer.save()
+        response_serializer = PaymentSerializer(payment, context=self.get_serializer_context())
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class PaymentDetailView(generics.RetrieveAPIView):
     """API endpoint for payment detail."""
@@ -163,7 +171,7 @@ class PaymentStatusUpdateView(APIView):
         
         payment.save()
         
-        return Response(PaymentSerializer(payment).data)
+        return Response(PaymentSerializer(payment, context={'request': request}).data)
 
 
 class InvoicePaymentsView(generics.ListAPIView):

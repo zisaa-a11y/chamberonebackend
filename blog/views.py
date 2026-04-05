@@ -97,6 +97,26 @@ class BlogPostListView(generics.ListCreateAPIView):
         return queryset
 
 
+class BlogPostWriteDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for backend writes by post id."""
+    permission_classes = [permissions.IsAdminUser]
+    queryset = BlogPost.objects.all().select_related('author', 'category').prefetch_related('tags', 'comments')
+    lookup_field = 'pk'
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return BlogPostCreateSerializer
+        return BlogPostSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(
+            {'success': True, 'detail': 'Blog post deleted successfully.'},
+            status=status.HTTP_200_OK,
+        )
+
+
 class BlogPostCreateView(generics.CreateAPIView):
     """API endpoint to create blog posts (admin only)."""
     serializer_class = BlogPostCreateSerializer

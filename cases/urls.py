@@ -9,6 +9,7 @@ from .views import (
     CaseNoteListCreateView,
     CaseNoteDetailView,
     CaseStatusUpdateView,
+    CaseAssignLawyerView,
 )
 
 app_name = 'cases'
@@ -17,6 +18,7 @@ urlpatterns = [
     # Cases
     path('', CaseListCreateView.as_view(), name='case_list'),
     path('<int:pk>/', CaseDetailView.as_view(), name='case_detail'),
+    path('<int:pk>/assign-lawyer/', CaseAssignLawyerView.as_view(), name='case_assign_lawyer'),
     path('<int:pk>/status/', CaseStatusUpdateView.as_view(), name='case_status'),
     
     # Documents

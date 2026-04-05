@@ -98,6 +98,12 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
 class BlogPostCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating blog posts."""
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        source='category',
+        write_only=True,
+        required=False
+    )
     tag_ids = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True,
@@ -108,7 +114,7 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
         fields = [
-            'title', 'content', 'excerpt', 'category',
+            'title', 'content', 'excerpt', 'category', 'category_id',
             'tag_ids', 'featured_image', 'status',
             'is_featured', 'published_date'
         ]
@@ -119,3 +125,6 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
         post = BlogPost.objects.create(**validated_data)
         post.tags.set(tags)
         return post
+
+    def to_representation(self, instance):
+        return BlogPostSerializer(instance, context=self.context).data

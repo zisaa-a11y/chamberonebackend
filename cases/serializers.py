@@ -127,6 +127,20 @@ class CaseSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'case_number', 'created_at', 'updated_at']
 
 
+class CaseAssignLawyerSerializer(serializers.Serializer):
+    """Serializer for assigning or reassigning a lawyer to a case."""
+    lawyer = serializers.IntegerField(required=False)
+    assigned_lawyer = serializers.IntegerField(required=False)
+    lawyer_name = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        if not attrs.get('lawyer') and not attrs.get('assigned_lawyer') and not attrs.get('lawyer_name'):
+            raise serializers.ValidationError({
+                'lawyer': 'Provide lawyer, assigned_lawyer, or lawyer_name.'
+            })
+        return attrs
+
+
 class CaseCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating cases."""
     
@@ -146,6 +160,7 @@ class CaseCreateSerializer(serializers.ModelSerializer):
 class CaseListSerializer(serializers.ModelSerializer):
     """Contract-focused serializer for listing cases."""
     client_name = serializers.ReadOnlyField()
+    lawyer_name = serializers.ReadOnlyField()
     timeline = CaseTimelineSerializer(many=True, read_only=True)
     documents = CaseDocumentSerializer(many=True, read_only=True)
     
@@ -153,6 +168,6 @@ class CaseListSerializer(serializers.ModelSerializer):
         model = Case
         fields = [
             'id', 'title', 'case_number', 'court_name',
-            'status', 'next_hearing_date', 'client_name',
+            'status', 'next_hearing_date', 'client_name', 'lawyer_name',
             'timeline', 'documents'
         ]

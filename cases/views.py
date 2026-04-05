@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from .models import Case, CaseDocument, CaseTimeline, CaseNote
 from .serializers import (
@@ -12,7 +13,9 @@ from .serializers import (
     CaseDocumentSerializer,
     CaseTimelineSerializer,
     CaseNoteSerializer,
+    CaseAssignLawyerSerializer,
 )
+from lawyers.models import LawyerProfile
 
 
 class IsOwnerOrLawyer(permissions.BasePermission):
@@ -216,3 +219,50 @@ class CaseStatusUpdateView(APIView):
         case.save()
         
         return Response(CaseListSerializer(case).data)
+
+
+class CaseAssignLawyerView(APIView):
+    """API endpoint to assign or reassign a lawyer to a case."""
+    permission_classes = [permissions.IsAdminUser]
+
+    def patch(self, request, pk):
+        try:
+            case = Case.objects.select_related('lawyer', 'lawyer__user', 'client', 'practice_area').get(pk=pk)
+        except Case.DoesNotExist:
+            return Response({'error': 'Case not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CaseAssignLawyerSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        lawyer = self._resolve_lawyer(serializer.validated_data)
+        if lawyer is None:
+            return Response({'error': 'Lawyer not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        case.lawyer = lawyer
+        case.save(update_fields=['lawyer', 'updated_at'])
+
+        response_serializer = CaseSerializer(case, context={'request': request})
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+    def _resolve_lawyer(self, validated_data):
+        lawyer_id = validated_data.get('lawyer') or validated_data.get('assigned_lawyer')
+        lawyer_name = (validated_data.get('lawyer_name') or '').strip()
+
+        if lawyer_id:
+            return LawyerProfile.objects.select_related('user').filter(pk=lawyer_id).first()
+
+        if lawyer_name:
+            parts = lawyer_name.split(' ', 1)
+            if len(parts) == 2:
+                return LawyerProfile.objects.select_related('user').filter(
+                    Q(user__first_name__iexact=parts[0], user__last_name__iexact=parts[1]) |
+                    Q(user__first_name__iexact=lawyer_name) |
+                    Q(user__last_name__iexact=lawyer_name)
+                ).first()
+
+            return LawyerProfile.objects.select_related('user').filter(
+                Q(user__first_name__iexact=lawyer_name) |
+                Q(user__last_name__iexact=lawyer_name)
+            ).first()
+
+        return None

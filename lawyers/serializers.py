@@ -357,6 +357,12 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         default='',
         help_text="e.g. Civil Law, Criminal Law"
     )
+    gender = serializers.ChoiceField(
+        choices=LawyerProfile.Gender.choices,
+        required=False,
+        allow_blank=True,
+        default=''
+    )
     bio = serializers.CharField(
         required=False, 
         allow_blank=True, 
@@ -364,6 +370,15 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         style={'base_template': 'textarea.html'},
         help_text="Short biography"
     )
+    location = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        default='',
+        help_text="Primary work location"
+    )
+    city = serializers.CharField(required=False, allow_blank=True, default='')
+    district = serializers.CharField(required=False, allow_blank=True, default='')
+    chamberInfo = serializers.CharField(required=False, allow_blank=True, default='')
     practiceAreas = serializers.CharField(
         required=False,
         allow_blank=True,
@@ -412,6 +427,11 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 return []
             return [area.strip() for area in value.split(',') if area.strip()]
         return []
+
+    def validate(self, attrs):
+        if self.instance is None and not attrs.get('location'):
+            raise serializers.ValidationError({'location': ['This field is required.']})
+        return attrs
     
     def create(self, validated_data):
         from accounts.models import User
@@ -463,7 +483,12 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         lawyer_profile, _ = LawyerProfile.objects.get_or_create(user=user)
         lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
         lawyer_profile.specialization = validated_data.get('specialization', '')
+        lawyer_profile.gender = validated_data.get('gender', '')
         lawyer_profile.bio = validated_data.get('bio', '')
+        lawyer_profile.location = validated_data.get('location', '')
+        lawyer_profile.city = validated_data.get('city', '')
+        lawyer_profile.district = validated_data.get('district', '')
+        lawyer_profile.chamber_info = validated_data.get('chamberInfo', '')
         lawyer_profile.years_experience = validated_data.get('yearsExperience', 0)
         lawyer_profile.solved_cases = validated_data.get('casesSolved', 0)
         lawyer_profile.save()
@@ -514,8 +539,18 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
             instance.profession = validated_data['profession']
         if 'specialization' in validated_data:
             instance.specialization = validated_data['specialization']
+        if 'gender' in validated_data:
+            instance.gender = validated_data['gender']
         if 'bio' in validated_data:
             instance.bio = validated_data['bio']
+        if 'location' in validated_data:
+            instance.location = validated_data['location']
+        if 'city' in validated_data:
+            instance.city = validated_data['city']
+        if 'district' in validated_data:
+            instance.district = validated_data['district']
+        if 'chamberInfo' in validated_data:
+            instance.chamber_info = validated_data['chamberInfo']
         if 'yearsExperience' in validated_data:
             instance.years_experience = validated_data['yearsExperience']
         if 'casesSolved' in validated_data:
@@ -551,6 +586,7 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
                 'id': instance.id,
                 'fullName': user.full_name,
                 'profession': getattr(instance, 'profession', 'Lawyer'),
+                'gender': instance.gender or '',
                 'bio': instance.bio or '',
                 'practiceAreas': practice_areas,
                 'specialization': instance.specialization or '',
