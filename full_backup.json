@@ -1,0 +1,48 @@
+[
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$V74xrfV2yyFLPDNRsvZpzz$YkwxpH1mmKa+OK7viQlfGillNFTN18kWfrCpiYcZsEQ=",
+    "last_login": "2026-01-26T14:26:15.596Z",
+    "is_superuser": true,
+    "first_name": "Admin",
+    "last_name": "User",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-01-26T14:23:33.809Z",
+    "email": "admin@example.com",
+    "role": "admin",
+    "phone": null,
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-01-26T14:23:34.350Z",
+    "updated_at": "2026-01-26T14:23:34.350Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$FaINIqHL4Qxr7UkqiXBf8Q$893eQNFkZbGl6h+zmkyGy2GNFUSgkZZAeOP/oczW0Fk=",
+    "last_login": "2026-02-23T16:22:40.303Z",
+    "is_superuser": true,
+    "first_name": "zisa",
+    "last_name": "zisa",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-03T05:01:30.446Z",
+    "email": "zisa9065@gmail.com",
+    "role": "admin",
+    "phone": null,
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-02-03T05:01:30.986Z",
+    "updated_at": "2026-02-03T05:01:30.986Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
