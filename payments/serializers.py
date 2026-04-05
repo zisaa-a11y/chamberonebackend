@@ -70,9 +70,15 @@ class InvoiceCreateSerializer(serializers.ModelSerializer):
             'subtotal', 'tax_amount',
             'status', 'issue_date', 'due_date', 'notes', 'items'
         ]
+        extra_kwargs = {
+            'client': {'required': False},
+        }
 
     def create(self, validated_data):
         items_data = validated_data.pop('items', [])
+        # Auto-assign client from request user if not provided
+        if 'client' not in validated_data or validated_data['client'] is None:
+            validated_data['client'] = self.context['request'].user
         invoice = Invoice.objects.create(**validated_data)
         
         for item_data in items_data:

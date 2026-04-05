@@ -127,16 +127,15 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         return pa_list
 
     def validate_location(self, value):
-        value = value.strip()
-        if not value:
+        value = (value or '').strip()
+        # Only require location for new profiles; existing profiles can keep their current value
+        if not value and self.instance is None:
             raise serializers.ValidationError('This field is required.')
         return value
 
     def validate(self, attrs):
         location = attrs.get('location')
         if self.instance is None and not location:
-            raise serializers.ValidationError({'location': ['This field is required.']})
-        if self.instance is not None and not location and not self.instance.location:
             raise serializers.ValidationError({'location': ['This field is required.']})
         return attrs
 

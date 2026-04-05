@@ -17,7 +17,15 @@ class Command(BaseCommand):
         self.seed_blog_categories_and_tags()
         self.seed_blog_posts()
         self.seed_cases()
-        self.stdout.write(self.style.SUCCESS('Database seeded successfully!'))
+        self.seed_appointments()
+        self.seed_invoices_and_payments()
+        self.seed_subscriptions()
+        self.seed_landing_page()
+        self.stdout.write(self.style.SUCCESS('\n🎉 Database seeded successfully!'))
+        self.stdout.write(self.style.WARNING('\n📋 Test Accounts:'))
+        self.stdout.write('  Admin:   admin@thechamberone.com / admin123')
+        self.stdout.write('  Lawyer:  rahim@example.com / lawyer123')
+        self.stdout.write('  Client:  client@example.com / client123')
 
     def seed_practice_areas(self):
         from lawyers.models import PracticeArea
@@ -53,6 +61,18 @@ class Command(BaseCommand):
                 'icon_name': 'home',
                 'detailed_description': 'Property law involves the various forms of ownership and tenancy in real property and personal property, including land transactions, tenant rights, and boundary disputes.',
             },
+            {
+                'name': 'Constitutional Law',
+                'description': 'Constitutional rights, judicial review, and state litigation',
+                'icon_name': 'account_balance',
+                'detailed_description': 'Constitutional law deals with the fundamental principles by which the government exercises its authority. It includes the interpretation and implementation of constitutional rights, judicial review, separation of powers, and fundamental rights of citizens.',
+            },
+            {
+                'name': 'Administrative Law',
+                'description': 'Government regulation, public administration, and state affairs',
+                'icon_name': 'admin_panel_settings',
+                'detailed_description': 'Administrative law governs the activities of administrative agencies of government. It covers rule-making, adjudication, enforcement of regulatory agendas, and the legal relations between government bodies and citizens.',
+            },
         ]
 
         for area_data in areas:
@@ -83,6 +103,11 @@ class Command(BaseCommand):
                     'rating': Decimal('4.70'),
                     'is_available': True,
                     'gender': 'male',
+                    'location': 'Dhaka Judge Court, Dhaka',
+                    'city': 'Dhaka',
+                    'district': 'Dhaka',
+                    'qualifications': 'LL.B, LL.M, Advocate - Dhaka Judge Court',
+                    'chamber_info': 'Chamber #45, Dhaka Judge Court Bar, Dhaka-1000',
                 },
                 'practice_areas': ['Criminal Law', 'Civil Law'],
             },
@@ -101,6 +126,11 @@ class Command(BaseCommand):
                     'rating': Decimal('4.50'),
                     'is_available': True,
                     'gender': 'female',
+                    'location': 'Chittagong District Court, Chittagong',
+                    'city': 'Chittagong',
+                    'district': 'Chittagong',
+                    'qualifications': 'LL.B (Hons), Barrister-at-Law (Lincoln\'s Inn)',
+                    'chamber_info': 'Chamber #12, Chittagong Bar Association, Chittagong-4000',
                 },
                 'practice_areas': ['Family Law', 'Civil Law'],
             },
@@ -119,6 +149,11 @@ class Command(BaseCommand):
                     'rating': Decimal('4.90'),
                     'is_available': True,
                     'gender': 'male',
+                    'location': 'Gulshan Corporate Office, Dhaka',
+                    'city': 'Dhaka',
+                    'district': 'Dhaka',
+                    'qualifications': 'LL.B, LL.M (Corporate Law), Advocate - Supreme Court of Bangladesh',
+                    'chamber_info': 'Suite 8B, Gulshan Tower, Gulshan-2, Dhaka-1212',
                 },
                 'practice_areas': ['Corporate Law', 'Property Law'],
             },
@@ -137,6 +172,11 @@ class Command(BaseCommand):
                     'rating': Decimal('4.60'),
                     'is_available': True,
                     'gender': 'female',
+                    'location': 'Rajshahi District Court, Rajshahi',
+                    'city': 'Rajshahi',
+                    'district': 'Rajshahi',
+                    'qualifications': 'LL.B, LL.M, Advocate - Rajshahi District Court',
+                    'chamber_info': 'Chamber #22, Rajshahi Bar Association, Rajshahi-6000',
                 },
                 'practice_areas': ['Property Law', 'Civil Law'],
             },
@@ -155,8 +195,59 @@ class Command(BaseCommand):
                     'rating': Decimal('4.30'),
                     'is_available': True,
                     'gender': 'male',
+                    'location': 'Khulna District Court, Khulna',
+                    'city': 'Khulna',
+                    'district': 'Khulna',
+                    'qualifications': 'LL.B (Hons), Barrister-at-Law',
+                    'chamber_info': 'Chamber #8, Khulna Bar Association, Khulna-9100',
                 },
                 'practice_areas': ['Criminal Law', 'Family Law'],
+            },
+            {
+                'email': 'kamrul@thechamberone.com',
+                'first_name': 'Kamrul',
+                'last_name': 'Islam',
+                'phone': '+8801766666666',
+                'profile': {
+                    'profession': 'Assistant Attorney General',
+                    'specialization': 'Constitutional & Administrative Law',
+                    'bio': 'Advocate Kamrul Islam is a respected legal practitioner and dedicated public law advocate serving as an Assistant Attorney General of Bangladesh at the Attorney General\'s Office. In his role, he represents the Government of Bangladesh in litigation before the courts and upholds the legal interests of the State with professionalism and integrity.\n\nWith a strong foundation in legal practice, Advocate Islam regularly appears in the Supreme Court of Bangladesh, handling a wide range of cases involving constitutional, civil, and administrative law. His advocacy is marked by meticulous preparation, persuasive argumentation, and a deep commitment to justice.\n\nAs Assistant Attorney General, he assists in formulating legal strategies for state representation, prepares legal opinions, and contributes to advancing the rule of law in Bangladesh\'s judicial system. His dedication to legal excellence and public service has made him a trusted figure among peers and clients alike.\n\nAdvocate Kamrul Islam continues to work steadfastly to promote fairness, uphold legal rights, and contribute meaningfully to the development of legal jurisprudence in Bangladesh.',
+                    'years_experience': 14,
+                    'solved_cases': 180,
+                    'consultancy_fees': Decimal('10000.00'),
+                    'rating': Decimal('4.85'),
+                    'is_available': True,
+                    'gender': 'male',
+                    'location': 'Attorney General\'s Office, Supreme Court of Bangladesh, Dhaka',
+                    'city': 'Dhaka',
+                    'district': 'Dhaka',
+                    'qualifications': 'LL.B, LL.M, Advocate - Supreme Court of Bangladesh, Assistant Attorney General of Bangladesh',
+                    'chamber_info': 'Attorney General\'s Office, Supreme Court of Bangladesh, Ramna, Dhaka-1000',
+                },
+                'practice_areas': ['Constitutional Law', 'Administrative Law', 'Civil Law'],
+            },
+            {
+                'email': 'mohsin@thechamberone.com',
+                'first_name': 'Mohammad Mohsin',
+                'last_name': 'Kabir',
+                'phone': '+8801777777777',
+                'profile': {
+                    'profession': 'Deputy Attorney General',
+                    'specialization': 'Constitutional, Civil & Administrative Law',
+                    'bio': 'Advocate Mohammad Mohsin Kabir is a dedicated legal professional serving as a Deputy Attorney General of Bangladesh at the Attorney General\'s Office, Government of Bangladesh. In this senior legal role, he represents the State in high-level litigation and contributes significantly to the administration of justice in the country.\n\nWith a strong foundation in legal practice, Advocate Kabir regularly appears before the Supreme Court of Bangladesh, where he advocates on behalf of the Government in constitutional, civil, and administrative matters. His work reflects a deep commitment to upholding the rule of law and ensuring that the State\'s legal positions are articulated with clarity and integrity.\n\nAs Deputy Attorney General, he plays a key role in formulating legal strategies, preparing authoritative legal opinions, and managing complex litigation on behalf of the government. Advocate Kabir\'s professionalism, analytical acumen, and courtroom presence have earned him respect among peers, judicial officers, and clients alike.\n\nHis legal philosophy emphasizes fairness, rigorous legal reasoning, and public service, making him a valued member of Bangladesh\'s legal community and a trusted representative of the State in the highest courts.',
+                    'years_experience': 18,
+                    'solved_cases': 250,
+                    'consultancy_fees': Decimal('15000.00'),
+                    'rating': Decimal('4.95'),
+                    'is_available': True,
+                    'gender': 'male',
+                    'location': 'Attorney General\'s Office, Supreme Court of Bangladesh, Dhaka',
+                    'city': 'Dhaka',
+                    'district': 'Dhaka',
+                    'qualifications': 'LL.B, LL.M, Advocate - Supreme Court of Bangladesh, Deputy Attorney General of Bangladesh',
+                    'chamber_info': 'Attorney General\'s Office, Supreme Court of Bangladesh, Ramna, Dhaka-1000',
+                },
+                'practice_areas': ['Constitutional Law', 'Administrative Law', 'Civil Law'],
             },
         ]
 
@@ -475,3 +566,201 @@ class Command(BaseCommand):
 
             status = 'Created' if created else 'Already exists'
             self.stdout.write(f'  Case: {case.title} - {status}')
+
+    def seed_appointments(self):
+        from accounts.models import User
+        from lawyers.models import LawyerProfile
+        from appointments.models import Appointment
+        import random
+
+        now = timezone.now()
+        clients = User.objects.filter(role='client')
+        lawyers = LawyerProfile.objects.all()
+
+        if not clients.exists() or not lawyers.exists():
+            self.stdout.write(self.style.WARNING('  Skipping appointments — no clients or lawyers'))
+            return
+
+        statuses = ['pending', 'confirmed', 'completed']
+        types = ['consultation', 'follow_up', 'case_review', 'document_review']
+        count = 0
+
+        for client in clients[:3]:
+            for lp in lawyers[:3]:
+                dt = now + timedelta(days=random.randint(1, 30), hours=random.randint(9, 16))
+                _, created = Appointment.objects.get_or_create(
+                    client=client,
+                    lawyer=lp,
+                    date_time=dt,
+                    defaults={
+                        'duration_minutes': random.choice([30, 60]),
+                        'status': random.choice(statuses),
+                        'appointment_type': random.choice(types),
+                        'client_notes': f'Consultation with {lp.full_name}',
+                    }
+                )
+                if created:
+                    count += 1
+
+        self.stdout.write(f'  Appointments created: {count}')
+
+    def seed_invoices_and_payments(self):
+        from accounts.models import User
+        from cases.models import Case
+        from payments.models import Invoice, InvoiceItem, Payment
+        import random
+
+        now = timezone.now()
+        cases = Case.objects.select_related('client').all()
+        if not cases.exists():
+            self.stdout.write(self.style.WARNING('  Skipping invoices — no cases'))
+            return
+
+        inv_count = 0
+        for case in cases[:4]:
+            issue_date = (now - timedelta(days=random.randint(5, 30))).date()
+            due_date = issue_date + timedelta(days=30)
+            subtotal = Decimal(str(random.choice([5000, 10000, 15000, 20000])))
+            tax = subtotal * Decimal('0.05')
+            inv_status = random.choice(['pending', 'paid', 'draft'])
+
+            inv, created = Invoice.objects.get_or_create(
+                client=case.client,
+                case=case,
+                description=f'Legal fees for: {case.title}',
+                defaults={
+                    'subtotal': subtotal,
+                    'tax_amount': tax,
+                    'status': inv_status,
+                    'issue_date': issue_date,
+                    'due_date': due_date,
+                    'notes': f'Invoice for case {case.case_number}',
+                }
+            )
+            if created:
+                inv_count += 1
+                InvoiceItem.objects.create(
+                    invoice=inv,
+                    description='Legal Consultation Fee',
+                    quantity=1,
+                    unit_price=subtotal * Decimal('0.6'),
+                    amount=subtotal * Decimal('0.6'),
+                )
+                InvoiceItem.objects.create(
+                    invoice=inv,
+                    description='Documentation & Filing',
+                    quantity=1,
+                    unit_price=subtotal * Decimal('0.4'),
+                    amount=subtotal * Decimal('0.4'),
+                )
+                if inv_status == 'paid':
+                    Payment.objects.create(
+                        invoice=inv,
+                        client=case.client,
+                        amount=inv.total_amount,
+                        payment_method='card',
+                        status='completed',
+                        payment_date=now,
+                        notes='Payment completed',
+                    )
+
+        self.stdout.write(f'  Invoices created: {inv_count}')
+
+    def seed_subscriptions(self):
+        from accounts.models import User
+        from payments.models import Subscription
+
+        clients = User.objects.filter(role='client')[:2]
+        count = 0
+        for client in clients:
+            _, created = Subscription.objects.get_or_create(
+                user=client,
+                plan='basic_plan',
+                defaults={'status': 'active'},
+            )
+            if created:
+                count += 1
+        self.stdout.write(f'  Subscriptions created: {count}')
+
+    def seed_landing_page(self):
+        from landing.models import (
+            SiteSettings, HeroSection, Service, Testimonial,
+            FAQ, TeamMember, ContactSubmission, Statistic,
+        )
+
+        if not SiteSettings.objects.exists():
+            SiteSettings.objects.create(
+                site_name='The Chamber One',
+                tagline='Legal Excellence at Your Fingertips',
+                email='info@thechamberone.com',
+                phone='+880-2-1234-5678',
+                address='House 42, Road 11, Banani, Dhaka 1213, Bangladesh',
+                meta_description='The Chamber One - Premier Legal Services Platform',
+                meta_keywords='law, lawyer, legal services, bangladesh',
+            )
+
+        hero_data = [
+            ('Find the Right Lawyer', 'Expert legal professionals at your service.', 'Find a Lawyer', '/lawyer-profile'),
+            ('Justice Made Accessible', 'Professional legal services for everyone.', 'Get Started', '/register'),
+        ]
+        for idx, (title, subtitle, btn, link) in enumerate(hero_data):
+            HeroSection.objects.get_or_create(title=title, defaults={
+                'subtitle': subtitle, 'button_text': btn, 'button_link': link, 'order': idx
+            })
+
+        service_data = [
+            ('Legal Consultation', 'Book online or in-person consultations with verified lawyers', 'gavel'),
+            ('Case Management', 'Track your cases with real-time updates and document management', 'folder_open'),
+            ('Document Verification', 'Verify legal documents and stamps with our online tool', 'verified'),
+            ('Payment Gateway', 'Secure payments via bKash, Nagad, card, and bank transfer', 'payment'),
+        ]
+        for idx, (title, desc, icon) in enumerate(service_data):
+            Service.objects.get_or_create(title=title, defaults={'description': desc, 'icon_name': icon, 'order': idx})
+
+        testimonial_data = [
+            ('Rahim Uddin', 'Business Owner', 'Excellent service! Found a great lawyer.', 5),
+            ('Salma Khatun', 'Teacher', 'Very helpful platform. Got legal advice quickly.', 4),
+            ('Jamal Ahmed', 'Engineer', 'The case tracking feature is amazing.', 5),
+        ]
+        for name, title, content, rating in testimonial_data:
+            Testimonial.objects.get_or_create(client_name=name, defaults={
+                'client_title': title, 'content': content, 'rating': rating
+            })
+
+        faq_data = [
+            ('How do I book a consultation?', 'Browse our lawyer directory, select a lawyer, and choose an available time slot.', 'General'),
+            ('What payment methods are accepted?', 'We accept bKash, Nagad, credit/debit cards, and bank transfers.', 'Payment'),
+            ('How can I track my case?', 'Log in and navigate to Cases to view active cases, timelines, and hearing dates.', 'Cases'),
+            ('Is my data secure?', 'Yes, we use industry-standard encryption and security practices.', 'Security'),
+        ]
+        for question, answer, category in faq_data:
+            FAQ.objects.get_or_create(question=question, defaults={'answer': answer, 'category': category})
+
+        team_data = [
+            ('Advocate Rahman', 'Founding Partner', 'Senior advocate with 25+ years of experience.'),
+            ('Barrister Sultana', 'Managing Partner', 'International law specialist.'),
+        ]
+        for name, title, bio in team_data:
+            TeamMember.objects.get_or_create(name=name, defaults={'title': title, 'bio': bio})
+
+        stat_data = [
+            ('Happy Clients', '1500', 'people', '+'),
+            ('Cases Won', '3200', 'gavel', '+'),
+            ('Expert Lawyers', '50', 'school', '+'),
+            ('Years Experience', '15', 'schedule', '+'),
+        ]
+        for label, value, icon, suffix in stat_data:
+            Statistic.objects.get_or_create(label=label, defaults={
+                'value': value, 'icon_name': icon, 'suffix': suffix
+            })
+
+        ContactSubmission.objects.get_or_create(
+            name='Test User', email='test@example.com',
+            defaults={
+                'phone': '+8801799999999',
+                'subject': 'General Inquiry',
+                'message': 'I would like to know more about your legal services.',
+            }
+        )
+
+        self.stdout.write('  Landing page data created')

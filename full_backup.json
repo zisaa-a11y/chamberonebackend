@@ -1,23 +1,2380 @@
 [
 {
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "accounts",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "accounts",
+    "model": "clientprofile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "lawyers",
+    "model": "practicearea"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "lawyers",
+    "model": "lawyerprofile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "lawyers",
+    "model": "lawyeravailability"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "appointments",
+    "model": "appointment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "cases",
+    "model": "case"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "cases",
+    "model": "casedocument"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "cases",
+    "model": "casenote"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "cases",
+    "model": "casetimeline"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "payments",
+    "model": "invoice"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "payments",
+    "model": "invoiceitem"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "payments",
+    "model": "payment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "payments",
+    "model": "subscription"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "blog",
+    "model": "category"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "blog",
+    "model": "tag"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "blog",
+    "model": "blogpost"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "blog",
+    "model": "comment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "contactsubmission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "faq"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "herosection"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "partner"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "service"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "sitesettings"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "statistic"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "teammember"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "landing",
+    "model": "testimonial"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "token_blacklist",
+    "model": "blacklistedtoken"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "token_blacklist",
+    "model": "outstandingtoken"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gzo3hu9p9rnkt0jmzf9gss678r3y2qtk",
+  "fields": {
+    "session_data": ".eJxVi0sKwjAQQO-StZSQZPJxKXiOMJPMkKJWMM1KvLsWuqjb93mrjGNteXR-5bmqswrqdGSE5cbLJrCU51jWPu2oT9cHzvfLHvxdDXv7LYlEohcCXbRBByFJYitaqqnJQaIA1mofKSAbU5xHwmgNBEaHkUF9vlN3M_0:1w9R9T:bf0Xtbv0CiOtzX-c4bVtoHZDN7TAMHOb6hoDIbvUuu4",
+    "expire_date": "2026-04-19T17:20:47.047Z"
+  }
+},
+{
+  "model": "token_blacklist.blacklistedtoken",
+  "pk": 1,
+  "fields": {
+    "token": 4,
+    "blacklisted_at": "2026-04-05T17:02:11.520Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 1,
+  "fields": {
+    "name": "Criminal Law",
+    "description": "Defense and prosecution in criminal cases",
+    "icon_name": "gavel",
+    "detailed_description": "Criminal law involves prosecution by the government of a person for an act that has been classified as a crime. It includes offenses like theft, assault, robbery, murder, and more.",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.469Z",
+    "updated_at": "2026-04-05T16:58:35.469Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 2,
+  "fields": {
+    "name": "Family Law",
+    "description": "Divorce, custody, and family disputes",
+    "icon_name": "family_restroom",
+    "detailed_description": "Family law deals with family-related issues and domestic relations including marriage, divorce, child custody, adoption, and domestic violence cases.",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.470Z",
+    "updated_at": "2026-04-05T16:58:35.470Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 3,
+  "fields": {
+    "name": "Civil Law",
+    "description": "Property disputes, contracts, and civil rights",
+    "icon_name": "balance",
+    "detailed_description": "Civil law covers disputes between individuals or organizations, including property disputes, contract breaches, tort claims, and other non-criminal legal matters.",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.470Z",
+    "updated_at": "2026-04-05T16:58:35.470Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 4,
+  "fields": {
+    "name": "Corporate Law",
+    "description": "Business formation, compliance, and corporate governance",
+    "icon_name": "business",
+    "detailed_description": "Corporate law governs the formation and operations of corporations, including mergers, acquisitions, corporate governance, and regulatory compliance.",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.471Z",
+    "updated_at": "2026-04-05T16:58:35.471Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 5,
+  "fields": {
+    "name": "Property Law",
+    "description": "Real estate transactions and property disputes",
+    "icon_name": "home",
+    "detailed_description": "Property law involves the various forms of ownership and tenancy in real property and personal property, including land transactions, tenant rights, and boundary disputes.",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.471Z",
+    "updated_at": "2026-04-05T16:58:35.471Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 6,
+  "fields": {
+    "name": "Constitutional Law",
+    "description": "Constitutional rights, judicial review, and state litigation",
+    "icon_name": "account_balance",
+    "detailed_description": "Constitutional law deals with the fundamental principles by which the government exercises its authority. It includes the interpretation and implementation of constitutional rights, judicial review, separation of powers, and fundamental rights of citizens.",
+    "is_active": true,
+    "created_at": "2026-04-05T17:05:07.267Z",
+    "updated_at": "2026-04-05T17:05:07.267Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 7,
+  "fields": {
+    "name": "Administrative Law",
+    "description": "Government regulation, public administration, and state affairs",
+    "icon_name": "admin_panel_settings",
+    "detailed_description": "Administrative law governs the activities of administrative agencies of government. It covers rule-making, adjudication, enforcement of regulatory agendas, and the legal relations between government bodies and citizens.",
+    "is_active": true,
+    "created_at": "2026-04-05T17:05:07.267Z",
+    "updated_at": "2026-04-05T17:05:07.267Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 8,
+  "fields": {
+    "name": "criminal",
+    "description": "",
+    "icon_name": "",
+    "detailed_description": "",
+    "is_active": true,
+    "created_at": "2026-04-05T17:32:18.165Z",
+    "updated_at": "2026-04-05T17:32:18.165Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 9,
+  "fields": {
+    "name": "corporate",
+    "description": "",
+    "icon_name": "",
+    "detailed_description": "",
+    "is_active": true,
+    "created_at": "2026-04-05T17:32:18.165Z",
+    "updated_at": "2026-04-05T17:32:18.165Z"
+  }
+},
+{
+  "model": "lawyers.practicearea",
+  "pk": 10,
+  "fields": {
+    "name": "family",
+    "description": "",
+    "icon_name": "",
+    "detailed_description": "",
+    "is_active": true,
+    "created_at": "2026-04-05T17:32:18.166Z",
+    "updated_at": "2026-04-05T17:32:18.166Z"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 1,
+  "fields": {
+    "invoice": 1,
+    "description": "Legal Consultation Fee",
+    "quantity": "1.00",
+    "unit_price": "12000.00",
+    "amount": "12000.00"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 2,
+  "fields": {
+    "invoice": 1,
+    "description": "Documentation & Filing",
+    "quantity": "1.00",
+    "unit_price": "8000.00",
+    "amount": "8000.00"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 3,
+  "fields": {
+    "invoice": 2,
+    "description": "Legal Consultation Fee",
+    "quantity": "1.00",
+    "unit_price": "3000.00",
+    "amount": "3000.00"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 4,
+  "fields": {
+    "invoice": 2,
+    "description": "Documentation & Filing",
+    "quantity": "1.00",
+    "unit_price": "2000.00",
+    "amount": "2000.00"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 5,
+  "fields": {
+    "invoice": 3,
+    "description": "Legal Consultation Fee",
+    "quantity": "1.00",
+    "unit_price": "3000.00",
+    "amount": "3000.00"
+  }
+},
+{
+  "model": "payments.invoiceitem",
+  "pk": 6,
+  "fields": {
+    "invoice": 3,
+    "description": "Documentation & Filing",
+    "quantity": "1.00",
+    "unit_price": "2000.00",
+    "amount": "2000.00"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Legal Tips",
+    "slug": "legal-tips",
+    "description": "Helpful legal tips for everyday life",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.865Z"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Case Studies",
+    "slug": "case-studies",
+    "description": "Detailed analysis of notable legal cases",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.866Z"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 3,
+  "fields": {
+    "name": "Law Updates",
+    "slug": "law-updates",
+    "description": "Latest updates in Bangladesh law and judiciary",
+    "is_active": true,
+    "created_at": "2026-04-05T16:58:35.866Z"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 1,
+  "fields": {
+    "name": "criminal",
+    "slug": "criminal"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 2,
+  "fields": {
+    "name": "law",
+    "slug": "law"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 3,
+  "fields": {
+    "name": "property",
+    "slug": "property"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 4,
+  "fields": {
+    "name": "family",
+    "slug": "family"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 5,
+  "fields": {
+    "name": "corporate",
+    "slug": "corporate"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 6,
+  "fields": {
+    "name": "rights",
+    "slug": "rights"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 7,
+  "fields": {
+    "name": "court",
+    "slug": "court"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 8,
+  "fields": {
+    "name": "bangladesh",
+    "slug": "bangladesh"
+  }
+},
+{
+  "model": "blog.tag",
+  "pk": 9,
+  "fields": {
+    "name": "legal-advice",
+    "slug": "legal-advice"
+  }
+},
+{
+  "model": "landing.sitesettings",
+  "pk": 1,
+  "fields": {
+    "site_name": "The Chamber One",
+    "tagline": "Legal Excellence at Your Fingertips",
+    "logo": "",
+    "favicon": "",
+    "email": "info@thechamberone.com",
+    "phone": "+880-2-1234-5678",
+    "address": "House 42, Road 11, Banani, Dhaka 1213, Bangladesh",
+    "facebook_url": "",
+    "twitter_url": "",
+    "linkedin_url": "",
+    "instagram_url": "",
+    "youtube_url": "",
+    "meta_description": "The Chamber One - Premier Legal Services Platform",
+    "meta_keywords": "law, lawyer, legal services, bangladesh",
+    "updated_at": "2026-04-05T16:58:36.138Z"
+  }
+},
+{
+  "model": "landing.herosection",
+  "pk": 1,
+  "fields": {
+    "title": "Find the Right Lawyer",
+    "subtitle": "Expert legal professionals at your service.",
+    "background_image": "",
+    "button_text": "Find a Lawyer",
+    "button_link": "/lawyer-profile",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.139Z",
+    "updated_at": "2026-04-05T16:58:36.139Z"
+  }
+},
+{
+  "model": "landing.herosection",
+  "pk": 2,
+  "fields": {
+    "title": "Justice Made Accessible",
+    "subtitle": "Professional legal services for everyone.",
+    "background_image": "",
+    "button_text": "Get Started",
+    "button_link": "/register",
+    "is_active": true,
+    "order": 1,
+    "created_at": "2026-04-05T16:58:36.140Z",
+    "updated_at": "2026-04-05T16:58:36.140Z"
+  }
+},
+{
+  "model": "landing.service",
+  "pk": 1,
+  "fields": {
+    "title": "Legal Consultation",
+    "description": "Book online or in-person consultations with verified lawyers",
+    "icon_name": "gavel",
+    "icon_image": "",
+    "link": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.140Z"
+  }
+},
+{
+  "model": "landing.service",
+  "pk": 2,
+  "fields": {
+    "title": "Case Management",
+    "description": "Track your cases with real-time updates and document management",
+    "icon_name": "folder_open",
+    "icon_image": "",
+    "link": "",
+    "is_active": true,
+    "order": 1,
+    "created_at": "2026-04-05T16:58:36.141Z"
+  }
+},
+{
+  "model": "landing.service",
+  "pk": 3,
+  "fields": {
+    "title": "Document Verification",
+    "description": "Verify legal documents and stamps with our online tool",
+    "icon_name": "verified",
+    "icon_image": "",
+    "link": "",
+    "is_active": true,
+    "order": 2,
+    "created_at": "2026-04-05T16:58:36.142Z"
+  }
+},
+{
+  "model": "landing.service",
+  "pk": 4,
+  "fields": {
+    "title": "Payment Gateway",
+    "description": "Secure payments via bKash, Nagad, card, and bank transfer",
+    "icon_name": "payment",
+    "icon_image": "",
+    "link": "",
+    "is_active": true,
+    "order": 3,
+    "created_at": "2026-04-05T16:58:36.142Z"
+  }
+},
+{
+  "model": "landing.testimonial",
+  "pk": 1,
+  "fields": {
+    "client_name": "Rahim Uddin",
+    "client_title": "Business Owner",
+    "client_company": "",
+    "client_photo": "",
+    "content": "Excellent service! Found a great lawyer.",
+    "rating": 5,
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.143Z"
+  }
+},
+{
+  "model": "landing.testimonial",
+  "pk": 2,
+  "fields": {
+    "client_name": "Salma Khatun",
+    "client_title": "Teacher",
+    "client_company": "",
+    "client_photo": "",
+    "content": "Very helpful platform. Got legal advice quickly.",
+    "rating": 4,
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.144Z"
+  }
+},
+{
+  "model": "landing.testimonial",
+  "pk": 3,
+  "fields": {
+    "client_name": "Jamal Ahmed",
+    "client_title": "Engineer",
+    "client_company": "",
+    "client_photo": "",
+    "content": "The case tracking feature is amazing.",
+    "rating": 5,
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.144Z"
+  }
+},
+{
+  "model": "landing.faq",
+  "pk": 1,
+  "fields": {
+    "question": "How do I book a consultation?",
+    "answer": "Browse our lawyer directory, select a lawyer, and choose an available time slot.",
+    "category": "General",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.145Z"
+  }
+},
+{
+  "model": "landing.faq",
+  "pk": 2,
+  "fields": {
+    "question": "What payment methods are accepted?",
+    "answer": "We accept bKash, Nagad, credit/debit cards, and bank transfers.",
+    "category": "Payment",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.146Z"
+  }
+},
+{
+  "model": "landing.faq",
+  "pk": 3,
+  "fields": {
+    "question": "How can I track my case?",
+    "answer": "Log in and navigate to Cases to view active cases, timelines, and hearing dates.",
+    "category": "Cases",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.146Z"
+  }
+},
+{
+  "model": "landing.faq",
+  "pk": 4,
+  "fields": {
+    "question": "Is my data secure?",
+    "answer": "Yes, we use industry-standard encryption and security practices.",
+    "category": "Security",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.147Z"
+  }
+},
+{
+  "model": "landing.teammember",
+  "pk": 1,
+  "fields": {
+    "name": "Advocate Rahman",
+    "title": "Founding Partner",
+    "bio": "Senior advocate with 25+ years of experience.",
+    "photo": "",
+    "email": "",
+    "linkedin_url": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.148Z"
+  }
+},
+{
+  "model": "landing.teammember",
+  "pk": 2,
+  "fields": {
+    "name": "Barrister Sultana",
+    "title": "Managing Partner",
+    "bio": "International law specialist.",
+    "photo": "",
+    "email": "",
+    "linkedin_url": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-04-05T16:58:36.149Z"
+  }
+},
+{
+  "model": "landing.contactsubmission",
+  "pk": 1,
+  "fields": {
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "+8801799999999",
+    "subject": "General Inquiry",
+    "message": "I would like to know more about your legal services.",
+    "is_read": false,
+    "is_replied": false,
+    "created_at": "2026-04-05T16:58:36.152Z"
+  }
+},
+{
+  "model": "landing.contactsubmission",
+  "pk": 2,
+  "fields": {
+    "name": "API Test",
+    "email": "apitest@test.com",
+    "phone": "",
+    "subject": "Test",
+    "message": "Testing API",
+    "is_read": false,
+    "is_replied": false,
+    "created_at": "2026-04-05T17:02:11.616Z"
+  }
+},
+{
+  "model": "landing.statistic",
+  "pk": 1,
+  "fields": {
+    "label": "Happy Clients",
+    "value": "1500",
+    "icon_name": "people",
+    "suffix": "+",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "landing.statistic",
+  "pk": 2,
+  "fields": {
+    "label": "Cases Won",
+    "value": "3200",
+    "icon_name": "gavel",
+    "suffix": "+",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "landing.statistic",
+  "pk": 3,
+  "fields": {
+    "label": "Expert Lawyers",
+    "value": "50",
+    "icon_name": "school",
+    "suffix": "+",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "landing.statistic",
+  "pk": 4,
+  "fields": {
+    "label": "Years Experience",
+    "value": "15",
+    "icon_name": "schedule",
+    "suffix": "+",
+    "is_active": true,
+    "order": 0
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add User",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change User",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete User",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view User",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Client Profile",
+    "content_type": [
+      "accounts",
+      "clientprofile"
+    ],
+    "codename": "add_clientprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Client Profile",
+    "content_type": [
+      "accounts",
+      "clientprofile"
+    ],
+    "codename": "change_clientprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Client Profile",
+    "content_type": [
+      "accounts",
+      "clientprofile"
+    ],
+    "codename": "delete_clientprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Client Profile",
+    "content_type": [
+      "accounts",
+      "clientprofile"
+    ],
+    "codename": "view_clientprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Practice Area",
+    "content_type": [
+      "lawyers",
+      "practicearea"
+    ],
+    "codename": "add_practicearea"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Practice Area",
+    "content_type": [
+      "lawyers",
+      "practicearea"
+    ],
+    "codename": "change_practicearea"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Practice Area",
+    "content_type": [
+      "lawyers",
+      "practicearea"
+    ],
+    "codename": "delete_practicearea"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Practice Area",
+    "content_type": [
+      "lawyers",
+      "practicearea"
+    ],
+    "codename": "view_practicearea"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Lawyer Profile",
+    "content_type": [
+      "lawyers",
+      "lawyerprofile"
+    ],
+    "codename": "add_lawyerprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Lawyer Profile",
+    "content_type": [
+      "lawyers",
+      "lawyerprofile"
+    ],
+    "codename": "change_lawyerprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Lawyer Profile",
+    "content_type": [
+      "lawyers",
+      "lawyerprofile"
+    ],
+    "codename": "delete_lawyerprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Lawyer Profile",
+    "content_type": [
+      "lawyers",
+      "lawyerprofile"
+    ],
+    "codename": "view_lawyerprofile"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Lawyer Availability",
+    "content_type": [
+      "lawyers",
+      "lawyeravailability"
+    ],
+    "codename": "add_lawyeravailability"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Lawyer Availability",
+    "content_type": [
+      "lawyers",
+      "lawyeravailability"
+    ],
+    "codename": "change_lawyeravailability"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Lawyer Availability",
+    "content_type": [
+      "lawyers",
+      "lawyeravailability"
+    ],
+    "codename": "delete_lawyeravailability"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Lawyer Availability",
+    "content_type": [
+      "lawyers",
+      "lawyeravailability"
+    ],
+    "codename": "view_lawyeravailability"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Appointment",
+    "content_type": [
+      "appointments",
+      "appointment"
+    ],
+    "codename": "add_appointment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Appointment",
+    "content_type": [
+      "appointments",
+      "appointment"
+    ],
+    "codename": "change_appointment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Appointment",
+    "content_type": [
+      "appointments",
+      "appointment"
+    ],
+    "codename": "delete_appointment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Appointment",
+    "content_type": [
+      "appointments",
+      "appointment"
+    ],
+    "codename": "view_appointment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Case",
+    "content_type": [
+      "cases",
+      "case"
+    ],
+    "codename": "add_case"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Case",
+    "content_type": [
+      "cases",
+      "case"
+    ],
+    "codename": "change_case"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Case",
+    "content_type": [
+      "cases",
+      "case"
+    ],
+    "codename": "delete_case"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Case",
+    "content_type": [
+      "cases",
+      "case"
+    ],
+    "codename": "view_case"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Case Document",
+    "content_type": [
+      "cases",
+      "casedocument"
+    ],
+    "codename": "add_casedocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Case Document",
+    "content_type": [
+      "cases",
+      "casedocument"
+    ],
+    "codename": "change_casedocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Case Document",
+    "content_type": [
+      "cases",
+      "casedocument"
+    ],
+    "codename": "delete_casedocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Case Document",
+    "content_type": [
+      "cases",
+      "casedocument"
+    ],
+    "codename": "view_casedocument"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Case Note",
+    "content_type": [
+      "cases",
+      "casenote"
+    ],
+    "codename": "add_casenote"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Case Note",
+    "content_type": [
+      "cases",
+      "casenote"
+    ],
+    "codename": "change_casenote"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Case Note",
+    "content_type": [
+      "cases",
+      "casenote"
+    ],
+    "codename": "delete_casenote"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Case Note",
+    "content_type": [
+      "cases",
+      "casenote"
+    ],
+    "codename": "view_casenote"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Case Timeline Event",
+    "content_type": [
+      "cases",
+      "casetimeline"
+    ],
+    "codename": "add_casetimeline"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Case Timeline Event",
+    "content_type": [
+      "cases",
+      "casetimeline"
+    ],
+    "codename": "change_casetimeline"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Case Timeline Event",
+    "content_type": [
+      "cases",
+      "casetimeline"
+    ],
+    "codename": "delete_casetimeline"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Case Timeline Event",
+    "content_type": [
+      "cases",
+      "casetimeline"
+    ],
+    "codename": "view_casetimeline"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Invoice",
+    "content_type": [
+      "payments",
+      "invoice"
+    ],
+    "codename": "add_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Invoice",
+    "content_type": [
+      "payments",
+      "invoice"
+    ],
+    "codename": "change_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Invoice",
+    "content_type": [
+      "payments",
+      "invoice"
+    ],
+    "codename": "delete_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Invoice",
+    "content_type": [
+      "payments",
+      "invoice"
+    ],
+    "codename": "view_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Invoice Item",
+    "content_type": [
+      "payments",
+      "invoiceitem"
+    ],
+    "codename": "add_invoiceitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Invoice Item",
+    "content_type": [
+      "payments",
+      "invoiceitem"
+    ],
+    "codename": "change_invoiceitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Invoice Item",
+    "content_type": [
+      "payments",
+      "invoiceitem"
+    ],
+    "codename": "delete_invoiceitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Invoice Item",
+    "content_type": [
+      "payments",
+      "invoiceitem"
+    ],
+    "codename": "view_invoiceitem"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Payment",
+    "content_type": [
+      "payments",
+      "payment"
+    ],
+    "codename": "add_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Payment",
+    "content_type": [
+      "payments",
+      "payment"
+    ],
+    "codename": "change_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Payment",
+    "content_type": [
+      "payments",
+      "payment"
+    ],
+    "codename": "delete_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Payment",
+    "content_type": [
+      "payments",
+      "payment"
+    ],
+    "codename": "view_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Subscription",
+    "content_type": [
+      "payments",
+      "subscription"
+    ],
+    "codename": "add_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Subscription",
+    "content_type": [
+      "payments",
+      "subscription"
+    ],
+    "codename": "change_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Subscription",
+    "content_type": [
+      "payments",
+      "subscription"
+    ],
+    "codename": "delete_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Subscription",
+    "content_type": [
+      "payments",
+      "subscription"
+    ],
+    "codename": "view_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Category",
+    "content_type": [
+      "blog",
+      "category"
+    ],
+    "codename": "add_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Category",
+    "content_type": [
+      "blog",
+      "category"
+    ],
+    "codename": "change_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Category",
+    "content_type": [
+      "blog",
+      "category"
+    ],
+    "codename": "delete_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Category",
+    "content_type": [
+      "blog",
+      "category"
+    ],
+    "codename": "view_category"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Tag",
+    "content_type": [
+      "blog",
+      "tag"
+    ],
+    "codename": "add_tag"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Tag",
+    "content_type": [
+      "blog",
+      "tag"
+    ],
+    "codename": "change_tag"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Tag",
+    "content_type": [
+      "blog",
+      "tag"
+    ],
+    "codename": "delete_tag"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Tag",
+    "content_type": [
+      "blog",
+      "tag"
+    ],
+    "codename": "view_tag"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Blog Post",
+    "content_type": [
+      "blog",
+      "blogpost"
+    ],
+    "codename": "add_blogpost"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Blog Post",
+    "content_type": [
+      "blog",
+      "blogpost"
+    ],
+    "codename": "change_blogpost"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Blog Post",
+    "content_type": [
+      "blog",
+      "blogpost"
+    ],
+    "codename": "delete_blogpost"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Blog Post",
+    "content_type": [
+      "blog",
+      "blogpost"
+    ],
+    "codename": "view_blogpost"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Comment",
+    "content_type": [
+      "blog",
+      "comment"
+    ],
+    "codename": "add_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Comment",
+    "content_type": [
+      "blog",
+      "comment"
+    ],
+    "codename": "change_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Comment",
+    "content_type": [
+      "blog",
+      "comment"
+    ],
+    "codename": "delete_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Comment",
+    "content_type": [
+      "blog",
+      "comment"
+    ],
+    "codename": "view_comment"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Contact Submission",
+    "content_type": [
+      "landing",
+      "contactsubmission"
+    ],
+    "codename": "add_contactsubmission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Contact Submission",
+    "content_type": [
+      "landing",
+      "contactsubmission"
+    ],
+    "codename": "change_contactsubmission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Contact Submission",
+    "content_type": [
+      "landing",
+      "contactsubmission"
+    ],
+    "codename": "delete_contactsubmission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Contact Submission",
+    "content_type": [
+      "landing",
+      "contactsubmission"
+    ],
+    "codename": "view_contactsubmission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add FAQ",
+    "content_type": [
+      "landing",
+      "faq"
+    ],
+    "codename": "add_faq"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change FAQ",
+    "content_type": [
+      "landing",
+      "faq"
+    ],
+    "codename": "change_faq"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete FAQ",
+    "content_type": [
+      "landing",
+      "faq"
+    ],
+    "codename": "delete_faq"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view FAQ",
+    "content_type": [
+      "landing",
+      "faq"
+    ],
+    "codename": "view_faq"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Hero Section",
+    "content_type": [
+      "landing",
+      "herosection"
+    ],
+    "codename": "add_herosection"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Hero Section",
+    "content_type": [
+      "landing",
+      "herosection"
+    ],
+    "codename": "change_herosection"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Hero Section",
+    "content_type": [
+      "landing",
+      "herosection"
+    ],
+    "codename": "delete_herosection"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Hero Section",
+    "content_type": [
+      "landing",
+      "herosection"
+    ],
+    "codename": "view_herosection"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Partner",
+    "content_type": [
+      "landing",
+      "partner"
+    ],
+    "codename": "add_partner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Partner",
+    "content_type": [
+      "landing",
+      "partner"
+    ],
+    "codename": "change_partner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Partner",
+    "content_type": [
+      "landing",
+      "partner"
+    ],
+    "codename": "delete_partner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Partner",
+    "content_type": [
+      "landing",
+      "partner"
+    ],
+    "codename": "view_partner"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Service",
+    "content_type": [
+      "landing",
+      "service"
+    ],
+    "codename": "add_service"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Service",
+    "content_type": [
+      "landing",
+      "service"
+    ],
+    "codename": "change_service"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Service",
+    "content_type": [
+      "landing",
+      "service"
+    ],
+    "codename": "delete_service"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Service",
+    "content_type": [
+      "landing",
+      "service"
+    ],
+    "codename": "view_service"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Site Settings",
+    "content_type": [
+      "landing",
+      "sitesettings"
+    ],
+    "codename": "add_sitesettings"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Site Settings",
+    "content_type": [
+      "landing",
+      "sitesettings"
+    ],
+    "codename": "change_sitesettings"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Site Settings",
+    "content_type": [
+      "landing",
+      "sitesettings"
+    ],
+    "codename": "delete_sitesettings"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Site Settings",
+    "content_type": [
+      "landing",
+      "sitesettings"
+    ],
+    "codename": "view_sitesettings"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Statistic",
+    "content_type": [
+      "landing",
+      "statistic"
+    ],
+    "codename": "add_statistic"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Statistic",
+    "content_type": [
+      "landing",
+      "statistic"
+    ],
+    "codename": "change_statistic"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Statistic",
+    "content_type": [
+      "landing",
+      "statistic"
+    ],
+    "codename": "delete_statistic"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Statistic",
+    "content_type": [
+      "landing",
+      "statistic"
+    ],
+    "codename": "view_statistic"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Team Member",
+    "content_type": [
+      "landing",
+      "teammember"
+    ],
+    "codename": "add_teammember"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Team Member",
+    "content_type": [
+      "landing",
+      "teammember"
+    ],
+    "codename": "change_teammember"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Team Member",
+    "content_type": [
+      "landing",
+      "teammember"
+    ],
+    "codename": "delete_teammember"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Team Member",
+    "content_type": [
+      "landing",
+      "teammember"
+    ],
+    "codename": "view_teammember"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Testimonial",
+    "content_type": [
+      "landing",
+      "testimonial"
+    ],
+    "codename": "add_testimonial"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Testimonial",
+    "content_type": [
+      "landing",
+      "testimonial"
+    ],
+    "codename": "change_testimonial"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Testimonial",
+    "content_type": [
+      "landing",
+      "testimonial"
+    ],
+    "codename": "delete_testimonial"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Testimonial",
+    "content_type": [
+      "landing",
+      "testimonial"
+    ],
+    "codename": "view_testimonial"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Blacklisted Token",
+    "content_type": [
+      "token_blacklist",
+      "blacklistedtoken"
+    ],
+    "codename": "add_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Blacklisted Token",
+    "content_type": [
+      "token_blacklist",
+      "blacklistedtoken"
+    ],
+    "codename": "change_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Blacklisted Token",
+    "content_type": [
+      "token_blacklist",
+      "blacklistedtoken"
+    ],
+    "codename": "delete_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Blacklisted Token",
+    "content_type": [
+      "token_blacklist",
+      "blacklistedtoken"
+    ],
+    "codename": "view_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add Outstanding Token",
+    "content_type": [
+      "token_blacklist",
+      "outstandingtoken"
+    ],
+    "codename": "add_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change Outstanding Token",
+    "content_type": [
+      "token_blacklist",
+      "outstandingtoken"
+    ],
+    "codename": "change_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete Outstanding Token",
+    "content_type": [
+      "token_blacklist",
+      "outstandingtoken"
+    ],
+    "codename": "delete_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view Outstanding Token",
+    "content_type": [
+      "token_blacklist",
+      "outstandingtoken"
+    ],
+    "codename": "view_outstandingtoken"
+  }
+},
+{
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1000000$V74xrfV2yyFLPDNRsvZpzz$YkwxpH1mmKa+OK7viQlfGillNFTN18kWfrCpiYcZsEQ=",
-    "last_login": "2026-01-26T14:26:15.596Z",
+    "password": "pbkdf2_sha256$600000$22NfRY2L4lccncJnDqUA8H$3e7GmWzxyDLV2ui2oNF6P1t4oAyEsEoHAbMcOmz82zo=",
+    "last_login": null,
     "is_superuser": true,
-    "first_name": "Admin",
-    "last_name": "User",
+    "first_name": "shehab",
+    "last_name": "",
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2026-01-26T14:23:33.809Z",
-    "email": "admin@example.com",
+    "date_joined": "2026-04-05T16:23:39.908Z",
+    "email": "92shehab@gmail.com",
     "role": "admin",
-    "phone": null,
+    "phone": "01796995806",
     "address": null,
-    "profile_photo": "",
+    "profile_photo": "profiles/profile_1.jpeg",
     "is_verified": false,
-    "created_at": "2026-01-26T14:23:34.350Z",
-    "updated_at": "2026-01-26T14:23:34.350Z",
+    "created_at": "2026-04-05T16:23:40.017Z",
+    "updated_at": "2026-04-05T17:32:34.421Z",
     "groups": [],
     "user_permissions": []
   }
@@ -25,24 +2382,1704 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1000000$FaINIqHL4Qxr7UkqiXBf8Q$893eQNFkZbGl6h+zmkyGy2GNFUSgkZZAeOP/oczW0Fk=",
-    "last_login": "2026-02-23T16:22:40.303Z",
+    "password": "pbkdf2_sha256$600000$a2a5ZgUQOZkQCNDftZL8nk$XLut6cvV9K01XjuhCc1iTxexSJT5HcQMxkN9tplrp+E=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Rahim",
+    "last_name": "Uddin",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.472Z",
+    "email": "rahim@example.com",
+    "role": "lawyer",
+    "phone": "+8801711111111",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.472Z",
+    "updated_at": "2026-04-05T16:58:35.544Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$n1HSE0ug9id2zjhH6c5OjT$Dc256PVP3LFv5GWU/uJ6R/vg8E5aH5KP/u7+6cgKrdU=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Fatema",
+    "last_name": "Begum",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.554Z",
+    "email": "fatema@example.com",
+    "role": "lawyer",
+    "phone": "+8801722222222",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.554Z",
+    "updated_at": "2026-04-05T16:58:35.635Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$qGIgWPoNGDNErUjc187A0u$gBe4L7+u2zJ0mQZxomoGC4dXELqvWtXqsA1oXWXWutE=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Karim",
+    "last_name": "Ahmed",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.640Z",
+    "email": "karim@example.com",
+    "role": "lawyer",
+    "phone": "+8801733333333",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.640Z",
+    "updated_at": "2026-04-05T16:58:35.711Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$crRdgJDrLCGpujAoUeO2aU$RDD4hpvM9FUy9yoVy0Eg+Luldmn6bnXqczGTlNAYE2k=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Naima",
+    "last_name": "Sultana",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.714Z",
+    "email": "naima@example.com",
+    "role": "lawyer",
+    "phone": "+8801744444444",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.714Z",
+    "updated_at": "2026-04-05T16:58:35.786Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$v7Sh7CponuSemumkmu72KA$E17PLicje8wb8BXgTXqjYqCKZZLFKUZPdSBTUFlxdGU=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Hassan",
+    "last_name": "Ali",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.790Z",
+    "email": "hassan@example.com",
+    "role": "lawyer",
+    "phone": "+8801755555555",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.791Z",
+    "updated_at": "2026-04-05T16:58:35.861Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$LHSoQGne6MIV1wE7nfP47I$g9IEAiAazo3U7t4F2kbILhU6LyenXzS/SgALLBwRN10=",
+    "last_login": "2026-04-05T17:20:47.046Z",
     "is_superuser": true,
-    "first_name": "zisa",
-    "last_name": "zisa",
+    "first_name": "Admin",
+    "last_name": "User",
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2026-02-03T05:01:30.446Z",
-    "email": "zisa9065@gmail.com",
+    "date_joined": "2026-04-05T16:58:35.876Z",
+    "email": "admin@thechamberone.com",
     "role": "admin",
     "phone": null,
     "address": null,
     "profile_photo": "",
     "is_verified": false,
-    "created_at": "2026-02-03T05:01:30.986Z",
-    "updated_at": "2026-02-03T05:01:30.986Z",
+    "created_at": "2026-04-05T16:58:35.876Z",
+    "updated_at": "2026-04-05T16:58:35.949Z",
     "groups": [],
     "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$0ayLSPkd0vBGMemaRYC6SC$rY/ix4g3fuatbv9bLZsbZJX1BMIshoFnJgOwIHZmO+E=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Aminul",
+    "last_name": "Khan",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:35.964Z",
+    "email": "client@example.com",
+    "role": "client",
+    "phone": "+8801766666666",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:35.964Z",
+    "updated_at": "2026-04-05T16:58:36.035Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$CvC9rbwju5lwaMHE05RQ9r$5CPN4jBNytCHZaMM46ozkhy0gMaGueVHfp0j60WJByo=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Roksana",
+    "last_name": "Akter",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T16:58:36.036Z",
+    "email": "client2@example.com",
+    "role": "client",
+    "phone": "+8801777777777",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T16:58:36.036Z",
+    "updated_at": "2026-04-05T16:58:36.106Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$7WqHYrwmIgsGNDFN4Lj9lU$R1yIRJ22OPe3ER50HRU6TvUqMeeLMuDmIfHS4IDESZM=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Test",
+    "last_name": "User",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T17:02:11.439Z",
+    "email": "newuser@test.com",
+    "role": "client",
+    "phone": null,
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T17:02:11.509Z",
+    "updated_at": "2026-04-05T17:02:11.509Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$L9XFOhuTdqRqmaDnq7nX2b$P817zePfC1boRohD3FAfcmbE2k47HquK+ZmLD3TJJOo=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Kamrul",
+    "last_name": "Islam",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T17:05:07.278Z",
+    "email": "kamrul@thechamberone.com",
+    "role": "lawyer",
+    "phone": "+8801766666666",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T17:05:07.278Z",
+    "updated_at": "2026-04-05T17:05:07.349Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$bdGyd8Pi7VV5ezhxZ7PiLD$G/VwHLzxRGxKV2zbObyRRVG9ii+paOkTx+hCONL43CM=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Mohammad Mohsin",
+    "last_name": "Kabir",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-05T17:05:07.360Z",
+    "email": "mohsin@thechamberone.com",
+    "role": "lawyer",
+    "phone": "+8801777777777",
+    "address": null,
+    "profile_photo": "",
+    "is_verified": false,
+    "created_at": "2026-04-05T17:05:07.360Z",
+    "updated_at": "2026-04-05T17:05:07.433Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "rahim@example.com"
+    ],
+    "profession": "Advocate",
+    "specialization": "Criminal Defense",
+    "gender": "male",
+    "years_experience": 12,
+    "solved_cases": 120,
+    "consultancy_fees": "5000.00",
+    "qualifications": "LL.B, LL.M, Advocate - Dhaka Judge Court",
+    "bio": "Senior criminal lawyer with over 12 years of experience in the Dhaka courts. Specializes in criminal defense and has successfully represented hundreds of clients.",
+    "location": "Dhaka Judge Court, Dhaka",
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "chamber_info": "Chamber #45, Dhaka Judge Court Bar, Dhaka-1000",
+    "rating": "4.70",
+    "is_available": true,
+    "created_at": "2026-04-05T16:58:35.551Z",
+    "updated_at": "2026-04-05T17:33:59.936Z",
+    "practice_areas": [
+      3,
+      1
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "fatema@example.com"
+    ],
+    "profession": "Barrister",
+    "specialization": "Family Law",
+    "gender": "female",
+    "years_experience": 8,
+    "solved_cases": 85,
+    "consultancy_fees": "4000.00",
+    "qualifications": "LL.B (Hons), Barrister-at-Law (Lincoln's Inn)",
+    "bio": "Experienced family law practitioner dedicated to resolving domestic disputes, custody battles, and divorce proceedings with compassion and expertise.",
+    "location": "Chittagong District Court, Chittagong",
+    "city": "Chittagong",
+    "district": "Chittagong",
+    "chamber_info": "Chamber #12, Chittagong Bar Association, Chittagong-4000",
+    "rating": "4.50",
+    "is_available": true,
+    "created_at": "2026-04-05T16:58:35.636Z",
+    "updated_at": "2026-04-05T17:33:59.938Z",
+    "practice_areas": [
+      3,
+      2
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "karim@example.com"
+    ],
+    "profession": "Senior Advocate",
+    "specialization": "Corporate Law",
+    "gender": "male",
+    "years_experience": 15,
+    "solved_cases": 200,
+    "consultancy_fees": "8000.00",
+    "qualifications": "LL.B, LL.M (Corporate Law), Advocate - Supreme Court of Bangladesh",
+    "bio": "Leading corporate law expert specializing in business formation, mergers & acquisitions, and regulatory compliance for both local and international firms.",
+    "location": "Gulshan Corporate Office, Dhaka",
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "chamber_info": "Suite 8B, Gulshan Tower, Gulshan-2, Dhaka-1212",
+    "rating": "4.90",
+    "is_available": true,
+    "created_at": "2026-04-05T16:58:35.712Z",
+    "updated_at": "2026-04-05T17:33:59.940Z",
+    "practice_areas": [
+      4,
+      5
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "naima@example.com"
+    ],
+    "profession": "Advocate",
+    "specialization": "Property Law",
+    "gender": "female",
+    "years_experience": 10,
+    "solved_cases": 95,
+    "consultancy_fees": "4500.00",
+    "qualifications": "LL.B, LL.M, Advocate - Rajshahi District Court",
+    "bio": "Property law specialist handling land disputes, real estate transactions, and boundary conflicts. Known for meticulous documentation and strong court representation.",
+    "location": "Rajshahi District Court, Rajshahi",
+    "city": "Rajshahi",
+    "district": "Rajshahi",
+    "chamber_info": "Chamber #22, Rajshahi Bar Association, Rajshahi-6000",
+    "rating": "4.60",
+    "is_available": true,
+    "created_at": "2026-04-05T16:58:35.788Z",
+    "updated_at": "2026-04-05T17:33:59.941Z",
+    "practice_areas": [
+      3,
+      5
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "hassan@example.com"
+    ],
+    "profession": "Barrister",
+    "specialization": "Criminal and Civil Law",
+    "gender": "male",
+    "years_experience": 7,
+    "solved_cases": 60,
+    "consultancy_fees": "3500.00",
+    "qualifications": "LL.B (Hons), Barrister-at-Law",
+    "bio": "Versatile legal professional with extensive experience in both criminal and civil matters. Committed to justice and fair representation for all clients.",
+    "location": "Khulna District Court, Khulna",
+    "city": "Khulna",
+    "district": "Khulna",
+    "chamber_info": "Chamber #8, Khulna Bar Association, Khulna-9100",
+    "rating": "4.30",
+    "is_available": true,
+    "created_at": "2026-04-05T16:58:35.863Z",
+    "updated_at": "2026-04-05T17:33:59.943Z",
+    "practice_areas": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "kamrul@thechamberone.com"
+    ],
+    "profession": "Assistant Attorney General",
+    "specialization": "Constitutional & Administrative Law",
+    "gender": "male",
+    "years_experience": 14,
+    "solved_cases": 180,
+    "consultancy_fees": "10000.00",
+    "qualifications": "LL.B, LL.M, Advocate - Supreme Court of Bangladesh, Assistant Attorney General of Bangladesh",
+    "bio": "Advocate Kamrul Islam is a respected legal practitioner and dedicated public law advocate serving as an Assistant Attorney General of Bangladesh at the Attorney General's Office. In his role, he represents the Government of Bangladesh in litigation before the courts and upholds the legal interests of the State with professionalism and integrity.\n\nWith a strong foundation in legal practice, Advocate Islam regularly appears in the Supreme Court of Bangladesh, handling a wide range of cases involving constitutional, civil, and administrative law. His advocacy is marked by meticulous preparation, persuasive argumentation, and a deep commitment to justice.\n\nAs Assistant Attorney General, he assists in formulating legal strategies for state representation, prepares legal opinions, and contributes to advancing the rule of law in Bangladesh's judicial system. His dedication to legal excellence and public service has made him a trusted figure among peers and clients alike.\n\nAdvocate Kamrul Islam continues to work steadfastly to promote fairness, uphold legal rights, and contribute meaningfully to the development of legal jurisprudence in Bangladesh.",
+    "location": "Attorney General's Office, Supreme Court of Bangladesh, Dhaka",
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "chamber_info": "Attorney General's Office, Supreme Court of Bangladesh, Ramna, Dhaka-1000",
+    "rating": "4.85",
+    "is_available": true,
+    "created_at": "2026-04-05T17:05:07.356Z",
+    "updated_at": "2026-04-05T17:33:59.944Z",
+    "practice_areas": [
+      7,
+      3,
+      6
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "mohsin@thechamberone.com"
+    ],
+    "profession": "Deputy Attorney General",
+    "specialization": "Constitutional, Civil & Administrative Law",
+    "gender": "male",
+    "years_experience": 18,
+    "solved_cases": 250,
+    "consultancy_fees": "15000.00",
+    "qualifications": "LL.B, LL.M, Advocate - Supreme Court of Bangladesh, Deputy Attorney General of Bangladesh",
+    "bio": "Advocate Mohammad Mohsin Kabir is a dedicated legal professional serving as a Deputy Attorney General of Bangladesh at the Attorney General's Office, Government of Bangladesh. In this senior legal role, he represents the State in high-level litigation and contributes significantly to the administration of justice in the country.\n\nWith a strong foundation in legal practice, Advocate Kabir regularly appears before the Supreme Court of Bangladesh, where he advocates on behalf of the Government in constitutional, civil, and administrative matters. His work reflects a deep commitment to upholding the rule of law and ensuring that the State's legal positions are articulated with clarity and integrity.\n\nAs Deputy Attorney General, he plays a key role in formulating legal strategies, preparing authoritative legal opinions, and managing complex litigation on behalf of the government. Advocate Kabir's professionalism, analytical acumen, and courtroom presence have earned him respect among peers, judicial officers, and clients alike.\n\nHis legal philosophy emphasizes fairness, rigorous legal reasoning, and public service, making him a valued member of Bangladesh's legal community and a trusted representative of the State in the highest courts.",
+    "location": "Attorney General's Office, Supreme Court of Bangladesh, Dhaka",
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "chamber_info": "Attorney General's Office, Supreme Court of Bangladesh, Ramna, Dhaka-1000",
+    "rating": "4.95",
+    "is_available": true,
+    "created_at": "2026-04-05T17:05:07.434Z",
+    "updated_at": "2026-04-05T17:33:59.946Z",
+    "practice_areas": [
+      7,
+      3,
+      6
+    ]
+  }
+},
+{
+  "model": "lawyers.lawyerprofile",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "92shehab@gmail.com"
+    ],
+    "profession": "test",
+    "specialization": "laywer",
+    "gender": "female",
+    "years_experience": 12,
+    "solved_cases": 12,
+    "consultancy_fees": "0.00",
+    "qualifications": "",
+    "bio": "[LOCATION] Dhaka",
+    "location": "Dhaka",
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "chamber_info": "Dhaka",
+    "rating": "4.50",
+    "is_available": true,
+    "created_at": "2026-04-05T17:32:18.162Z",
+    "updated_at": "2026-04-05T17:32:34.423Z",
+    "practice_areas": [
+      9,
+      8,
+      10
+    ]
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 1,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-21T04:58:36.117Z",
+    "duration_minutes": 60,
+    "status": "pending",
+    "appointment_type": "follow_up",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.119Z",
+    "updated_at": "2026-04-05T16:58:36.119Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 2,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 1,
+    "date_time": "2026-04-23T04:58:36.117Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Rahim Uddin",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.121Z",
+    "updated_at": "2026-04-05T16:58:36.121Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 3,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 4,
+    "date_time": "2026-04-27T01:58:36.117Z",
+    "duration_minutes": 60,
+    "status": "pending",
+    "appointment_type": "follow_up",
+    "notes": "",
+    "client_notes": "Consultation with Naima Sultana",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.122Z",
+    "updated_at": "2026-04-05T16:58:36.122Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 4,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-05-03T04:58:36.117Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.123Z",
+    "updated_at": "2026-04-05T16:58:36.123Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 5,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 1,
+    "date_time": "2026-04-12T02:58:36.117Z",
+    "duration_minutes": 60,
+    "status": "confirmed",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Rahim Uddin",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.124Z",
+    "updated_at": "2026-04-05T16:58:36.124Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 6,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 4,
+    "date_time": "2026-04-11T02:58:36.117Z",
+    "duration_minutes": 30,
+    "status": "completed",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Naima Sultana",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T16:58:36.125Z",
+    "updated_at": "2026-04-05T16:58:36.125Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 7,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-05-06T06:05:07.443Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.446Z",
+    "updated_at": "2026-04-05T17:05:07.446Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 8,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-21T02:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "pending",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.448Z",
+    "updated_at": "2026-04-05T17:05:07.448Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 9,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-04-18T07:05:07.443Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "follow_up",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.449Z",
+    "updated_at": "2026-04-05T17:05:07.449Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 10,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-12T07:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "confirmed",
+    "appointment_type": "follow_up",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.451Z",
+    "updated_at": "2026-04-05T17:05:07.451Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 11,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-30T09:05:07.443Z",
+    "duration_minutes": 30,
+    "status": "confirmed",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.453Z",
+    "updated_at": "2026-04-05T17:05:07.453Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 12,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-04-08T06:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.454Z",
+    "updated_at": "2026-04-05T17:05:07.454Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 13,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-15T06:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.455Z",
+    "updated_at": "2026-04-05T17:05:07.455Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 14,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-26T02:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "pending",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.456Z",
+    "updated_at": "2026-04-05T17:05:07.456Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 15,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-04-29T02:05:07.443Z",
+    "duration_minutes": 60,
+    "status": "confirmed",
+    "appointment_type": "document_review",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:05:07.457Z",
+    "updated_at": "2026-04-05T17:05:07.457Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 16,
+  "fields": {
+    "client": [
+      "admin@thechamberone.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-06T06:30:00Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "testing",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:31:06.408Z",
+    "updated_at": "2026-04-05T17:31:06.408Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 17,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-25T05:33:59.954Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.957Z",
+    "updated_at": "2026-04-05T17:33:59.957Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 18,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-11T09:33:59.954Z",
+    "duration_minutes": 30,
+    "status": "completed",
+    "appointment_type": "follow_up",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.958Z",
+    "updated_at": "2026-04-05T17:33:59.958Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 19,
+  "fields": {
+    "client": [
+      "newuser@test.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-05-04T07:33:59.954Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.959Z",
+    "updated_at": "2026-04-05T17:33:59.959Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 20,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-20T03:33:59.954Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.960Z",
+    "updated_at": "2026-04-05T17:33:59.960Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 21,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-04-20T03:33:59.954Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "consultation",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.961Z",
+    "updated_at": "2026-04-05T17:33:59.961Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 22,
+  "fields": {
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-04-29T06:33:59.954Z",
+    "duration_minutes": 60,
+    "status": "completed",
+    "appointment_type": "document_review",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.962Z",
+    "updated_at": "2026-04-05T17:33:59.962Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 23,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 7,
+    "date_time": "2026-04-12T09:33:59.954Z",
+    "duration_minutes": 30,
+    "status": "confirmed",
+    "appointment_type": "document_review",
+    "notes": "",
+    "client_notes": "Consultation with Mohammad Mohsin Kabir",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.964Z",
+    "updated_at": "2026-04-05T17:33:59.964Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 24,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 3,
+    "date_time": "2026-05-03T02:33:59.954Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Karim Ahmed",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.965Z",
+    "updated_at": "2026-04-05T17:33:59.965Z"
+  }
+},
+{
+  "model": "appointments.appointment",
+  "pk": 25,
+  "fields": {
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 6,
+    "date_time": "2026-04-07T06:33:59.954Z",
+    "duration_minutes": 30,
+    "status": "pending",
+    "appointment_type": "case_review",
+    "notes": "",
+    "client_notes": "Consultation with Kamrul Islam",
+    "lawyer_notes": "",
+    "meeting_link": null,
+    "created_at": "2026-04-05T17:33:59.966Z",
+    "updated_at": "2026-04-05T17:33:59.966Z"
+  }
+},
+{
+  "model": "cases.case",
+  "pk": 1,
+  "fields": {
+    "title": "Property Dispute - Khan vs Ahmed",
+    "case_number": "CS-2026-001",
+    "description": "Property boundary dispute in Dhaka involving contested land ownership between two neighboring families.",
+    "court_name": "Dhaka Judge Court",
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 4,
+    "practice_area": 5,
+    "status": "open",
+    "next_hearing_date": "2026-04-17T16:58:36.107Z",
+    "filing_date": "2026-03-08",
+    "closing_date": null,
+    "notes": "",
+    "created_at": "2026-04-05T16:58:36.109Z",
+    "updated_at": "2026-04-05T16:58:36.109Z"
+  }
+},
+{
+  "model": "cases.case",
+  "pk": 2,
+  "fields": {
+    "title": "Criminal Appeal - State vs Hasan",
+    "case_number": "CR-2026-015",
+    "description": "Criminal appeal against conviction. The defendant seeks to overturn the lower court verdict on grounds of insufficient evidence.",
+    "court_name": "High Court Division, Dhaka",
+    "client": [
+      "client@example.com"
+    ],
+    "lawyer": 1,
+    "practice_area": 1,
+    "status": "in_progress",
+    "next_hearing_date": "2026-04-25T16:58:36.107Z",
+    "filing_date": "2026-02-04",
+    "closing_date": null,
+    "notes": "",
+    "created_at": "2026-04-05T16:58:36.113Z",
+    "updated_at": "2026-04-05T16:58:36.113Z"
+  }
+},
+{
+  "model": "cases.case",
+  "pk": 3,
+  "fields": {
+    "title": "Divorce Settlement - Akter vs Akter",
+    "case_number": "FM-2026-008",
+    "description": "Divorce case involving custody dispute and asset division between the parties.",
+    "court_name": "Family Court, Dhaka",
+    "client": [
+      "client2@example.com"
+    ],
+    "lawyer": 2,
+    "practice_area": 2,
+    "status": "pending",
+    "next_hearing_date": "2026-04-10T16:58:36.107Z",
+    "filing_date": "2026-02-24",
+    "closing_date": null,
+    "notes": "",
+    "created_at": "2026-04-05T16:58:36.116Z",
+    "updated_at": "2026-04-05T16:58:36.116Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 1,
+  "fields": {
+    "case": 1,
+    "date": "2026-03-08",
+    "event": "Case Filed",
+    "description": "Initial filing of the property dispute case",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.111Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 2,
+  "fields": {
+    "case": 1,
+    "date": "2026-03-22",
+    "event": "First Hearing",
+    "description": "Both parties presented initial arguments",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.112Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 3,
+  "fields": {
+    "case": 2,
+    "date": "2026-02-04",
+    "event": "Appeal Filed",
+    "description": "Appeal petition submitted to High Court",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.114Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 4,
+  "fields": {
+    "case": 2,
+    "date": "2026-02-19",
+    "event": "Hearing Scheduled",
+    "description": "Court accepted the appeal and scheduled hearing",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.114Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 5,
+  "fields": {
+    "case": 2,
+    "date": "2026-03-06",
+    "event": "Evidence Reviewed",
+    "description": "Judge reviewed additional evidence submitted by defense",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.114Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 6,
+  "fields": {
+    "case": 3,
+    "date": "2026-02-24",
+    "event": "Case Filed",
+    "description": "Divorce petition filed in Family Court",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.116Z"
+  }
+},
+{
+  "model": "cases.casetimeline",
+  "pk": 7,
+  "fields": {
+    "case": 3,
+    "date": "2026-03-16",
+    "event": "Mediation Attempted",
+    "description": "Court-ordered mediation session conducted",
+    "created_by": [
+      "admin@thechamberone.com"
+    ],
+    "created_at": "2026-04-05T16:58:36.117Z"
+  }
+},
+{
+  "model": "payments.invoice",
+  "pk": 1,
+  "fields": {
+    "invoice_number": "INV-B4225162",
+    "client": [
+      "client2@example.com"
+    ],
+    "case": 3,
+    "description": "Legal fees for: Divorce Settlement - Akter vs Akter",
+    "subtotal": "20000.00",
+    "tax_amount": "1000.00",
+    "total_amount": "21000.00",
+    "status": "draft",
+    "issue_date": "2026-03-29",
+    "due_date": "2026-04-28",
+    "paid_date": null,
+    "notes": "Invoice for case FM-2026-008",
+    "created_at": "2026-04-05T16:58:36.127Z",
+    "updated_at": "2026-04-05T16:58:36.127Z"
+  }
+},
+{
+  "model": "payments.invoice",
+  "pk": 2,
+  "fields": {
+    "invoice_number": "INV-9D106B31",
+    "client": [
+      "client@example.com"
+    ],
+    "case": 2,
+    "description": "Legal fees for: Criminal Appeal - State vs Hasan",
+    "subtotal": "5000.00",
+    "tax_amount": "250.00",
+    "total_amount": "5250.00",
+    "status": "pending",
+    "issue_date": "2026-03-16",
+    "due_date": "2026-04-15",
+    "paid_date": null,
+    "notes": "Invoice for case CR-2026-015",
+    "created_at": "2026-04-05T16:58:36.129Z",
+    "updated_at": "2026-04-05T16:58:36.129Z"
+  }
+},
+{
+  "model": "payments.invoice",
+  "pk": 3,
+  "fields": {
+    "invoice_number": "INV-1F42D0A7",
+    "client": [
+      "client@example.com"
+    ],
+    "case": 1,
+    "description": "Legal fees for: Property Dispute - Khan vs Ahmed",
+    "subtotal": "5000.00",
+    "tax_amount": "250.00",
+    "total_amount": "5250.00",
+    "status": "paid",
+    "issue_date": "2026-03-28",
+    "due_date": "2026-04-27",
+    "paid_date": null,
+    "notes": "Invoice for case CS-2026-001",
+    "created_at": "2026-04-05T16:58:36.131Z",
+    "updated_at": "2026-04-05T16:58:36.131Z"
+  }
+},
+{
+  "model": "payments.payment",
+  "pk": 1,
+  "fields": {
+    "payment_id": "PAY-74319050",
+    "invoice": 3,
+    "client": [
+      "client@example.com"
+    ],
+    "amount": "5250.00",
+    "payment_method": "card",
+    "status": "completed",
+    "transaction_id": null,
+    "gateway_response": null,
+    "payment_date": "2026-04-05T16:58:36.126Z",
+    "notes": "Payment completed",
+    "created_at": "2026-04-05T16:58:36.135Z",
+    "updated_at": "2026-04-05T16:58:36.135Z"
+  }
+},
+{
+  "model": "payments.subscription",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "client2@example.com"
+    ],
+    "plan": "basic_plan",
+    "status": "active",
+    "payment_url": null,
+    "metadata": null,
+    "created_at": "2026-04-05T16:58:36.137Z",
+    "updated_at": "2026-04-05T16:58:36.137Z"
+  }
+},
+{
+  "model": "payments.subscription",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "plan": "basic_plan",
+    "status": "active",
+    "payment_url": null,
+    "metadata": null,
+    "created_at": "2026-04-05T16:58:36.138Z",
+    "updated_at": "2026-04-05T16:58:36.138Z"
+  }
+},
+{
+  "model": "payments.subscription",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "plan": "basic_plan",
+    "status": "pending",
+    "payment_url": null,
+    "metadata": null,
+    "created_at": "2026-04-05T17:02:11.619Z",
+    "updated_at": "2026-04-05T17:02:11.619Z"
+  }
+},
+{
+  "model": "payments.subscription",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "newuser@test.com"
+    ],
+    "plan": "basic_plan",
+    "status": "active",
+    "payment_url": null,
+    "metadata": null,
+    "created_at": "2026-04-05T17:05:07.460Z",
+    "updated_at": "2026-04-05T17:05:07.460Z"
+  }
+},
+{
+  "model": "payments.subscription",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "plan": "premium_plan",
+    "status": "pending",
+    "payment_url": null,
+    "metadata": null,
+    "created_at": "2026-04-05T17:46:18.528Z",
+    "updated_at": "2026-04-05T17:46:18.528Z"
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 1,
+  "fields": {
+    "title": "Understanding Criminal Law in Bangladesh",
+    "slug": "understanding-criminal-law-in-bangladesh",
+    "content": "<h2>Introduction to Criminal Law</h2>\n<p>Criminal law in Bangladesh is primarily governed by the Penal Code of 1860 and the Code of Criminal Procedure of 1898. These laws define various criminal offenses and prescribe punishments for them.</p>\n<h2>Key Principles</h2>\n<p>The fundamental principles of criminal law in Bangladesh include the presumption of innocence, the right to a fair trial, and the right to legal representation. Every accused person has the right to be defended by a lawyer of their choice.</p>\n<h2>Common Criminal Offenses</h2>\n<p>Common criminal offenses in Bangladesh include theft, robbery, assault, murder, fraud, and cybercrime. Each offense carries specific penalties ranging from fines to imprisonment.</p>\n<h2>The Court System</h2>\n<p>Criminal cases in Bangladesh are heard by Magistrate Courts, Sessions Courts, and the High Court Division. The Supreme Court serves as the highest appellate authority.</p>",
+    "excerpt": "A comprehensive guide to understanding criminal law in Bangladesh, including key principles, common offenses, and the court system.",
+    "author": [
+      "admin@thechamberone.com"
+    ],
+    "category": 1,
+    "featured_image": "",
+    "status": "published",
+    "is_featured": true,
+    "views_count": 150,
+    "published_date": "2026-03-22T16:58:35.950Z",
+    "created_at": "2026-04-05T16:58:35.952Z",
+    "updated_at": "2026-04-05T16:58:35.952Z",
+    "tags": [
+      8,
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 2,
+  "fields": {
+    "title": "Property Rights and Land Disputes: A Complete Guide",
+    "slug": "property-rights-and-land-disputes-a-complete-guide",
+    "content": "<h2>Property Rights in Bangladesh</h2>\n<p>Property rights in Bangladesh are governed by various laws including the Transfer of Property Act 1882, the Registration Act 1908, and the Land Management Manual. Understanding these laws is crucial for anyone involved in property transactions.</p>\n<h2>Common Land Disputes</h2>\n<p>Land disputes in Bangladesh often involve boundary conflicts, inheritance claims, fraudulent transfers, and encroachment. These disputes can be complex and may require extensive documentation to resolve.</p>\n<h2>How to Protect Your Property</h2>\n<p>To protect your property rights, always ensure proper documentation, register all property transactions, maintain updated land records, and consult a qualified property lawyer for any transactions.</p>\n<h2>Legal Remedies</h2>\n<p>If you face a property dispute, legal remedies include filing a civil suit, seeking injunctions, and pursuing alternative dispute resolution methods like mediation and arbitration.</p>",
+    "excerpt": "Everything you need to know about property rights and land disputes in Bangladesh, including legal remedies and protection strategies.",
+    "author": [
+      "admin@thechamberone.com"
+    ],
+    "category": 1,
+    "featured_image": "",
+    "status": "published",
+    "is_featured": false,
+    "views_count": 98,
+    "published_date": "2026-03-26T16:58:35.950Z",
+    "created_at": "2026-04-05T16:58:35.955Z",
+    "updated_at": "2026-04-05T16:58:35.955Z",
+    "tags": [
+      9,
+      3,
+      6
+    ]
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 3,
+  "fields": {
+    "title": "Family Law: Navigating Divorce and Custody in Bangladesh",
+    "slug": "family-law-navigating-divorce-and-custody-in-bangladesh",
+    "content": "<h2>Family Law Overview</h2>\n<p>Family law in Bangladesh addresses matters related to marriage, divorce, child custody, maintenance, and inheritance. The laws differ based on religious personal laws — Muslim Family Laws Ordinance 1961, Hindu Marriage Act, and Christian Marriage Act.</p>\n<h2>Divorce Proceedings</h2>\n<p>Divorce in Bangladesh can be initiated by either spouse. Under Muslim law, the husband can pronounce talaq, while the wife can seek divorce through khula or judicial decree. The process involves notice periods and attempts at reconciliation.</p>\n<h2>Child Custody</h2>\n<p>Child custody decisions are made based on the best interests of the child. Generally, mothers have custody rights for young children, while fathers retain guardianship. Courts consider factors like the child's age, welfare, and the parents' ability to provide care.</p>\n<h2>Seeking Legal Help</h2>\n<p>Family disputes can be emotionally challenging. It is advisable to seek the help of an experienced family law attorney who can guide you through the legal process with sensitivity and expertise.</p>",
+    "excerpt": "A guide to family law in Bangladesh covering divorce proceedings, child custody, and how to navigate these sensitive legal matters.",
+    "author": [
+      "admin@thechamberone.com"
+    ],
+    "category": 2,
+    "featured_image": "",
+    "status": "published",
+    "is_featured": true,
+    "views_count": 75,
+    "published_date": "2026-03-29T16:58:35.950Z",
+    "created_at": "2026-04-05T16:58:35.957Z",
+    "updated_at": "2026-04-05T16:58:35.957Z",
+    "tags": [
+      7,
+      4,
+      2
+    ]
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 4,
+  "fields": {
+    "title": "Corporate Law Essentials for Business Owners",
+    "slug": "corporate-law-essentials-for-business-owners",
+    "content": "<h2>Starting a Business in Bangladesh</h2>\n<p>Setting up a business in Bangladesh requires compliance with the Companies Act 1994, the Partnership Act 1932, and various regulatory requirements. Understanding these legal frameworks is essential for entrepreneurs.</p>\n<h2>Company Registration</h2>\n<p>To register a company, you need to submit the Memorandum and Articles of Association to the Registrar of Joint Stock Companies and Firms (RJSC). The process includes name clearance, document submission, and obtaining a certificate of incorporation.</p>\n<h2>Corporate Governance</h2>\n<p>Good corporate governance ensures transparency, accountability, and fair management of a company. It includes proper board meetings, financial reporting, and compliance with the Bangladesh Securities and Exchange Commission (BSEC) regulations.</p>\n<h2>Tax Obligations</h2>\n<p>Businesses must comply with the Income Tax Ordinance 1984 and the Value Added Tax Act 2012. Proper tax planning and compliance are crucial for sustainable business operations.</p>",
+    "excerpt": "Essential corporate law knowledge for business owners in Bangladesh, covering registration, governance, and tax obligations.",
+    "author": [
+      "admin@thechamberone.com"
+    ],
+    "category": 3,
+    "featured_image": "",
+    "status": "published",
+    "is_featured": false,
+    "views_count": 42,
+    "published_date": "2026-04-02T16:58:35.950Z",
+    "created_at": "2026-04-05T16:58:35.959Z",
+    "updated_at": "2026-04-05T16:58:35.959Z",
+    "tags": [
+      8,
+      5,
+      2
+    ]
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 5,
+  "fields": {
+    "title": "Your Rights When Arrested: What Every Citizen Should Know",
+    "slug": "your-rights-when-arrested-what-every-citizen-should-know",
+    "content": "<h2>Fundamental Rights During Arrest</h2>\n<p>Under the Constitution of Bangladesh, every citizen has fundamental rights that must be respected during an arrest. Article 33 guarantees the right to be informed of the grounds of arrest, the right to consult and be defended by a lawyer, and the right to be produced before a magistrate within 24 hours.</p>\n<h2>What to Do If You Are Arrested</h2>\n<p>If you are arrested, remain calm and do not resist. Ask for the reason for your arrest. Request to speak to a lawyer immediately. Do not sign any document without legal counsel. You have the right to inform a family member about your arrest.</p>\n<h2>Bail Provisions</h2>\n<p>Bail is a right in bailable offenses and can be granted by the court in non-bailable offenses. Your lawyer can file a bail petition in the appropriate court to secure your release.</p>\n<h2>Filing Complaints Against Unlawful Arrest</h2>\n<p>If you believe your arrest was unlawful, you can file a writ petition in the High Court Division under Article 102 of the Constitution, or lodge a complaint with the police commission.</p>",
+    "excerpt": "Know your legal rights during an arrest in Bangladesh — from the right to a lawyer to bail provisions and filing complaints.",
+    "author": [
+      "admin@thechamberone.com"
+    ],
+    "category": 1,
+    "featured_image": "",
+    "status": "published",
+    "is_featured": true,
+    "views_count": 210,
+    "published_date": "2026-04-04T16:58:35.950Z",
+    "created_at": "2026-04-05T16:58:35.962Z",
+    "updated_at": "2026-04-05T16:58:35.962Z",
+    "tags": [
+      1,
+      9,
+      6
+    ]
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "fb4e3e3c9c1546a380ccb725c87e9ea9",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzE5MSwiaWF0IjoxNzc1NDA4MzkxLCJqdGkiOiJmYjRlM2UzYzljMTU0NmEzODBjY2I3MjVjODdlOWVhOSIsInVzZXJfaWQiOiI4In0.BqXj5iqfT0ZRrffQFeb9k7wYzvmoc83UOZHN63FxkNo",
+    "created_at": "2026-04-05T16:59:51.575Z",
+    "expires_at": "2026-04-12T16:59:51Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "d31888101f814464aeaafd94e852cfe9",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzIwNiwiaWF0IjoxNzc1NDA4NDA2LCJqdGkiOiJkMzE4ODgxMDFmODE0NDY0YWVhYWZkOTRlODUyY2ZlOSIsInVzZXJfaWQiOiI4In0.Dx0LZXktDAkmsgco7Uj27Fl0SComx583-c_3FPVOKzo",
+    "created_at": "2026-04-05T17:00:06.308Z",
+    "expires_at": "2026-04-12T17:00:06Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "d934267acb9346afb9176d30ca7c6af0",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzIyOCwiaWF0IjoxNzc1NDA4NDI4LCJqdGkiOiJkOTM0MjY3YWNiOTM0NmFmYjkxNzZkMzBjYTdjNmFmMCIsInVzZXJfaWQiOiI4In0.0gnEVY1ztcvJ38WmprQiys0iov9Tnefs47PUTp8TMWU",
+    "created_at": "2026-04-05T17:00:28.781Z",
+    "expires_at": "2026-04-12T17:00:28Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "8f1209721b544daeaefdd67ad109834a",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzMzMSwiaWF0IjoxNzc1NDA4NTMxLCJqdGkiOiI4ZjEyMDk3MjFiNTQ0ZGFlYWVmZGQ2N2FkMTA5ODM0YSIsInVzZXJfaWQiOiI4In0.f3FHux_2CMKSUnPT9MQNlCS5o9SsXs0cWpZ2bN1ayJ4",
+    "created_at": "2026-04-05T17:02:11.308Z",
+    "expires_at": "2026-04-12T17:02:11Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "e2f8a2c55de44c27b9165f5516fa3e07",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzMzMSwiaWF0IjoxNzc1NDA4NTMxLCJqdGkiOiJlMmY4YTJjNTVkZTQ0YzI3YjkxNjVmNTUxNmZhM2UwNyIsInVzZXJfaWQiOiI3In0.dhsWgvhhyaZVwC0jWuBM5wQUu6gCvq5IOD5YNOutmcE",
+    "created_at": "2026-04-05T17:02:11.429Z",
+    "expires_at": "2026-04-12T17:02:11Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "newuser@test.com"
+    ],
+    "jti": "25a3ab8c82424cf69e43cac066b7868d",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzMzMSwiaWF0IjoxNzc1NDA4NTMxLCJqdGkiOiIyNWEzYWI4YzgyNDI0Y2Y2OWU0M2NhYzA2NmI3ODY4ZCIsInVzZXJfaWQiOiIxMCJ9.IhOW4Rt1rhtx2uIvZqvQ-q2vAMVmZUIufeaG36wOYlc",
+    "created_at": "2026-04-05T17:02:11.511Z",
+    "expires_at": "2026-04-12T17:02:11Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "0a8e655b15ba42cf8d8026d936b34822",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzMzMSwiaWF0IjoxNzc1NDA4NTMxLCJqdGkiOiIwYThlNjU1YjE1YmE0MmNmOGQ4MDI2ZDkzNmIzNDgyMiIsInVzZXJfaWQiOiI4In0.HaM1KtFBcsZPn74iQKkjR3pWYKkqTUbakM2wQHkSSAo",
+    "created_at": "2026-04-05T17:02:11.518Z",
+    "expires_at": "2026-04-12T17:02:11Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "b9bc1b4059ed4faf8373154893af00b8",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzkyNiwiaWF0IjoxNzc1NDA5MTI2LCJqdGkiOiJiOWJjMWI0MDU5ZWQ0ZmFmODM3MzE1NDg5M2FmMDBiOCIsInVzZXJfaWQiOiI3In0.vSWgupl-gOOS-55Gd3jXj5RzaG0bmErLbGsZM23MySk",
+    "created_at": "2026-04-05T17:12:06.285Z",
+    "expires_at": "2026-04-12T17:12:06Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "rahim@example.com"
+    ],
+    "jti": "2bd56ec84dec4058a2f0c0b50e1d2d0d",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzkzMywiaWF0IjoxNzc1NDA5MTMzLCJqdGkiOiIyYmQ1NmVjODRkZWM0MDU4YTJmMGMwYjUwZTFkMmQwZCIsInVzZXJfaWQiOiIyIn0.JeZfUEfwbTIVXPrOxBP7vR-v4ViF9fK7TVMqBsqw5_U",
+    "created_at": "2026-04-05T17:12:13.385Z",
+    "expires_at": "2026-04-12T17:12:13Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "0e20373ef9344f949a3a32da5c582ab5",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxMzkzMywiaWF0IjoxNzc1NDA5MTMzLCJqdGkiOiIwZTIwMzczZWY5MzQ0Zjk0OWEzYTMyZGE1YzU4MmFiNSIsInVzZXJfaWQiOiI4In0.zS4bVPCJWENR1W_yanTuOvc8BqrzX1v_VG6eanj_qEQ",
+    "created_at": "2026-04-05T17:12:13.490Z",
+    "expires_at": "2026-04-12T17:12:13Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "e19bc6b387fc4f69a07716528011b593",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDA2MCwiaWF0IjoxNzc1NDA5MjYwLCJqdGkiOiJlMTliYzZiMzg3ZmM0ZjY5YTA3NzE2NTI4MDExYjU5MyIsInVzZXJfaWQiOiI3In0.cO6Jdb_eoM2pbiF6dNctuHCxN1rFBVdJXJXSIP8Ss9Q",
+    "created_at": "2026-04-05T17:14:20.853Z",
+    "expires_at": "2026-04-12T17:14:20Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "1e73b7ca66b74fe19d772ad73ba8445e",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDQ5NSwiaWF0IjoxNzc1NDA5Njk1LCJqdGkiOiIxZTczYjdjYTY2Yjc0ZmUxOWQ3NzJhZDczYmE4NDQ1ZSIsInVzZXJfaWQiOiI3In0.Tqg1TezFZGAmzia6aWOs7W7KNOsGUDCtxuLlJ9ni24E",
+    "created_at": "2026-04-05T17:21:35.772Z",
+    "expires_at": "2026-04-12T17:21:35Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "rahim@example.com"
+    ],
+    "jti": "d751b5dacad5443c92cb599a2c04a0f7",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDQ5NSwiaWF0IjoxNzc1NDA5Njk1LCJqdGkiOiJkNzUxYjVkYWNhZDU0NDNjOTJjYjU5OWEyYzA0YTBmNyIsInVzZXJfaWQiOiIyIn0.rN_-1KblFE_XhEQG6DQw0ra18AFmtb6pLYl4xlAh1yQ",
+    "created_at": "2026-04-05T17:21:35.889Z",
+    "expires_at": "2026-04-12T17:21:35Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "kamrul@thechamberone.com"
+    ],
+    "jti": "b00b683967244f4b8ec817abc19b5c01",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDQ5NSwiaWF0IjoxNzc1NDA5Njk1LCJqdGkiOiJiMDBiNjgzOTY3MjQ0ZjRiOGVjODE3YWJjMTliNWMwMSIsInVzZXJfaWQiOiIxMSJ9.-SJZBIlQrYsng2MRSZn6XYo_55P2xvKblqKvF80N2fc",
+    "created_at": "2026-04-05T17:21:35.991Z",
+    "expires_at": "2026-04-12T17:21:35Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "mohsin@thechamberone.com"
+    ],
+    "jti": "8d91147cdf4846d194880444c74a440d",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDQ5NiwiaWF0IjoxNzc1NDA5Njk2LCJqdGkiOiI4ZDkxMTQ3Y2RmNDg0NmQxOTQ4ODA0NDRjNzRhNDQwZCIsInVzZXJfaWQiOiIxMiJ9.NyPmwW1cMkDwYtjSw_1zfzf4PkuOFI2HUzDD8rr1uhU",
+    "created_at": "2026-04-05T17:21:36.094Z",
+    "expires_at": "2026-04-12T17:21:36Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "fe375129d67446b6a7ced00b10f6c88e",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDQ5NiwiaWF0IjoxNzc1NDA5Njk2LCJqdGkiOiJmZTM3NTEyOWQ2NzQ0NmI2YTdjZWQwMGIxMGY2Yzg4ZSIsInVzZXJfaWQiOiI4In0.POYyhSpFXDxzeASttoKdoJK-geLsrHICfsvctC1o0Yo",
+    "created_at": "2026-04-05T17:21:36.197Z",
+    "expires_at": "2026-04-12T17:21:36Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "1e90c8d9d9264805bcd1b0ea3ec52d2f",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDc5MiwiaWF0IjoxNzc1NDA5OTkyLCJqdGkiOiIxZTkwYzhkOWQ5MjY0ODA1YmNkMWIwZWEzZWM1MmQyZiIsInVzZXJfaWQiOiI3In0.TOUBn_vcA-4DOByI1RB7KYFbV7ZR440Vbc6c9fMv-uU",
+    "created_at": "2026-04-05T17:26:32.097Z",
+    "expires_at": "2026-04-12T17:26:32Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 18,
+  "fields": {
+    "user": [
+      "admin@thechamberone.com"
+    ],
+    "jti": "738f198376684c61aac17753a7eca013",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDkxMywiaWF0IjoxNzc1NDEwMTEzLCJqdGkiOiI3MzhmMTk4Mzc2Njg0YzYxYWFjMTc3NTNhN2VjYTAxMyIsInVzZXJfaWQiOiI3In0.yNoE21TEYdtMRHfVcA_W8XO9iXEkwQHrhuiZtbsTDzE",
+    "created_at": "2026-04-05T17:28:33.269Z",
+    "expires_at": "2026-04-12T17:28:33Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "client@example.com"
+    ],
+    "jti": "3dc7f54aa9544609b454272c72fdf178",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNDkxNCwiaWF0IjoxNzc1NDEwMTE0LCJqdGkiOiIzZGM3ZjU0YWE5NTQ0NjA5YjQ1NDI3MmM3MmZkZjE3OCIsInVzZXJfaWQiOiI4In0.lNLVYoJs8jn8_QhIBVphTnqhsqygYI-Q7gvjSMhJU_k",
+    "created_at": "2026-04-05T17:28:34.196Z",
+    "expires_at": "2026-04-12T17:28:34Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 20,
+  "fields": {
+    "user": [
+      "rahim@example.com"
+    ],
+    "jti": "f8adaa4fbfef4099a960cfc9204cb100",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3NjAxNjA1NywiaWF0IjoxNzc1NDExMjU3LCJqdGkiOiJmOGFkYWE0ZmJmZWY0MDk5YTk2MGNmYzkyMDRjYjEwMCIsInVzZXJfaWQiOiIyIn0.dEnqegyVOugSN7a3mModb0rhcnLOis5BI266IkYFrP0",
+    "created_at": "2026-04-05T17:47:37.830Z",
+    "expires_at": "2026-04-12T17:47:37Z"
   }
 }
 ]
