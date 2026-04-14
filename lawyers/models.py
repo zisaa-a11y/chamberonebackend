@@ -96,8 +96,16 @@ class LawyerProfile(models.Model):
 
     @property
     def profile_photo_url(self):
-        if self.user.profile_photo:
-            return self.user.profile_photo.url
+        photo = self.user.profile_photo
+        if not photo:
+            return None
+
+        try:
+            if photo.name and photo.storage.exists(photo.name):
+                return photo.url
+        except Exception:
+            return None
+
         return None
 
     @property

@@ -91,6 +91,7 @@ urlpatterns = [
     path('api/stamps/verify/', StampVerifyView.as_view(), name='stamp_verify'),
     path('api/blog/', include('blog.urls')),
     path('api/landing/', include('landing.urls')),
+    path('api/messaging/', include('messaging.urls')),
     re_path(r'^api/.*$', api_not_found, name='api_not_found'),
 ]
 

@@ -104,6 +104,7 @@ class CaseNoteSerializer(serializers.ModelSerializer):
 class CaseSerializer(serializers.ModelSerializer):
     """Full serializer for Case model."""
     client = UserSerializer(read_only=True)
+    client_id = serializers.IntegerField(source='client.id', read_only=True)
     lawyer_details = LawyerProfileListSerializer(source='lawyer', read_only=True)
     practice_area_details = PracticeAreaSerializer(source='practice_area', read_only=True)
     client_name = serializers.ReadOnlyField()
@@ -118,7 +119,7 @@ class CaseSerializer(serializers.ModelSerializer):
             'id', 'title', 'case_number', 'description',
             'court_name', 'client', 'lawyer', 'lawyer_details',
             'practice_area', 'practice_area_details',
-            'client_name', 'lawyer_name',
+            'client_id', 'client_name', 'lawyer_name',
             'status', 'status_display',
             'next_hearing_date', 'filing_date', 'closing_date',
             'notes', 'documents', 'timeline',
@@ -159,6 +160,7 @@ class CaseCreateSerializer(serializers.ModelSerializer):
 
 class CaseListSerializer(serializers.ModelSerializer):
     """Contract-focused serializer for listing cases."""
+    client_id = serializers.IntegerField(source='client.id', read_only=True)
     client_name = serializers.ReadOnlyField()
     lawyer_name = serializers.ReadOnlyField()
     timeline = CaseTimelineSerializer(many=True, read_only=True)
@@ -168,6 +170,6 @@ class CaseListSerializer(serializers.ModelSerializer):
         model = Case
         fields = [
             'id', 'title', 'case_number', 'court_name',
-            'status', 'next_hearing_date', 'client_name', 'lawyer_name',
+            'status', 'next_hearing_date', 'client_id', 'client_name', 'lawyer_name',
             'timeline', 'documents'
         ]

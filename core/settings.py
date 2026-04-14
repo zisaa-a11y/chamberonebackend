@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'payments',
     'blog',
     'landing',
+    'messaging',
 ]
 
 MIDDLEWARE = [

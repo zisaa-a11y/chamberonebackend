@@ -158,7 +158,7 @@ class LawyerCreateView(generics.CreateAPIView):
     POST /api/lawyers/create/
     """
     serializer_class = LawyerSnakeCaseCreateSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class LawyerUpdateView(generics.UpdateAPIView):

@@ -75,9 +75,15 @@ class BlogPostListView(generics.ListCreateAPIView):
         return BlogPostListSerializer
 
     def get_queryset(self):
-        queryset = BlogPost.objects.filter(
-            status=BlogPost.Status.PUBLISHED
-        ).select_related('author', 'category').prefetch_related('tags')
+        queryset = BlogPost.objects.select_related('author', 'category').prefetch_related('tags')
+
+        include_unpublished = (
+            self.request.query_params.get('include_unpublished', '').lower() == 'true'
+        )
+        if include_unpublished and self.request.user.is_authenticated and self.request.user.is_staff:
+            queryset = queryset.all()
+        else:
+            queryset = queryset.filter(status=BlogPost.Status.PUBLISHED)
         
         # Filter by category
         category_slug = self.request.query_params.get('category')

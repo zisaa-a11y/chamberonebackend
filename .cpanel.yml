@@ -3,5 +3,5 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/hasansajib/backend.thechamberone.com
     - /bin/cp -R accounts appointments blog cases core landing lawyers payments manage.py passenger_wsgi.py requirements.txt .htaccess $DEPLOYPATH/
-    - cd $DEPLOYPATH && source /home/hasansajib/virtualenv/backend.thechamberone.com/3.9/bin/activate && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    - cd $DEPLOYPATH && source /home/hasansajib/virtualenv/backend.thechamberone.com/3.9/bin/activate && pip install -r requirements.txt && python manage.py collectstatic --noinput
     - mkdir -p $DEPLOYPATH/tmp && /bin/touch $DEPLOYPATH/tmp/restart.txt
