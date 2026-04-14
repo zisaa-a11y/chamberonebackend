@@ -161,8 +161,6 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-If you want to deploy backend code without changing the production database schema, skip the `migrate` step during deployment and run it manually only when you intentionally need a schema change.
-
 5. **Create superuser**
 ```bash
 python manage.py createsuperuser

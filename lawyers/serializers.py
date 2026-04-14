@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.contrib.auth.password_validation import validate_password
 from accounts.serializers import UserSerializer
 from .models import PracticeArea, LawyerProfile, LawyerAvailability
 
@@ -109,11 +108,6 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
     is_available = serializers.BooleanField(required=False, default=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True, default='')
 
-    def validate_password(self, value):
-        if value:
-            validate_password(value)
-        return value
-
     def _get(self, data, snake, camel, default=None):
         """Get value preferring snake_case over camelCase."""
         val = data.get(snake)
@@ -149,7 +143,6 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         from accounts.models import User
         import base64
         from django.core.files.base import ContentFile
-        from django.db import IntegrityError, transaction
 
         name = self._get(validated_data, 'full_name', 'fullName', '')
         name_parts = name.strip().split(' ', 1)
@@ -159,28 +152,23 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         email = validated_data['email']
         password = validated_data.get('password', '')
 
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({
-                'email': 'A user with this email already exists. Use the update flow for that lawyer.'
-            })
-
-        try:
-            with transaction.atomic():
-                user = User.objects.create_user(
-                    email=email,
-                    password=password or None,
-                    first_name=first_name,
-                    last_name=last_name,
-                    phone=validated_data.get('phone', ''),
-                    role=User.Role.LAWYER,
-                )
-                if not password:
-                    user.set_unusable_password()
-                    user.save(update_fields=['password'])
-        except IntegrityError as exc:
-            raise serializers.ValidationError({
-                'email': 'A user with this email already exists.'
-            }) from exc
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                'first_name': first_name,
+                'last_name': last_name,
+                'phone': validated_data.get('phone', ''),
+                'role': User.Role.LAWYER,
+            }
+        )
+        if created and password:
+            user.set_password(password)
+            user.save()
+        elif not created:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.phone = validated_data.get('phone', '')
+            user.save()
 
         # Handle profile image
         img = self._get(validated_data, 'profile_image', 'profileImage', '')
@@ -234,16 +222,7 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             user.last_name = name_parts[1] if len(name_parts) > 1 else ''
 
         if 'email' in validated_data and validated_data.get('email'):
-            new_email = validated_data['email']
-            if new_email != user.email and user.__class__.objects.filter(email=new_email).exclude(pk=user.pk).exists():
-                raise serializers.ValidationError({
-                    'email': 'A user with this email already exists.'
-                })
-            user.email = new_email
-
-        # Support admin credential updates for an existing lawyer account.
-        if 'password' in validated_data and validated_data.get('password'):
-            user.set_password(validated_data['password'])
+            user.email = validated_data['email']
 
         if 'phone' in validated_data:
             user.phone = validated_data.get('phone', '')
