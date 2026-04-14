@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.db import IntegrityError, transaction
 from accounts.serializers import UserSerializer
 from .models import PracticeArea, LawyerProfile, LawyerAvailability
 
@@ -108,6 +111,11 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
     is_available = serializers.BooleanField(required=False, default=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True, default='')
 
+    def validate_password(self, value):
+        if value:
+            validate_password(value)
+        return value
+
     def _get(self, data, snake, camel, default=None):
         """Get value preferring snake_case over camelCase."""
         val = data.get(snake)
@@ -126,6 +134,23 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
                 pa_list = [a.strip() for a in pa_camel.split(',') if a.strip()]
         return pa_list
 
+    def _resolve_practice_areas(self, names):
+        """Resolve practice area names without using get_or_create/first."""
+        areas = []
+        for raw_name in names:
+            name = (raw_name or '').strip()
+            if not name:
+                continue
+            try:
+                area = PracticeArea.objects.get(name__iexact=name)
+            except PracticeArea.DoesNotExist:
+                try:
+                    area = PracticeArea.objects.create(name=name)
+                except IntegrityError:
+                    area = PracticeArea.objects.get(name__iexact=name)
+            areas.append(area)
+        return areas
+
     def validate_location(self, value):
         value = (value or '').strip()
         # Only require location for new profiles; existing profiles can keep their current value
@@ -140,9 +165,9 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        from accounts.models import User
         import base64
         from django.core.files.base import ContentFile
+        User = get_user_model()
 
         name = self._get(validated_data, 'full_name', 'fullName', '')
         name_parts = name.strip().split(' ', 1)
@@ -152,66 +177,67 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
         email = validated_data['email']
         password = validated_data.get('password', '')
 
-        user, created = User.objects.get_or_create(
-            email=email,
-            defaults={
-                'first_name': first_name,
-                'last_name': last_name,
-                'phone': validated_data.get('phone', ''),
-                'role': User.Role.LAWYER,
-            }
-        )
-        if created and password:
-            user.set_password(password)
-            user.save()
-        elif not created:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.phone = validated_data.get('phone', '')
-            user.save()
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({
+                'email': 'A user with this email already exists. Use the update endpoint with an explicit lawyer ID.'
+            })
 
-        # Handle profile image
-        img = self._get(validated_data, 'profile_image', 'profileImage', '')
-        if img and isinstance(img, str) and img.startswith('data:image'):
-            fmt, imgstr = img.split(';base64,')
-            ext = fmt.split('/')[-1]
-            user.profile_photo = ContentFile(
-                base64.b64decode(imgstr),
-                name=f'profile_{user.id}.{ext}'
-            )
-            user.save()
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    email=email,
+                    password=password or None,
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=validated_data.get('phone', ''),
+                    role=User.Role.LAWYER,
+                )
 
-        lawyer_profile, _ = LawyerProfile.objects.get_or_create(user=user)
-        lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
-        lawyer_profile.specialization = validated_data.get('specialization', '')
-        lawyer_profile.bio = validated_data.get('bio', '')
-        lawyer_profile.location = validated_data.get('location', '')
-        lawyer_profile.city = validated_data.get('city', '')
-        lawyer_profile.district = validated_data.get('district', '')
-        lawyer_profile.chamber_info = validated_data.get('chamber_info', '')
-        lawyer_profile.gender = validated_data.get('gender', '')
-        lawyer_profile.years_experience = self._get(validated_data, 'years_experience', 'yearsExperience', 0)
-        lawyer_profile.solved_cases = self._get(validated_data, 'cases_solved', 'casesSolved', 0)
-        fees = validated_data.get('consultancy_fees', 0)
-        if fees:
-            lawyer_profile.consultancy_fees = fees
-        lawyer_profile.is_available = validated_data.get('is_available', True)
-        lawyer_profile.save()
+                if not password:
+                    user.set_unusable_password()
+                    user.save(update_fields=['password'])
 
-        # Handle practice areas (accept list or comma-separated string)
-        pa_list = self._parse_practice_areas(validated_data)
-        if pa_list:
-            areas = []
-            for name in pa_list:
-                pa, _ = PracticeArea.objects.get_or_create(name=name)
-                areas.append(pa)
-            lawyer_profile.practice_areas.set(areas)
+                # Handle profile image
+                img = self._get(validated_data, 'profile_image', 'profileImage', '')
+                if img and isinstance(img, str) and img.startswith('data:image'):
+                    fmt, imgstr = img.split(';base64,')
+                    ext = fmt.split('/')[-1]
+                    user.profile_photo = ContentFile(
+                        base64.b64decode(imgstr),
+                        name=f'profile_{user.id}.{ext}'
+                    )
+                    user.save(update_fields=['profile_photo'])
 
-        return lawyer_profile
+                lawyer_profile = LawyerProfile.objects.create(
+                    user=user,
+                    profession=validated_data.get('profession', 'Lawyer'),
+                    specialization=validated_data.get('specialization', ''),
+                    bio=validated_data.get('bio', ''),
+                    location=validated_data.get('location', ''),
+                    city=validated_data.get('city', ''),
+                    district=validated_data.get('district', ''),
+                    chamber_info=validated_data.get('chamber_info', ''),
+                    gender=validated_data.get('gender', ''),
+                    years_experience=self._get(validated_data, 'years_experience', 'yearsExperience', 0),
+                    solved_cases=self._get(validated_data, 'cases_solved', 'casesSolved', 0),
+                    consultancy_fees=validated_data.get('consultancy_fees', 0),
+                    is_available=validated_data.get('is_available', True),
+                )
+
+                pa_list = self._parse_practice_areas(validated_data)
+                if pa_list:
+                    lawyer_profile.practice_areas.set(self._resolve_practice_areas(pa_list))
+
+                return lawyer_profile
+        except IntegrityError as exc:
+            raise serializers.ValidationError({
+                'detail': 'Unable to create lawyer profile due to a data conflict.'
+            }) from exc
 
     def update(self, instance, validated_data):
         import base64
         from django.core.files.base import ContentFile
+        User = get_user_model()
 
         user = instance.user
 
@@ -222,7 +248,13 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
             user.last_name = name_parts[1] if len(name_parts) > 1 else ''
 
         if 'email' in validated_data and validated_data.get('email'):
-            user.email = validated_data['email']
+            new_email = validated_data['email']
+            if User.objects.filter(email=new_email).exclude(pk=user.pk).exists():
+                raise serializers.ValidationError({'email': 'This email is already in use by another user.'})
+            user.email = new_email
+
+        if 'password' in validated_data and validated_data.get('password'):
+            user.set_password(validated_data['password'])
 
         if 'phone' in validated_data:
             user.phone = validated_data.get('phone', '')
@@ -278,11 +310,7 @@ class LawyerSnakeCaseCreateSerializer(serializers.Serializer):
 
         if 'practice_areas' in validated_data or 'practiceAreas' in validated_data:
             pa_list = self._parse_practice_areas(validated_data)
-            areas = []
-            for name in pa_list:
-                pa, _ = PracticeArea.objects.get_or_create(name=name)
-                areas.append(pa)
-            instance.practice_areas.set(areas)
+            instance.practice_areas.set(self._resolve_practice_areas(pa_list))
 
         return instance
 
@@ -416,6 +444,28 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         style={'input_type': 'password'},
         help_text="Password for new lawyer account (optional)"
     )
+
+    def validate_password(self, value):
+        if value:
+            validate_password(value)
+        return value
+
+    def _resolve_practice_areas(self, names):
+        """Resolve practice area names without using get_or_create/first."""
+        areas = []
+        for raw_name in names:
+            name = (raw_name or '').strip()
+            if not name:
+                continue
+            try:
+                area = PracticeArea.objects.get(name__iexact=name)
+            except PracticeArea.DoesNotExist:
+                try:
+                    area = PracticeArea.objects.create(name=name)
+                except IntegrityError:
+                    area = PracticeArea.objects.get(name__iexact=name)
+            areas.append(area)
+        return areas
     
     def validate_practiceAreas(self, value):
         """Convert comma-separated string to list or accept list."""
@@ -433,9 +483,9 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         return attrs
     
     def create(self, validated_data):
-        from accounts.models import User
         import base64
         from django.core.files.base import ContentFile
+        User = get_user_model()
         
         # Split full name
         full_name = validated_data.get('fullName', '')
@@ -443,70 +493,67 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         first_name = name_parts[0] if name_parts else ''
         last_name = name_parts[1] if len(name_parts) > 1 else ''
         
-        # Create or get user
         email = validated_data['email']
         password = validated_data.get('password', '')
-        
-        user, created = User.objects.get_or_create(
-            email=email,
-            defaults={
-                'first_name': first_name,
-                'last_name': last_name,
-                'phone': validated_data.get('phone', ''),
-                'role': User.Role.LAWYER,
-            }
-        )
-        
-        if created and password:
-            user.set_password(password)
-            user.save()
-        elif not created:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.phone = validated_data.get('phone', '')
-            user.save()
-        
-        # Handle profile image
-        profile_image_data = validated_data.get('profileImage')
-        if profile_image_data and profile_image_data.startswith('data:image'):
-            # Parse base64 image
-            format, imgstr = profile_image_data.split(';base64,')
-            ext = format.split('/')[-1]
-            user.profile_photo = ContentFile(
-                base64.b64decode(imgstr), 
-                name=f'profile_{user.id}.{ext}'
-            )
-            user.save()
-        
-        # Create or update lawyer profile
-        lawyer_profile, _ = LawyerProfile.objects.get_or_create(user=user)
-        lawyer_profile.profession = validated_data.get('profession', 'Lawyer')
-        lawyer_profile.specialization = validated_data.get('specialization', '')
-        lawyer_profile.gender = validated_data.get('gender', '')
-        lawyer_profile.bio = validated_data.get('bio', '')
-        lawyer_profile.location = validated_data.get('location', '')
-        lawyer_profile.city = validated_data.get('city', '')
-        lawyer_profile.district = validated_data.get('district', '')
-        lawyer_profile.chamber_info = validated_data.get('chamberInfo', '')
-        lawyer_profile.years_experience = validated_data.get('yearsExperience', 0)
-        lawyer_profile.solved_cases = validated_data.get('casesSolved', 0)
-        lawyer_profile.save()
-        
-        # Handle practice areas
-        practice_area_names = validated_data.get('practiceAreas', [])
-        if practice_area_names:
-            practice_areas = []
-            for name in practice_area_names:
-                pa, _ = PracticeArea.objects.get_or_create(name=name)
-                practice_areas.append(pa)
-            lawyer_profile.practice_areas.set(practice_areas)
-        
-        return lawyer_profile
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({
+                'email': 'A user with this email already exists. Use update with an explicit lawyer ID.'
+            })
+
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    email=email,
+                    password=password or None,
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=validated_data.get('phone', ''),
+                    role=User.Role.LAWYER,
+                )
+
+                if not password:
+                    user.set_unusable_password()
+                    user.save(update_fields=['password'])
+
+                profile_image_data = validated_data.get('profileImage')
+                if profile_image_data and profile_image_data.startswith('data:image'):
+                    format, imgstr = profile_image_data.split(';base64,')
+                    ext = format.split('/')[-1]
+                    user.profile_photo = ContentFile(
+                        base64.b64decode(imgstr),
+                        name=f'profile_{user.id}.{ext}'
+                    )
+                    user.save(update_fields=['profile_photo'])
+
+                lawyer_profile = LawyerProfile.objects.create(
+                    user=user,
+                    profession=validated_data.get('profession', 'Lawyer'),
+                    specialization=validated_data.get('specialization', ''),
+                    gender=validated_data.get('gender', ''),
+                    bio=validated_data.get('bio', ''),
+                    location=validated_data.get('location', ''),
+                    city=validated_data.get('city', ''),
+                    district=validated_data.get('district', ''),
+                    chamber_info=validated_data.get('chamberInfo', ''),
+                    years_experience=validated_data.get('yearsExperience', 0),
+                    solved_cases=validated_data.get('casesSolved', 0),
+                )
+
+                practice_area_names = validated_data.get('practiceAreas', [])
+                if practice_area_names:
+                    lawyer_profile.practice_areas.set(self._resolve_practice_areas(practice_area_names))
+
+                return lawyer_profile
+        except IntegrityError as exc:
+            raise serializers.ValidationError({
+                'detail': 'Unable to create lawyer profile due to a data conflict.'
+            }) from exc
     
     def update(self, instance, validated_data):
-        from accounts.models import User
         import base64
         from django.core.files.base import ContentFile
+        User = get_user_model()
         
         user = instance.user
         
@@ -520,6 +567,15 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         # Update phone
         if 'phone' in validated_data:
             user.phone = validated_data['phone']
+
+        if 'email' in validated_data and validated_data.get('email'):
+            new_email = validated_data['email']
+            if User.objects.filter(email=new_email).exclude(pk=user.pk).exists():
+                raise serializers.ValidationError({'email': 'This email is already in use by another user.'})
+            user.email = new_email
+
+        if 'password' in validated_data and validated_data.get('password'):
+            user.set_password(validated_data['password'])
         
         # Handle profile image
         profile_image_data = validated_data.get('profileImage')
@@ -560,11 +616,7 @@ class LawyerCreateUpdateSerializer(serializers.Serializer):
         # Handle practice areas
         practice_area_names = validated_data.get('practiceAreas')
         if practice_area_names is not None:
-            practice_areas = []
-            for name in practice_area_names:
-                pa, _ = PracticeArea.objects.get_or_create(name=name)
-                practice_areas.append(pa)
-            instance.practice_areas.set(practice_areas)
+            instance.practice_areas.set(self._resolve_practice_areas(practice_area_names))
         
         return instance
     

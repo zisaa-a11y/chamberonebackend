@@ -160,6 +160,21 @@ class LawyerCreateView(generics.CreateAPIView):
     serializer_class = LawyerSnakeCaseCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        serializer = LawyerSnakeCaseCreateSerializer(
+            data=request.data,
+            context={'request': request},
+        )
+        serializer.is_valid(raise_exception=True)
+        lawyer = serializer.save()
+        return Response(
+            {
+                'success': True,
+                'data': serializer.to_representation(lawyer),
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
 
 class LawyerUpdateView(generics.UpdateAPIView):
     """
@@ -181,6 +196,29 @@ class LawyerUpdateView(generics.UpdateAPIView):
             raise PermissionDenied("You can only update your own profile.")
         
         return lawyer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        lawyer = self.get_object()
+        serializer = LawyerSnakeCaseCreateSerializer(
+            instance=lawyer,
+            data=request.data,
+            partial=partial,
+            context={'request': request},
+        )
+        serializer.is_valid(raise_exception=True)
+        updated = serializer.save()
+        return Response(
+            {
+                'success': True,
+                'data': serializer.to_representation(updated),
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
 
 class LawyerCamelCaseDetailView(generics.RetrieveAPIView):

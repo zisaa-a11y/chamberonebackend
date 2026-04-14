@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils import timezone
 from .models import Category, Tag, BlogPost, Comment
 from accounts.serializers import UserSerializer
 
@@ -119,12 +120,36 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
             'is_featured', 'published_date'
         ]
 
+    def validate(self, attrs):
+        # Admin-created posts should be visible by default unless draft/archived is explicit.
+        if self.instance is None and not attrs.get('status'):
+            attrs['status'] = BlogPost.Status.PUBLISHED
+        return attrs
+
     def create(self, validated_data):
         tags = validated_data.pop('tags', [])
         validated_data['author'] = self.context['request'].user
+        if validated_data.get('status') == BlogPost.Status.PUBLISHED and not validated_data.get('published_date'):
+            validated_data['published_date'] = timezone.now()
         post = BlogPost.objects.create(**validated_data)
         post.tags.set(tags)
         return post
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if instance.status == BlogPost.Status.PUBLISHED and not instance.published_date:
+            instance.published_date = timezone.now()
+
+        instance.save()
+
+        if tags is not None:
+            instance.tags.set(tags)
+
+        return instance
 
     def to_representation(self, instance):
         return BlogPostSerializer(instance, context=self.context).data
