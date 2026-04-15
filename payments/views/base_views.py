@@ -52,6 +52,29 @@ class InvoiceListCreateView(generics.ListCreateAPIView):
         
         return queryset.filter(client=user)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        invoice = serializer.save()
+
+        logger.info(
+            'Invoice created: db_id=%s invoice_number=%s client_id=%s',
+            invoice.id,
+            invoice.invoice_number,
+            invoice.client_id,
+        )
+
+        response_serializer = InvoiceSerializer(
+            invoice,
+            context=self.get_serializer_context(),
+        )
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(
+            response_serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
+
 
 class InvoiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API endpoint for invoice detail."""
@@ -127,7 +150,14 @@ class PaymentListCreateView(generics.ListCreateAPIView):
             sorted(list(request.data.keys())),
         )
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            logger.warning(
+                'Payment create rejected: user=%s payload=%s errors=%s',
+                request.user.id,
+                dict(request.data),
+                serializer.errors,
+            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         payment = serializer.save()
         logger.info(
             'Payment created: db_id=%s payment_id=%s invoice_id=%s client_id=%s',

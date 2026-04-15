@@ -79,3 +79,63 @@ class PaymentApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('invoice', response.data)
         self.assertEqual(Payment.objects.count(), 0)
+
+    def test_invalid_invoice_id_returns_clear_message(self):
+        self.client.force_authenticate(user=self.client_user)
+        response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': 999999,
+                'amount': '100.00',
+                'payment_method': 'card',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('invoice', response.data)
+        self.assertIn('Invoice not found', str(response.data['invoice']))
+        self.assertEqual(Payment.objects.count(), 0)
+
+    def test_unauthenticated_payment_request_is_rejected(self):
+        response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': self.invoice.id,
+                'amount': '100.00',
+                'payment_method': 'card',
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_api_flow_create_invoice_then_create_payment(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        invoice_response = self.client.post(
+            '/api/payments/invoices/',
+            {
+                'description': 'API flow invoice',
+                'subtotal': '2000.00',
+                'tax_amount': '200.00',
+                'status': 'pending',
+                'issue_date': date.today().isoformat(),
+                'due_date': (date.today() + timedelta(days=10)).isoformat(),
+            },
+            format='json',
+        )
+        self.assertEqual(invoice_response.status_code, status.HTTP_201_CREATED)
+        created_invoice_id = invoice_response.data['id']
+
+        payment_response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': created_invoice_id,
+                'amount': '2200.00',
+                'payment_method': 'ssl',
+                'notes': 'Flow test payment',
+            },
+            format='json',
+        )
+        self.assertEqual(payment_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Payment.objects.filter(invoice_id=created_invoice_id).count(), 1)

@@ -1,7 +1,11 @@
 from rest_framework import serializers
+import logging
 from .models import Invoice, InvoiceItem, Payment, Subscription
 from accounts.serializers import UserSerializer
 from cases.serializers import CaseListSerializer
+
+
+logger = logging.getLogger(__name__)
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
@@ -111,6 +115,15 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating payments."""
+    invoice = serializers.PrimaryKeyRelatedField(
+        queryset=Invoice.objects.none(),
+        error_messages={
+            'required': 'Invoice ID is required.',
+            'does_not_exist': 'Invoice not found. Create invoice in backend first, then retry payment.',
+            'incorrect_type': 'Invoice ID must be a valid integer.',
+            'null': 'Invoice ID cannot be null.',
+        },
+    )
     payment_method = serializers.CharField(required=False, allow_blank=True)
     notes = serializers.CharField(required=False, allow_blank=True, default='')
     
@@ -118,16 +131,26 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ['invoice', 'amount', 'payment_method', 'notes']
 
-    def validate_invoice(self, invoice):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         request = self.context.get('request')
         user = getattr(request, 'user', None)
-        if user is None:
-            return invoice
 
-        if user.is_staff or invoice.client_id == user.id:
-            return invoice
+        if user is None or not getattr(user, 'is_authenticated', False):
+            return
 
-        raise serializers.ValidationError('You can only create payments for your own invoices.')
+        if user.is_staff:
+            self.fields['invoice'].queryset = Invoice.objects.all()
+        else:
+            self.fields['invoice'].queryset = Invoice.objects.filter(client=user)
+
+    def validate_invoice(self, invoice):
+        logger.info(
+            'Payment serializer invoice validated: invoice_id=%s client_id=%s',
+            invoice.id,
+            invoice.client_id,
+        )
+        return invoice
 
     def validate_payment_method(self, value):
         alias_map = {
@@ -153,7 +176,8 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
         return resolved
 
     def create(self, validated_data):
-        validated_data['client'] = self.context['request'].user
+        # Keep payment ownership aligned with the selected invoice owner.
+        validated_data['client'] = validated_data['invoice'].client
         return super().create(validated_data)
 
 
