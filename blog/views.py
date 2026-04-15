@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
-from django.db.models import F
+from django.db.models import F, Q
 
 from .models import Category, Tag, BlogPost, Comment
 from .serializers import (
@@ -90,7 +90,10 @@ class BlogPostListView(generics.ListCreateAPIView):
         # Filter by category
         category_slug = self.request.query_params.get('category')
         if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
+            queryset = queryset.filter(
+                Q(category__slug=category_slug) |
+                Q(category__name__iexact=category_slug)
+            )
         
         # Filter by tag
         tag_slug = self.request.query_params.get('tag')
