@@ -66,11 +66,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
 class InvoiceCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating invoices."""
     items = InvoiceItemSerializer(many=True, required=False)
+    client_name = serializers.CharField(required=False, allow_blank=True, write_only=True)
+    case_title = serializers.CharField(required=False, allow_blank=True, write_only=True)
     
     class Meta:
         model = Invoice
         fields = [
-            'client', 'case', 'description',
+            'client', 'client_name', 'case', 'case_title', 'description',
             'subtotal', 'tax_amount',
             'status', 'issue_date', 'due_date', 'notes', 'items'
         ]
@@ -79,6 +81,8 @@ class InvoiceCreateSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        validated_data.pop('client_name', None)
+        validated_data.pop('case_title', None)
         items_data = validated_data.pop('items', [])
         # Auto-assign client from request user if not provided
         if 'client' not in validated_data or validated_data['client'] is None:
@@ -96,6 +100,15 @@ class InvoiceCreateSerializer(serializers.ModelSerializer):
             invoice.save()
         
         return invoice
+
+    def to_internal_value(self, data):
+        mutable = data.copy()
+        for key in ('issue_date', 'due_date'):
+            value = mutable.get(key)
+            if isinstance(value, str) and 'T' in value:
+                mutable[key] = value.split('T', 1)[0]
+
+        return super().to_internal_value(mutable)
 
 
 class InvoiceListSerializer(serializers.ModelSerializer):

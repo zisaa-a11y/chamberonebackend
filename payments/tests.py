@@ -139,3 +139,45 @@ class PaymentApiTests(APITestCase):
         )
         self.assertEqual(payment_response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Payment.objects.filter(invoice_id=created_invoice_id).count(), 1)
+
+    def test_invoice_creation_accepts_legacy_frontend_fields(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        response = self.client.post(
+            '/api/payments/invoices/',
+            {
+                'client_name': 'Legacy Frontend Client',
+                'case_title': 'Legacy Case Title',
+                'description': 'Legacy payload compatibility',
+                'subtotal': '1450.00',
+                'tax_amount': '50.00',
+                'status': 'pending',
+                'issue_date': date.today().isoformat(),
+                'due_date': (date.today() + timedelta(days=7)).isoformat(),
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['client']['id'], self.client_user.id)
+        self.assertEqual(Invoice.objects.count(), 2)
+
+    def test_invoice_creation_accepts_datetime_like_date_strings(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        response = self.client.post(
+            '/api/payments/invoices/',
+            {
+                'description': 'Date compatibility test',
+                'subtotal': '1800.00',
+                'tax_amount': '200.00',
+                'status': 'pending',
+                'issue_date': '2026-04-15T00:00:00.000Z',
+                'due_date': '2026-04-22T00:00:00.000Z',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['issue_date'], '2026-04-15')
+        self.assertEqual(response.data['due_date'], '2026-04-22')
