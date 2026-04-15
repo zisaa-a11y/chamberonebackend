@@ -1,0 +1,81 @@
+from datetime import date, timedelta
+
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.test import APITestCase
+
+from payments.models import Invoice, Payment
+
+
+class PaymentApiTests(APITestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.client_user = user_model.objects.create_user(
+            email='client@example.com',
+            password='StrongPass123!',
+            first_name='Client',
+            last_name='One',
+            role='client',
+        )
+        self.other_user = user_model.objects.create_user(
+            email='other@example.com',
+            password='StrongPass123!',
+            first_name='Other',
+            last_name='User',
+            role='client',
+        )
+
+        self.invoice = Invoice.objects.create(
+            client=self.client_user,
+            description='Legal consultation',
+            subtotal=1000,
+            tax_amount=100,
+            status=Invoice.Status.PENDING,
+            issue_date=date.today(),
+            due_date=date.today() + timedelta(days=7),
+        )
+
+    def test_create_payment_persists_to_database(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        payload = {
+            'invoice': self.invoice.id,
+            'amount': '1100.00',
+            'payment_method': 'ssl',
+            'notes': 'Paid from API test',
+        }
+        response = self.client.post('/api/payments/', payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Payment.objects.count(), 1)
+        payment = Payment.objects.first()
+        self.assertIsNotNone(payment)
+        self.assertEqual(payment.invoice_id, self.invoice.id)
+        self.assertEqual(payment.client_id, self.client_user.id)
+        self.assertEqual(payment.payment_method, Payment.PaymentMethod.SSLCOMMERZ)
+
+    def test_payment_creation_rejects_other_users_invoice(self):
+        foreign_invoice = Invoice.objects.create(
+            client=self.other_user,
+            description='Foreign invoice',
+            subtotal=500,
+            tax_amount=0,
+            status=Invoice.Status.PENDING,
+            issue_date=date.today(),
+            due_date=date.today() + timedelta(days=7),
+        )
+
+        self.client.force_authenticate(user=self.client_user)
+        response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': foreign_invoice.id,
+                'amount': '100.00',
+                'payment_method': 'card',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('invoice', response.data)
+        self.assertEqual(Payment.objects.count(), 0)

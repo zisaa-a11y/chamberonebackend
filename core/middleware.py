@@ -2,6 +2,43 @@
 Custom middleware for The Chamber One backend.
 """
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+class ApiRequestLogMiddleware:
+    """Log API request/response metadata for debugging production issues."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.path.startswith('/api/'):
+            user_id = None
+            request_user = getattr(request, 'user', None)
+            if request_user is not None:
+                user_id = getattr(request_user, 'id', None)
+            logger.info(
+                'API request: method=%s path=%s user=%s',
+                request.method,
+                request.path,
+                user_id,
+            )
+
+        response = self.get_response(request)
+
+        if request.path.startswith('/api/'):
+            logger.info(
+                'API response: method=%s path=%s status=%s',
+                request.method,
+                request.path,
+                response.status_code,
+            )
+
+        return response
+
 
 class DisableCSRFForAPI(object):
     """

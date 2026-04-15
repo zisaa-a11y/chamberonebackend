@@ -111,16 +111,46 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating payments."""
-    payment_method = serializers.ChoiceField(
-        choices=Payment.PaymentMethod.choices,
-        required=False,
-        default=Payment.PaymentMethod.CARD,
-    )
+    payment_method = serializers.CharField(required=False, allow_blank=True)
     notes = serializers.CharField(required=False, allow_blank=True, default='')
     
     class Meta:
         model = Payment
         fields = ['invoice', 'amount', 'payment_method', 'notes']
+
+    def validate_invoice(self, invoice):
+        request = self.context.get('request')
+        user = getattr(request, 'user', None)
+        if user is None:
+            return invoice
+
+        if user.is_staff or invoice.client_id == user.id:
+            return invoice
+
+        raise serializers.ValidationError('You can only create payments for your own invoices.')
+
+    def validate_payment_method(self, value):
+        alias_map = {
+            'credit_card': Payment.PaymentMethod.CARD,
+            'debit_card': Payment.PaymentMethod.CARD,
+            'netbanking': Payment.PaymentMethod.BANK_TRANSFER,
+            'bank': Payment.PaymentMethod.BANK_TRANSFER,
+            'wallet': Payment.PaymentMethod.MOBILE,
+            'mobile_banking': Payment.PaymentMethod.MOBILE,
+            'ssl': Payment.PaymentMethod.SSLCOMMERZ,
+            'ssl_commerz': Payment.PaymentMethod.SSLCOMMERZ,
+            'sslc': Payment.PaymentMethod.SSLCOMMERZ,
+            'upi': Payment.PaymentMethod.OTHER,
+        }
+        normalized = (value or '').strip().lower()
+        if not normalized:
+            return Payment.PaymentMethod.CARD
+
+        resolved = alias_map.get(normalized, normalized)
+        valid_methods = dict(Payment.PaymentMethod.choices)
+        if resolved not in valid_methods:
+            raise serializers.ValidationError('Unsupported payment method.')
+        return resolved
 
     def create(self, validated_data):
         validated_data['client'] = self.context['request'].user

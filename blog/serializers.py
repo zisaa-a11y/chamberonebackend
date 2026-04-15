@@ -58,7 +58,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
         source='tags',
         required=False
     )
-    image_url = serializers.ReadOnlyField()
+    image_url = serializers.SerializerMethodField()
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     comments_count = serializers.SerializerMethodField()
     
@@ -80,12 +80,20 @@ class BlogPostSerializer(serializers.ModelSerializer):
     def get_comments_count(self, obj):
         return obj.comments.filter(is_approved=True).count()
 
+    def get_image_url(self, obj):
+        if not obj.featured_image:
+            return None
+        request = self.context.get('request')
+        if request is None:
+            return obj.featured_image.url
+        return request.build_absolute_uri(obj.featured_image.url)
+
 
 class BlogPostListSerializer(serializers.ModelSerializer):
     """Simplified serializer for listing blog posts."""
     author_name = serializers.ReadOnlyField()
     category_name = serializers.CharField(source='category.name', read_only=True)
-    image_url = serializers.ReadOnlyField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = BlogPost
@@ -95,6 +103,14 @@ class BlogPostListSerializer(serializers.ModelSerializer):
             'is_featured', 'views_count',
             'published_date'
         ]
+
+    def get_image_url(self, obj):
+        if not obj.featured_image:
+            return None
+        request = self.context.get('request')
+        if request is None:
+            return obj.featured_image.url
+        return request.build_absolute_uri(obj.featured_image.url)
 
 
 class BlogPostCreateSerializer(serializers.ModelSerializer):

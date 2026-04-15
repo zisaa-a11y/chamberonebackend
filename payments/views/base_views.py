@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
 from django.db.models import Sum
+import logging
 
 from ..models import Invoice, InvoiceItem, Payment, Subscription
 from ..serializers import (
@@ -15,6 +16,9 @@ from ..serializers import (
     SubscriptionSerializer,
     SubscriptionCreateSerializer,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class IsOwnerOrAdmin(permissions.BasePermission):
@@ -117,9 +121,21 @@ class PaymentListCreateView(generics.ListCreateAPIView):
         return queryset.filter(client=user)
 
     def create(self, request, *args, **kwargs):
+        logger.info(
+            'Payment create requested: user=%s payload_keys=%s',
+            request.user.id,
+            sorted(list(request.data.keys())),
+        )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         payment = serializer.save()
+        logger.info(
+            'Payment created: db_id=%s payment_id=%s invoice_id=%s client_id=%s',
+            payment.id,
+            payment.payment_id,
+            payment.invoice_id,
+            payment.client_id,
+        )
         response_serializer = PaymentSerializer(payment, context=self.get_serializer_context())
         headers = self.get_success_headers(response_serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
