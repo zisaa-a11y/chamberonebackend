@@ -181,3 +181,29 @@ class PaymentApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['issue_date'], '2026-04-15')
         self.assertEqual(response.data['due_date'], '2026-04-22')
+
+    def test_invoice_total_amount_calculated_and_persisted(self):
+        """Verify subtotal + tax_amount = total_amount and saved to DB."""
+        self.client.force_authenticate(user=self.client_user)
+
+        response = self.client.post(
+            '/api/payments/invoices/',
+            {
+                'description': 'Total amount test',
+                'subtotal': '123.00',
+                'tax_amount': '0.00',
+                'status': 'pending',
+                'issue_date': date.today().isoformat(),
+                'due_date': (date.today() + timedelta(days=7)).isoformat(),
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['total_amount'], '123.00')
+
+        # Confirm persisted in DB
+        invoice = Invoice.objects.get(pk=response.data['id'])
+        self.assertEqual(invoice.subtotal, 123)
+        self.assertEqual(invoice.tax_amount, 0)
+        self.assertEqual(invoice.total_amount, 123)

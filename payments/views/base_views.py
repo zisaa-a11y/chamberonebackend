@@ -53,6 +53,11 @@ class InvoiceListCreateView(generics.ListCreateAPIView):
         return queryset.filter(client=user)
 
     def create(self, request, *args, **kwargs):
+        logger.info(
+            'Invoice create requested: user=%s payload=%s',
+            request.user.id,
+            dict(request.data),
+        )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         invoice = serializer.save()
