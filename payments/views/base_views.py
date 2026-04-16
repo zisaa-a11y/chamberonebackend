@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from django.utils import timezone
 from django.db.models import Sum
 import logging
+from cases.models import Case
+from cases.serializers import CaseListSerializer
 
 from ..models import Invoice, InvoiceItem, Payment, Subscription
 from ..serializers import (
@@ -235,6 +237,28 @@ class InvoicePaymentsView(generics.ListAPIView):
         return Payment.objects.filter(
             invoice_id=invoice_id
         ).select_related('client')
+
+
+class PaymentCaseListView(generics.ListAPIView):
+    """Case list endpoint for payment/invoice forms."""
+    serializer_class = CaseListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'case_number', 'court_name']
+    ordering_fields = ['created_at', 'next_hearing_date', 'status']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Case.objects.select_related('client', 'lawyer', 'lawyer__user').all()
+
+        if user.is_staff:
+            return queryset
+
+        if hasattr(user, 'lawyer_profile'):
+            return queryset.filter(lawyer=user.lawyer_profile)
+
+        return queryset.filter(client=user)
 
 
 class PaymentSummaryView(APIView):

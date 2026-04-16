@@ -8,6 +8,7 @@ from .views import (
     PaymentDetailView,
     PaymentStatusUpdateView,
     InvoicePaymentsView,
+    PaymentCaseListView,
     PaymentSummaryView,
 )
 from .views.gateway_views import (
@@ -30,6 +31,7 @@ urlpatterns = [
     path('invoices/<int:invoice_id>/items/', InvoiceItemCreateView.as_view(), name='invoice_item_create'),
     path('invoices/items/<int:pk>/', InvoiceItemDeleteView.as_view(), name='invoice_item_delete'),
     path('invoices/<int:invoice_id>/payments/', InvoicePaymentsView.as_view(), name='invoice_payments'),
+    path('cases/', PaymentCaseListView.as_view(), name='payment_cases'),
     
     # Payments
     path('', PaymentListCreateView.as_view(), name='payment_list'),

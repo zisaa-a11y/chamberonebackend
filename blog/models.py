@@ -75,6 +75,7 @@ class BlogPost(models.Model):
         blank=True,
         null=True
     )
+    external_image_url = models.URLField(blank=True)
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -118,6 +119,8 @@ class BlogPost(models.Model):
     def image_url(self):
         if self.featured_image:
             return self.featured_image.url
+        if self.external_image_url:
+            return self.external_image_url
         return None
 
 

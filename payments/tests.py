@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from cases.models import Case
 from payments.models import Invoice, Payment
 
 
@@ -33,6 +34,15 @@ class PaymentApiTests(APITestCase):
             status=Invoice.Status.PENDING,
             issue_date=date.today(),
             due_date=date.today() + timedelta(days=7),
+        )
+
+        self.case = Case.objects.create(
+            title='Payment Linked Case',
+            description='Case used for payment-link tests',
+            court_name='Dhaka District Court',
+            client=self.client_user,
+            lawyer=None,
+            status=Case.Status.OPEN,
         )
 
     def test_create_payment_persists_to_database(self):
@@ -207,3 +217,53 @@ class PaymentApiTests(APITestCase):
         self.assertEqual(invoice.subtotal, 123)
         self.assertEqual(invoice.tax_amount, 0)
         self.assertEqual(invoice.total_amount, 123)
+
+    def test_create_payment_response_includes_linked_case_info(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        invoice = Invoice.objects.create(
+            client=self.client_user,
+            case=self.case,
+            description='Invoice linked to managed case',
+            subtotal=500,
+            tax_amount=50,
+            status=Invoice.Status.PENDING,
+            issue_date=date.today(),
+            due_date=date.today() + timedelta(days=7),
+        )
+
+        response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': invoice.id,
+                'amount': '550.00',
+                'payment_method': 'card',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['case_id'], self.case.id)
+        self.assertEqual(response.data['case_title'], self.case.title)
+
+    def test_payment_cases_endpoint_lists_only_authenticated_users_cases(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        other_case = Case.objects.create(
+            title='Other user case',
+            description='Should not be visible',
+            court_name='Other Court',
+            client=self.other_user,
+            lawyer=None,
+            status=Case.Status.OPEN,
+        )
+
+        response = self.client.get('/api/payments/cases/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = response.data
+        results = payload['results'] if isinstance(payload, dict) else payload
+        result_ids = {item['id'] for item in results}
+
+        self.assertIn(self.case.id, result_ids)
+        self.assertNotIn(other_case.id, result_ids)

@@ -22,6 +22,8 @@ class PaymentSerializer(serializers.ModelSerializer):
     client = UserSerializer(read_only=True)
     client_name = serializers.ReadOnlyField()
     invoice_number = serializers.CharField(source='invoice.invoice_number', read_only=True)
+    case_id = serializers.IntegerField(source='invoice.case_id', read_only=True)
+    case_title = serializers.CharField(source='invoice.case_title', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
     
@@ -29,6 +31,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = [
             'id', 'payment_id', 'invoice', 'invoice_number', 'client', 'client_name',
+            'case_id', 'case_title',
             'amount', 'payment_method', 'method_display',
             'status', 'status_display', 'transaction_id',
             'payment_date', 'notes', 'created_at', 'updated_at'

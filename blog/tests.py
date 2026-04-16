@@ -52,6 +52,51 @@ class BlogImageUrlTests(APITestCase):
         self.assertEqual(item['slug'], post.slug)
         self.assertTrue(item['image_url'].startswith('http://testserver/media/'))
 
+    def test_external_image_url_is_returned_when_featured_image_missing(self):
+        post = BlogPost.objects.create(
+            title='External image post',
+            content='Lorem ipsum',
+            author=self.admin,
+            status=BlogPost.Status.PUBLISHED,
+            external_image_url='https://images.example.com/blog/external.jpg',
+        )
+
+        response = self.client.get('/api/blog/posts/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = response.data
+        item = payload['results'][0] if isinstance(payload, dict) else payload[0]
+        self.assertEqual(item['slug'], post.slug)
+        self.assertEqual(
+            item['image_url'],
+            'https://images.example.com/blog/external.jpg',
+        )
+
+    def test_create_post_accepts_image_url_field(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.post(
+            '/api/blog/posts/',
+            {
+                'title': 'Create with image url',
+                'content': 'Body',
+                'excerpt': 'Short',
+                'image_url': 'https://images.example.com/blog/created.jpg',
+                'status': BlogPost.Status.PUBLISHED,
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created = BlogPost.objects.get(pk=response.data['id'])
+        self.assertEqual(
+            created.external_image_url,
+            'https://images.example.com/blog/created.jpg',
+        )
+        self.assertEqual(
+            response.data['image_url'],
+            'https://images.example.com/blog/created.jpg',
+        )
+
 
 class BlogCategoryFilterTests(APITestCase):
     def setUp(self):

@@ -59,6 +59,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
         required=False
     )
     image_url = serializers.SerializerMethodField()
+    external_image_url = serializers.URLField(required=False, allow_blank=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     comments_count = serializers.SerializerMethodField()
     
@@ -69,7 +70,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
             'author', 'author_name',
             'category', 'category_id',
             'tags', 'tag_ids',
-            'featured_image', 'image_url',
+            'featured_image', 'external_image_url', 'image_url',
             'status', 'status_display',
             'is_featured', 'views_count',
             'published_date', 'created_at', 'updated_at',
@@ -81,12 +82,16 @@ class BlogPostSerializer(serializers.ModelSerializer):
         return obj.comments.filter(is_approved=True).count()
 
     def get_image_url(self, obj):
-        if not obj.featured_image:
-            return None
-        request = self.context.get('request')
-        if request is None:
-            return obj.featured_image.url
-        return request.build_absolute_uri(obj.featured_image.url)
+        if obj.featured_image:
+            request = self.context.get('request')
+            if request is None:
+                return obj.featured_image.url
+            return request.build_absolute_uri(obj.featured_image.url)
+
+        if obj.external_image_url:
+            return obj.external_image_url
+
+        return None
 
 
 class BlogPostListSerializer(serializers.ModelSerializer):
@@ -94,23 +99,28 @@ class BlogPostListSerializer(serializers.ModelSerializer):
     author_name = serializers.ReadOnlyField()
     category_name = serializers.CharField(source='category.name', read_only=True)
     image_url = serializers.SerializerMethodField()
+    external_image_url = serializers.URLField(read_only=True)
     
     class Meta:
         model = BlogPost
         fields = [
             'id', 'title', 'slug', 'excerpt',
-            'author_name', 'category_name', 'image_url',
+            'author_name', 'category_name', 'image_url', 'external_image_url',
             'is_featured', 'views_count',
             'published_date'
         ]
 
     def get_image_url(self, obj):
-        if not obj.featured_image:
-            return None
-        request = self.context.get('request')
-        if request is None:
-            return obj.featured_image.url
-        return request.build_absolute_uri(obj.featured_image.url)
+        if obj.featured_image:
+            request = self.context.get('request')
+            if request is None:
+                return obj.featured_image.url
+            return request.build_absolute_uri(obj.featured_image.url)
+
+        if obj.external_image_url:
+            return obj.external_image_url
+
+        return None
 
 
 class BlogPostCreateSerializer(serializers.ModelSerializer):
@@ -127,12 +137,13 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
         source='tags',
         required=False
     )
+    image_url = serializers.URLField(write_only=True, required=False, allow_blank=True)
     
     class Meta:
         model = BlogPost
         fields = [
             'title', 'content', 'excerpt', 'category', 'category_id',
-            'tag_ids', 'featured_image', 'status',
+            'tag_ids', 'featured_image', 'external_image_url', 'image_url', 'status',
             'is_featured', 'published_date'
         ]
 
@@ -144,7 +155,10 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tags = validated_data.pop('tags', [])
+        image_url = validated_data.pop('image_url', '').strip()
         validated_data['author'] = self.context['request'].user
+        if image_url:
+            validated_data['external_image_url'] = image_url
         if validated_data.get('status') == BlogPost.Status.PUBLISHED and not validated_data.get('published_date'):
             validated_data['published_date'] = timezone.now()
         post = BlogPost.objects.create(**validated_data)
@@ -153,9 +167,13 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags', None)
+        image_url = validated_data.pop('image_url', None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
+        if image_url is not None:
+            instance.external_image_url = image_url.strip()
 
         if instance.status == BlogPost.Status.PUBLISHED and not instance.published_date:
             instance.published_date = timezone.now()

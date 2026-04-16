@@ -9,6 +9,7 @@ from .base_views import (
     PaymentDetailView,
     PaymentStatusUpdateView,
     InvoicePaymentsView,
+    PaymentCaseListView,
     PaymentSummaryView,
     SubscriptionCreateView,
 )
@@ -36,6 +37,7 @@ __all__ = [
     'PaymentDetailView',
     'PaymentStatusUpdateView',
     'InvoicePaymentsView',
+    'PaymentCaseListView',
     'PaymentSummaryView',
     'SubscriptionCreateView',
     # Gateway views
