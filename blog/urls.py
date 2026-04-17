@@ -29,10 +29,12 @@ urlpatterns = [
     
     # Posts (public GET, admin POST for create)
     path('posts/', BlogPostListView.as_view(), name='post_list'),
+    path('articles/', BlogPostListView.as_view(), name='article_list'),
     path('posts/create/', BlogPostCreateView.as_view(), name='post_create'),
     path('posts/featured/', FeaturedPostsView.as_view(), name='featured_posts'),
     path('posts/<int:pk>/', BlogPostWriteDetailView.as_view(), name='post_write_detail'),
     path('posts/<slug:slug>/', BlogPostDetailView.as_view(), name='post_detail'),
+    path('articles/<slug:slug>/', BlogPostDetailView.as_view(), name='article_detail'),
     
     # Posts (admin)
     path('admin/posts/', BlogPostAdminListView.as_view(), name='admin_post_list'),

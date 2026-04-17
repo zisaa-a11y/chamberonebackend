@@ -25,6 +25,7 @@ class BlogImageUrlTests(APITestCase):
             role='admin',
             is_staff=True,
         )
+        self.category, _ = Category.objects.get_or_create(name='Corporate Law')
 
     def tearDown(self):
         self.override.disable()
@@ -80,6 +81,7 @@ class BlogImageUrlTests(APITestCase):
                 'title': 'Create with image url',
                 'content': 'Body',
                 'excerpt': 'Short',
+                'category': 'Corporate Law',
                 'image_url': 'https://images.example.com/blog/created.jpg',
                 'status': BlogPost.Status.PUBLISHED,
             },
@@ -88,6 +90,7 @@ class BlogImageUrlTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         created = BlogPost.objects.get(pk=response.data['id'])
+        self.assertEqual(created.category.name, 'Corporate Law')
         self.assertEqual(
             created.external_image_url,
             'https://images.example.com/blog/created.jpg',
@@ -96,6 +99,37 @@ class BlogImageUrlTests(APITestCase):
             response.data['image_url'],
             'https://images.example.com/blog/created.jpg',
         )
+
+    def test_create_post_requires_category(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.post(
+            '/api/blog/posts/',
+            {
+                'title': 'Missing category',
+                'content': 'Body',
+                'excerpt': 'Short',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('category', response.data)
+
+    def test_create_post_rejects_invalid_category(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.post(
+            '/api/blog/posts/',
+            {
+                'title': 'Invalid category',
+                'content': 'Body',
+                'excerpt': 'Short',
+                'category': 'Tax Law',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('category', response.data)
 
 
 class BlogCategoryFilterTests(APITestCase):
@@ -107,8 +141,8 @@ class BlogCategoryFilterTests(APITestCase):
             first_name='Author',
             last_name='User',
         )
-        self.corporate = Category.objects.create(name='Corporate Law')
-        self.family = Category.objects.create(name='Family Law')
+        self.corporate, _ = Category.objects.get_or_create(name='Corporate Law')
+        self.family, _ = Category.objects.get_or_create(name='Family Law')
 
         BlogPost.objects.create(
             title='Corporate compliance checklist',

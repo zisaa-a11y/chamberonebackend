@@ -3,6 +3,16 @@ from django.conf import settings
 from django.utils.text import slugify
 
 
+LEGAL_BLOG_CATEGORIES = [
+    'Criminal Law',
+    'Family Law',
+    'Corporate Law',
+    'Property Law',
+    'Constitutional Law',
+    'Others',
+]
+
+
 class Category(models.Model):
     """Model for blog post categories."""
     name = models.CharField(max_length=100, unique=True)

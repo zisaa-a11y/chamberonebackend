@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.utils import timezone
-from .models import Category, Tag, BlogPost, Comment
+from django.utils.text import slugify
+from .models import Category, Tag, BlogPost, Comment, LEGAL_BLOG_CATEGORIES
 from accounts.serializers import UserSerializer
 
 
@@ -125,8 +126,13 @@ class BlogPostListSerializer(serializers.ModelSerializer):
 
 class BlogPostCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating blog posts."""
+    category = serializers.ChoiceField(
+        choices=LEGAL_BLOG_CATEGORIES,
+        required=False,
+        write_only=True,
+    )
     category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.filter(is_active=True),
         source='category',
         write_only=True,
         required=False
@@ -148,6 +154,27 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
+        category_name = attrs.pop('category', None)
+        category_obj = attrs.get('category')
+
+        if self.instance is None and category_name is None and category_obj is None:
+            raise serializers.ValidationError({'category': 'Category is required.'})
+
+        if category_name:
+            category_slug = slugify(category_name)
+            category_obj, _ = Category.objects.get_or_create(
+                slug=category_slug,
+                defaults={
+                    'name': category_name,
+                    'is_active': True,
+                },
+            )
+            if category_obj.name != category_name or not category_obj.is_active:
+                category_obj.name = category_name
+                category_obj.is_active = True
+                category_obj.save(update_fields=['name', 'is_active'])
+            attrs['category'] = category_obj
+
         # Admin-created posts should be visible by default unless draft/archived is explicit.
         if self.instance is None and not attrs.get('status'):
             attrs['status'] = BlogPost.Status.PUBLISHED
