@@ -46,6 +46,10 @@ class CaseDocumentSerializer(serializers.ModelSerializer):
             'description', 'uploaded_at', 'uploaded_by', 'uploaded_by_name', 'created_at'
         ]
         read_only_fields = ['id', 'created_at', 'uploaded_by']
+        extra_kwargs = {
+            'case': {'required': False},
+            'file': {'required': False},
+        }
 
     def get_file_url(self, obj):
         request = self.context.get('request')

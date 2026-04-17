@@ -153,6 +153,24 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
             'is_featured', 'published_date'
         ]
 
+    def validate_title(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Title is required.')
+        return value
+
+    def validate_content(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Content is required.')
+        return value
+
+    def validate_excerpt(self, value):
+        value = (value or '').strip()
+        if self.instance is None and not value:
+            raise serializers.ValidationError('Excerpt is required.')
+        return value
+
     def validate(self, attrs):
         category_name = attrs.pop('category', None)
         category_obj = attrs.get('category')

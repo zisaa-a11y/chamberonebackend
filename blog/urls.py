@@ -33,6 +33,7 @@ urlpatterns = [
     path('posts/create/', BlogPostCreateView.as_view(), name='post_create'),
     path('posts/featured/', FeaturedPostsView.as_view(), name='featured_posts'),
     path('posts/<int:pk>/', BlogPostWriteDetailView.as_view(), name='post_write_detail'),
+    path('articles/<int:pk>/', BlogPostWriteDetailView.as_view(), name='article_write_detail'),
     path('posts/<slug:slug>/', BlogPostDetailView.as_view(), name='post_detail'),
     path('articles/<slug:slug>/', BlogPostDetailView.as_view(), name='article_detail'),
     

@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cases.models import Case
+from cases.models import Case, CaseDocument
 
 
 class CaseApiTests(APITestCase):
@@ -132,4 +134,78 @@ class CaseApiTests(APITestCase):
         self.client.force_authenticate(user=self.other_client)
         response = self.client.get(f'/api/cases/{case.id}/')
 
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+@override_settings(MEDIA_ROOT='test-media')
+class CaseDocumentApiTests(APITestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.client_user = user_model.objects.create_user(
+            email='doc-client@example.com',
+            password='StrongPass123!',
+            first_name='Doc',
+            last_name='Client',
+            role='client',
+        )
+        self.other_client = user_model.objects.create_user(
+            email='doc-other@example.com',
+            password='StrongPass123!',
+            first_name='Other',
+            last_name='Client',
+            role='client',
+        )
+
+        self.case = Case.objects.create(
+            title='Document upload case',
+            client_name='Doc Client',
+            description='Document API test',
+            court_name='District Court',
+            client=self.client_user,
+            status=Case.Status.OPEN,
+        )
+
+    def test_upload_document_links_to_case(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        upload = SimpleUploadedFile(
+            'evidence.pdf',
+            b'%PDF-1.4 document test',
+            content_type='application/pdf',
+        )
+
+        response = self.client.post(
+            '/api/cases/documents/',
+            {
+                'case_id': self.case.id,
+                'title': 'Evidence File',
+                'document': upload,
+            },
+            format='multipart',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created = CaseDocument.objects.get(pk=response.data['id'])
+        self.assertEqual(created.case_id, self.case.id)
+        self.assertEqual(created.uploaded_by, self.client_user)
+
+    def test_document_list_filtered_by_case_id(self):
+        self.client.force_authenticate(user=self.client_user)
+        CaseDocument.objects.create(
+            case=self.case,
+            title='Existing Document',
+            file=SimpleUploadedFile('existing.pdf', b'%PDF-1.4 existing', content_type='application/pdf'),
+            uploaded_by=self.client_user,
+        )
+
+        response = self.client.get(f'/api/cases/documents/?case_id={self.case.id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        payload = response.data
+        results = payload.get('results', payload) if isinstance(payload, dict) else payload
+        self.assertGreaterEqual(len(results), 1)
+        self.assertTrue(all(item['case'] == self.case.id for item in results))
+
+    def test_unrelated_user_gets_forbidden_for_case_documents(self):
+        self.client.force_authenticate(user=self.other_client)
+        response = self.client.get(f'/api/cases/documents/?case_id={self.case.id}')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

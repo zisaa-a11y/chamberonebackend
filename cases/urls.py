@@ -3,6 +3,7 @@ from .views import (
     CaseListCreateView,
     CaseDetailView,
     CaseDocumentListCreateView,
+    CaseDocumentGlobalListCreateView,
     CaseDocumentDetailView,
     CaseTimelineListCreateView,
     CaseTimelineDetailView,
@@ -22,6 +23,7 @@ urlpatterns = [
     path('<int:pk>/status/', CaseStatusUpdateView.as_view(), name='case_status'),
     
     # Documents
+    path('documents/', CaseDocumentGlobalListCreateView.as_view(), name='documents_global'),
     path('<int:case_id>/documents/', CaseDocumentListCreateView.as_view(), name='case_documents'),
     path('documents/<int:pk>/', CaseDocumentDetailView.as_view(), name='document_detail'),
     

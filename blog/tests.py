@@ -179,3 +179,60 @@ class BlogCategoryFilterTests(APITestCase):
         results = self._extract_results(response.data)
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['category_name'], 'Family Law')
+
+
+class BlogCrudContractTests(APITestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.admin = user_model.objects.create_user(
+            email='blog-admin@example.com',
+            password='StrongPass123!',
+            first_name='Blog',
+            last_name='Admin',
+            role='admin',
+            is_staff=True,
+        )
+
+    def test_articles_crud_flow_persists_in_database(self):
+        self.client.force_authenticate(user=self.admin)
+
+        create_response = self.client.post(
+            '/api/blog/articles/',
+            {
+                'title': 'Data retention and litigation hold',
+                'content': 'Detailed article content.',
+                'excerpt': 'Retention policy essentials.',
+                'category': 'Corporate Law',
+                'image_url': 'https://images.example.com/article.jpg',
+            },
+            format='json',
+        )
+
+        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+        created_id = create_response.data['id']
+
+        created_post = BlogPost.objects.get(pk=created_id)
+        self.assertEqual(created_post.title, 'Data retention and litigation hold')
+        self.assertEqual(created_post.external_image_url, 'https://images.example.com/article.jpg')
+        self.assertEqual(created_post.category.name, 'Corporate Law')
+
+        update_response = self.client.put(
+            f'/api/blog/articles/{created_id}/',
+            {
+                'title': 'Updated litigation hold checklist',
+                'content': 'Updated body content.',
+                'excerpt': 'Updated summary.',
+                'category': 'Corporate Law',
+                'image_url': 'https://images.example.com/article-updated.jpg',
+            },
+            format='json',
+        )
+
+        self.assertEqual(update_response.status_code, status.HTTP_200_OK)
+        created_post.refresh_from_db()
+        self.assertEqual(created_post.title, 'Updated litigation hold checklist')
+        self.assertEqual(created_post.external_image_url, 'https://images.example.com/article-updated.jpg')
+
+        delete_response = self.client.delete(f'/api/blog/articles/{created_id}/')
+        self.assertIn(delete_response.status_code, [status.HTTP_200_OK, status.HTTP_204_NO_CONTENT])
+        self.assertFalse(BlogPost.objects.filter(pk=created_id).exists())

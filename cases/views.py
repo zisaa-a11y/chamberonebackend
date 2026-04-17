@@ -158,6 +158,61 @@ class CaseDocumentDetailView(generics.RetrieveDestroyAPIView):
         return queryset.filter(case__client=user)
 
 
+class CaseDocumentGlobalListCreateView(generics.ListCreateAPIView):
+    """Global documents endpoint: GET /documents?case_id= and POST /documents."""
+    serializer_class = CaseDocumentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def _allowed_cases(self):
+        user = self.request.user
+        queryset = Case.objects.select_related('lawyer', 'lawyer__user', 'client')
+
+        if _is_case_admin(user):
+            return queryset
+
+        if hasattr(user, 'lawyer_profile'):
+            return queryset.filter(Q(lawyer=user.lawyer_profile) | Q(client=user))
+
+        return queryset.filter(client=user)
+
+    def _resolve_case(self):
+        case_id = self.request.query_params.get('case_id')
+        if self.request.method == 'POST':
+            case_id = self.request.data.get('case_id') or self.request.data.get('case')
+
+        if not case_id:
+            return None
+
+        try:
+            case_id_int = int(case_id)
+        except (TypeError, ValueError):
+            self.permission_denied(self.request, message='Invalid case_id.')
+            return None
+
+        case = self._allowed_cases().filter(pk=case_id_int).first()
+        if case is None:
+            self.permission_denied(self.request, message='Permission denied for this case.')
+        return case
+
+    def get_queryset(self):
+        queryset = CaseDocument.objects.select_related(
+            'case', 'case__client', 'case__lawyer', 'case__lawyer__user', 'uploaded_by'
+        )
+
+        case = self._resolve_case()
+        if case is not None:
+            return queryset.filter(case=case)
+
+        return queryset.filter(case__in=self._allowed_cases())
+
+    def perform_create(self, serializer):
+        case = self._resolve_case()
+        if case is None:
+            self.permission_denied(self.request, message='case_id is required.')
+        serializer.save(case=case, uploaded_by=self.request.user)
+
+
 # Case Timeline Views
 class CaseTimelineListCreateView(CaseAccessMixin, generics.ListCreateAPIView):
     """API endpoint to list and create timeline events."""
