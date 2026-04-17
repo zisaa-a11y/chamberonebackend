@@ -15,6 +15,21 @@ class CaseApiTests(APITestCase):
             last_name='Ahmed',
             role='client',
         )
+        self.other_client = user_model.objects.create_user(
+            email='other-client@example.com',
+            password='StrongPass123!',
+            first_name='Karim',
+            last_name='Hasan',
+            role='client',
+        )
+        self.role_admin_user = user_model.objects.create_user(
+            email='role-admin@example.com',
+            password='StrongPass123!',
+            first_name='Admin',
+            last_name='User',
+            role='admin',
+            is_staff=False,
+        )
 
     def _extract_results(self, payload):
         if isinstance(payload, dict):
@@ -83,3 +98,38 @@ class CaseApiTests(APITestCase):
         self.assertEqual(listed['court_name'], 'High Court')
         self.assertEqual(listed['client_name'], 'Rahim Ahmed')
         self.assertIn('case_number', listed)
+
+    def test_case_detail_allows_role_admin_without_staff_flag(self):
+        case = Case.objects.create(
+            title='Civil dispute',
+            client_name='Rahim Ahmed',
+            description='Detail access test',
+            court_name='District Court',
+            client=self.client_user,
+            status=Case.Status.OPEN,
+        )
+
+        self.client.force_authenticate(user=self.role_admin_user)
+        response = self.client.get(f'/api/cases/{case.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], case.id)
+        self.assertEqual(response.data['title'], 'Civil dispute')
+        self.assertEqual(response.data['client_name'], 'Rahim Ahmed')
+        self.assertEqual(response.data['court_name'], 'District Court')
+        self.assertEqual(response.data['description'], 'Detail access test')
+
+    def test_case_detail_blocks_unrelated_client(self):
+        case = Case.objects.create(
+            title='Tax appeal',
+            client_name='Rahim Ahmed',
+            description='Unauthorized access test',
+            court_name='Tax Court',
+            client=self.client_user,
+            status=Case.Status.OPEN,
+        )
+
+        self.client.force_authenticate(user=self.other_client)
+        response = self.client.get(f'/api/cases/{case.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -18,13 +18,25 @@ from .serializers import (
 from lawyers.models import LawyerProfile
 
 
+def _is_case_admin(user):
+    return bool(
+        user
+        and user.is_authenticated
+        and (
+            user.is_staff
+            or getattr(user, 'role', None) == 'admin'
+            or getattr(user, 'is_admin', False)
+        )
+    )
+
+
 class IsOwnerOrLawyer(permissions.BasePermission):
     """Allow access only to case owner or assigned lawyer."""
     def has_object_permission(self, request, view, obj):
         return (
             obj.client == request.user or 
             (obj.lawyer and obj.lawyer.user == request.user) or
-            request.user.is_staff
+            _is_case_admin(request.user)
         )
 
 
@@ -40,7 +52,7 @@ class CaseAccessMixin:
         if not (
             case.client == user or
             (case.lawyer and case.lawyer.user == user) or
-            user.is_staff
+            _is_case_admin(user)
         ):
             self.permission_denied(self.request, message='Permission denied for this case.')
         return case
@@ -66,7 +78,7 @@ class CaseListCreateView(generics.ListCreateAPIView):
             'client', 'lawyer', 'lawyer__user', 'practice_area'
         ).prefetch_related('timeline', 'documents')
         
-        if user.is_staff:
+        if _is_case_admin(user):
             return queryset
         
         if hasattr(user, 'lawyer_profile'):
@@ -128,7 +140,22 @@ class CaseDocumentDetailView(generics.RetrieveDestroyAPIView):
     """API endpoint for case document detail."""
     serializer_class = CaseDocumentSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = CaseDocument.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = CaseDocument.objects.select_related(
+            'case', 'case__client', 'case__lawyer', 'case__lawyer__user'
+        )
+
+        if _is_case_admin(user):
+            return queryset
+
+        if hasattr(user, 'lawyer_profile'):
+            return queryset.filter(
+                Q(case__lawyer=user.lawyer_profile) | Q(case__client=user)
+            )
+
+        return queryset.filter(case__client=user)
 
 
 # Case Timeline Views
@@ -155,7 +182,22 @@ class CaseTimelineDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API endpoint for timeline event detail."""
     serializer_class = CaseTimelineSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = CaseTimeline.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = CaseTimeline.objects.select_related(
+            'case', 'case__client', 'case__lawyer', 'case__lawyer__user'
+        )
+
+        if _is_case_admin(user):
+            return queryset
+
+        if hasattr(user, 'lawyer_profile'):
+            return queryset.filter(
+                Q(case__lawyer=user.lawyer_profile) | Q(case__client=user)
+            )
+
+        return queryset.filter(case__client=user)
 
 
 # Case Notes Views
@@ -172,7 +214,7 @@ class CaseNoteListCreateView(generics.ListCreateAPIView):
         ).select_related('author')
         
         # Non-lawyers can't see private notes
-        if not (hasattr(user, 'lawyer_profile') or user.is_staff):
+        if not (hasattr(user, 'lawyer_profile') or _is_case_admin(user)):
             queryset = queryset.filter(is_private=False)
         
         return queryset
@@ -189,7 +231,22 @@ class CaseNoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API endpoint for case note detail."""
     serializer_class = CaseNoteSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = CaseNote.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = CaseNote.objects.select_related(
+            'case', 'case__client', 'case__lawyer', 'case__lawyer__user', 'author'
+        )
+
+        if _is_case_admin(user):
+            return queryset
+
+        if hasattr(user, 'lawyer_profile'):
+            return queryset.filter(
+                Q(case__lawyer=user.lawyer_profile) | Q(case__client=user)
+            )
+
+        return queryset.filter(case__client=user, is_private=False)
 
 
 class CaseStatusUpdateView(APIView):
@@ -209,7 +266,7 @@ class CaseStatusUpdateView(APIView):
         if not (
             case.client == user or 
             (case.lawyer and case.lawyer.user == user) or 
-            user.is_staff
+            _is_case_admin(user)
         ):
             return Response(
                 {'error': 'Permission denied.'},
