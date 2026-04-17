@@ -111,11 +111,12 @@ class CaseSerializer(serializers.ModelSerializer):
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     documents = CaseDocumentSerializer(many=True, read_only=True)
     timeline = CaseTimelineSerializer(many=True, read_only=True)
+    case_title = serializers.CharField(source='title', read_only=True)
     
     class Meta:
         model = Case
         fields = [
-            'id', 'title', 'case_number', 'description',
+            'id', 'title', 'case_title', 'case_number', 'description',
             'court_name', 'client', 'lawyer', 'lawyer_details',
             'practice_area', 'practice_area_details',
             'client_name', 'lawyer_name',
@@ -143,17 +144,41 @@ class CaseAssignLawyerSerializer(serializers.Serializer):
 
 class CaseCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating cases."""
+    case_title = serializers.CharField(source='title', required=False, allow_blank=False)
+    client_name = serializers.CharField(required=True, allow_blank=False)
+    title = serializers.CharField(required=True, allow_blank=False)
+    court_name = serializers.CharField(required=True, allow_blank=False)
     
     class Meta:
         model = Case
         fields = [
-            'title', 'description', 'court_name',
+            'title', 'case_title', 'client_name', 'description', 'court_name',
             'lawyer', 'practice_area', 'status',
             'next_hearing_date', 'filing_date', 'notes'
         ]
 
+    def validate_client_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Client name is required.')
+        return value
+
+    def validate_title(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Case title is required.')
+        return value
+
+    def validate_court_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Court name is required.')
+        return value
+
     def create(self, validated_data):
         validated_data['client'] = self.context['request'].user
+        if not validated_data.get('client_name'):
+            validated_data['client_name'] = self.context['request'].user.full_name
         return super().create(validated_data)
 
 
@@ -161,13 +186,14 @@ class CaseListSerializer(serializers.ModelSerializer):
     """Contract-focused serializer for listing cases."""
     client_name = serializers.ReadOnlyField()
     lawyer_name = serializers.ReadOnlyField()
+    case_title = serializers.CharField(source='title', read_only=True)
     timeline = CaseTimelineSerializer(many=True, read_only=True)
     documents = CaseDocumentSerializer(many=True, read_only=True)
     
     class Meta:
         model = Case
         fields = [
-            'id', 'title', 'case_number', 'court_name',
+            'id', 'title', 'case_title', 'case_number', 'court_name',
             'status', 'next_hearing_date', 'client_name', 'lawyer_name',
             'timeline', 'documents'
         ]

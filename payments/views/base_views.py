@@ -143,7 +143,7 @@ class PaymentListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Payment.objects.select_related('client', 'invoice')
+        queryset = Payment.objects.select_related('client', 'invoice', 'case')
         
         if user.is_staff:
             return queryset
@@ -182,7 +182,7 @@ class PaymentDetailView(generics.RetrieveAPIView):
     """API endpoint for payment detail."""
     serializer_class = PaymentSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
-    queryset = Payment.objects.select_related('client', 'invoice')
+    queryset = Payment.objects.select_related('client', 'invoice', 'case')
 
 
 class PaymentStatusUpdateView(APIView):
@@ -244,7 +244,7 @@ class PaymentCaseListView(generics.ListAPIView):
     serializer_class = CaseListSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'case_number', 'court_name']
+    search_fields = ['title', 'case_number', 'court_name', 'client_name']
     ordering_fields = ['created_at', 'next_hearing_date', 'status']
     ordering = ['-created_at']
 

@@ -38,6 +38,7 @@ class PaymentApiTests(APITestCase):
 
         self.case = Case.objects.create(
             title='Payment Linked Case',
+            client_name=self.client_user.full_name,
             description='Case used for payment-link tests',
             court_name='Dhaka District Court',
             client=self.client_user,
@@ -50,6 +51,7 @@ class PaymentApiTests(APITestCase):
 
         payload = {
             'invoice': self.invoice.id,
+            'case_id': self.case.id,
             'amount': '1100.00',
             'payment_method': 'ssl',
             'notes': 'Paid from API test',
@@ -61,6 +63,7 @@ class PaymentApiTests(APITestCase):
         payment = Payment.objects.first()
         self.assertIsNotNone(payment)
         self.assertEqual(payment.invoice_id, self.invoice.id)
+        self.assertEqual(payment.case_id, self.case.id)
         self.assertEqual(payment.client_id, self.client_user.id)
         self.assertEqual(payment.payment_method, Payment.PaymentMethod.SSLCOMMERZ)
 
@@ -80,6 +83,7 @@ class PaymentApiTests(APITestCase):
             '/api/payments/',
             {
                 'invoice': foreign_invoice.id,
+                'case_id': self.case.id,
                 'amount': '100.00',
                 'payment_method': 'card',
             },
@@ -96,6 +100,7 @@ class PaymentApiTests(APITestCase):
             '/api/payments/',
             {
                 'invoice': 999999,
+                'case_id': self.case.id,
                 'amount': '100.00',
                 'payment_method': 'card',
             },
@@ -112,6 +117,7 @@ class PaymentApiTests(APITestCase):
             '/api/payments/',
             {
                 'invoice': self.invoice.id,
+                'case_id': self.case.id,
                 'amount': '100.00',
                 'payment_method': 'card',
             },
@@ -141,6 +147,7 @@ class PaymentApiTests(APITestCase):
             '/api/payments/',
             {
                 'invoice': created_invoice_id,
+                'case_id': self.case.id,
                 'amount': '2200.00',
                 'payment_method': 'ssl',
                 'notes': 'Flow test payment',
@@ -236,6 +243,7 @@ class PaymentApiTests(APITestCase):
             '/api/payments/',
             {
                 'invoice': invoice.id,
+                'case_id': self.case.id,
                 'amount': '550.00',
                 'payment_method': 'card',
             },
@@ -251,6 +259,7 @@ class PaymentApiTests(APITestCase):
 
         other_case = Case.objects.create(
             title='Other user case',
+            client_name=self.other_user.full_name,
             description='Should not be visible',
             court_name='Other Court',
             client=self.other_user,
@@ -267,3 +276,19 @@ class PaymentApiTests(APITestCase):
 
         self.assertIn(self.case.id, result_ids)
         self.assertNotIn(other_case.id, result_ids)
+
+    def test_payment_creation_requires_case_id(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        response = self.client.post(
+            '/api/payments/',
+            {
+                'invoice': self.invoice.id,
+                'amount': '200.00',
+                'payment_method': 'card',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('case_id', response.data)

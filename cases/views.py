@@ -51,7 +51,7 @@ class CaseListCreateView(generics.ListCreateAPIView):
     """API endpoint to list and create cases."""
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'case_number', 'court_name']
+    search_fields = ['title', 'case_number', 'court_name', 'client_name']
     ordering_fields = ['created_at', 'next_hearing_date', 'status']
     ordering = ['-created_at']
 
@@ -80,6 +80,14 @@ class CaseListCreateView(generics.ListCreateAPIView):
             queryset = queryset.filter(status=status_filter)
         
         return queryset
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        case = serializer.save()
+        response_serializer = CaseSerializer(case, context=self.get_serializer_context())
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CaseDetailView(generics.RetrieveUpdateDestroyAPIView):

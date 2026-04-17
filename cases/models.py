@@ -13,6 +13,7 @@ class Case(models.Model):
         CLOSED = 'closed', 'Closed'
     
     title = models.CharField(max_length=255)
+    client_name = models.CharField(max_length=255)
     case_number = models.CharField(max_length=50, unique=True, blank=True)
     description = models.TextField(blank=True)
     court_name = models.CharField(max_length=255, blank=True)
@@ -58,11 +59,13 @@ class Case(models.Model):
         if not self.case_number:
             # Generate unique case number
             self.case_number = f"CASE-{uuid.uuid4().hex[:8].upper()}"
+        if not self.client_name and self.client_id:
+            self.client_name = self.client.full_name
         super().save(*args, **kwargs)
 
     @property
-    def client_name(self):
-        return self.client.full_name
+    def case_title(self):
+        return self.title
 
     @property
     def lawyer_name(self):

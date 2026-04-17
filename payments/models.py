@@ -115,6 +115,15 @@ class Payment(models.Model):
     invoice = models.ForeignKey(
         Invoice,
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='payments'
+    )
+    case = models.ForeignKey(
+        'cases.Case',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='payments'
     )
     client = models.ForeignKey(
@@ -156,6 +165,10 @@ class Payment(models.Model):
     @property
     def client_name(self):
         return self.client.full_name
+
+    @property
+    def case_title(self):
+        return self.case.title if self.case else None
 
 
 class Subscription(models.Model):

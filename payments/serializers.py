@@ -3,6 +3,7 @@ import logging
 from .models import Invoice, InvoiceItem, Payment, Subscription
 from accounts.serializers import UserSerializer
 from cases.serializers import CaseListSerializer
+from cases.models import Case
 
 
 logger = logging.getLogger(__name__)
@@ -22,8 +23,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     client = UserSerializer(read_only=True)
     client_name = serializers.ReadOnlyField()
     invoice_number = serializers.CharField(source='invoice.invoice_number', read_only=True)
-    case_id = serializers.IntegerField(source='invoice.case_id', read_only=True)
-    case_title = serializers.CharField(source='invoice.case_title', read_only=True)
+    case_id = serializers.IntegerField(source='case.id', read_only=True)
+    case_number = serializers.CharField(source='case.case_number', read_only=True)
+    case_title = serializers.CharField(source='case.title', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
     
@@ -31,7 +33,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = [
             'id', 'payment_id', 'invoice', 'invoice_number', 'client', 'client_name',
-            'case_id', 'case_title',
+            'case_id', 'case_number', 'case_title',
             'amount', 'payment_method', 'method_display',
             'status', 'status_display', 'transaction_id',
             'payment_date', 'notes', 'created_at', 'updated_at'
@@ -118,12 +120,13 @@ class InvoiceListSerializer(serializers.ModelSerializer):
     """Simplified serializer for listing invoices."""
     client_name = serializers.ReadOnlyField()
     case_title = serializers.ReadOnlyField()
+    case_number = serializers.CharField(source='case.case_number', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     
     class Meta:
         model = Invoice
         fields = [
-            'id', 'invoice_number', 'client_name', 'case_title',
+            'id', 'invoice_number', 'client_name', 'case', 'case_title', 'case_number',
             'total_amount', 'status', 'status_display',
             'issue_date', 'due_date'
         ]
@@ -133,11 +136,25 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
     """Serializer for creating payments."""
     invoice = serializers.PrimaryKeyRelatedField(
         queryset=Invoice.objects.none(),
+        required=False,
+        allow_null=True,
         error_messages={
-            'required': 'Invoice ID is required.',
+            'required': 'Invoice ID is required when case_id is not provided.',
             'does_not_exist': 'Invoice not found. Create invoice in backend first, then retry payment.',
             'incorrect_type': 'Invoice ID must be a valid integer.',
             'null': 'Invoice ID cannot be null.',
+        },
+    )
+    case_id = serializers.PrimaryKeyRelatedField(
+        queryset=Case.objects.none(),
+        source='case',
+        required=True,
+        allow_null=False,
+        error_messages={
+            'required': 'Case ID is required.',
+            'does_not_exist': 'Case not found.',
+            'incorrect_type': 'Case ID must be a valid integer.',
+            'null': 'Case ID cannot be null.',
         },
     )
     payment_method = serializers.CharField(required=False, allow_blank=True)
@@ -145,7 +162,7 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Payment
-        fields = ['invoice', 'amount', 'payment_method', 'notes']
+        fields = ['invoice', 'case_id', 'amount', 'payment_method', 'notes']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -157,8 +174,22 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
 
         if user.is_staff:
             self.fields['invoice'].queryset = Invoice.objects.all()
+            self.fields['case_id'].queryset = Case.objects.all()
         else:
             self.fields['invoice'].queryset = Invoice.objects.filter(client=user)
+            self.fields['case_id'].queryset = Case.objects.filter(client=user)
+
+    def validate(self, attrs):
+        invoice = attrs.get('invoice')
+        case = attrs.get('case')
+
+        if case is None:
+            raise serializers.ValidationError({'case_id': 'Case ID is required.'})
+
+        if invoice is not None and invoice.case_id and invoice.case_id != case.id:
+            raise serializers.ValidationError({'invoice': 'Invoice does not belong to selected case.'})
+
+        return attrs
 
     def validate_invoice(self, invoice):
         logger.info(
@@ -192,8 +223,8 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
         return resolved
 
     def create(self, validated_data):
-        # Keep payment ownership aligned with the selected invoice owner.
-        validated_data['client'] = validated_data['invoice'].client
+        # Keep payment ownership aligned with the selected case owner.
+        validated_data['client'] = validated_data['case'].client
         return super().create(validated_data)
 
 
