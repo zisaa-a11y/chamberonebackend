@@ -112,6 +112,10 @@ class CaseDocument(models.Model):
     def __str__(self):
         return f"{self.case.case_number} - {self.title}"
 
+    @property
+    def uploaded_at(self):
+        return self.created_at
+
 
 class CaseTimeline(models.Model):
     """Model for case timeline events."""

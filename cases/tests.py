@@ -189,6 +189,30 @@ class CaseDocumentApiTests(APITestCase):
         self.assertEqual(created.case_id, self.case.id)
         self.assertEqual(created.uploaded_by, self.client_user)
 
+    def test_upload_document_via_documents_alias(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        upload = SimpleUploadedFile(
+            'alias-evidence.pdf',
+            b'%PDF-1.4 alias upload',
+            content_type='application/pdf',
+        )
+
+        response = self.client.post(
+            '/api/documents/',
+            {
+                'case_id': self.case.id,
+                'title': 'Alias Evidence File',
+                'document': upload,
+            },
+            format='multipart',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created = CaseDocument.objects.get(pk=response.data['id'])
+        self.assertEqual(created.case_id, self.case.id)
+        self.assertEqual(created.uploaded_by, self.client_user)
+
     def test_document_list_filtered_by_case_id(self):
         self.client.force_authenticate(user=self.client_user)
         CaseDocument.objects.create(
@@ -199,6 +223,22 @@ class CaseDocumentApiTests(APITestCase):
         )
 
         response = self.client.get(f'/api/cases/documents/?case_id={self.case.id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        payload = response.data
+        results = payload.get('results', payload) if isinstance(payload, dict) else payload
+        self.assertGreaterEqual(len(results), 1)
+        self.assertTrue(all(item['case'] == self.case.id for item in results))
+
+    def test_document_list_via_documents_alias_filtered_by_case_id(self):
+        self.client.force_authenticate(user=self.client_user)
+        CaseDocument.objects.create(
+            case=self.case,
+            title='Alias Existing Document',
+            file=SimpleUploadedFile('alias-existing.pdf', b'%PDF-1.4 alias existing', content_type='application/pdf'),
+            uploaded_by=self.client_user,
+        )
+
+        response = self.client.get(f'/api/documents/?case_id={self.case.id}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         payload = response.data
         results = payload.get('results', payload) if isinstance(payload, dict) else payload

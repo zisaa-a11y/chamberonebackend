@@ -10,6 +10,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from payments.views import SubscriptionCreateView
+from cases.views import CaseDocumentGlobalListCreateView
 from .api_views import StampVerifyView
 
 # Determine the API URL based on DEBUG setting
@@ -56,6 +57,7 @@ def api_root(request):
             'lawyers': '/api/lawyers/',
             'appointments': '/api/appointments/',
             'cases': '/api/cases/',
+            'documents': '/api/documents/',
             'payments': '/api/payments/',
             'subscriptions': '/api/subscriptions/',
             'stamps_verify': '/api/stamps/verify/',
@@ -86,6 +88,7 @@ urlpatterns = [
     path('api/lawyers/', include('lawyers.urls')),
     path('api/appointments/', include('appointments.urls')),
     path('api/cases/', include('cases.urls')),
+    path('api/documents/', CaseDocumentGlobalListCreateView.as_view(), name='documents_global_alias'),
     path('api/payments/', include('payments.urls')),
     path('api/subscriptions/', SubscriptionCreateView.as_view(), name='subscription_create'),
     path('api/stamps/verify/', StampVerifyView.as_view(), name='stamp_verify'),
