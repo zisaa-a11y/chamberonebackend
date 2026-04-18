@@ -52,6 +52,11 @@ class Appointment(models.Model):
         verbose_name = 'Appointment'
         verbose_name_plural = 'Appointments'
         ordering = ['-date_time']
+        indexes = [
+            models.Index(fields=['client', '-date_time']),
+            models.Index(fields=['lawyer', '-date_time']),
+            models.Index(fields=['status', '-date_time']),
+        ]
 
     def __str__(self):
         return f"{self.client.full_name} - {self.lawyer.full_name} - {self.date_time}"

@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'core.middleware.ApiRequestLogMiddleware',
     'core.middleware.DisableCSRFForAPI',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,7 +151,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -334,3 +335,10 @@ LOGGING = {
         },
     },
 }
+
+# Performance toggles
+API_REQUEST_LOGGING_ENABLED = config(
+    'API_REQUEST_LOGGING_ENABLED',
+    default=DEBUG,
+    cast=bool,
+)

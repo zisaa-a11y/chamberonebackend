@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from .models import Case, CaseDocument, CaseTimeline, CaseNote
 from .serializers import (
@@ -76,7 +76,10 @@ class CaseListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         queryset = Case.objects.select_related(
             'client', 'lawyer', 'lawyer__user', 'practice_area'
-        ).prefetch_related('timeline', 'documents')
+        ).annotate(
+            timeline_count=Count('timeline', distinct=True),
+            document_count=Count('documents', distinct=True),
+        )
         
         if _is_case_admin(user):
             return queryset

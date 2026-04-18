@@ -191,13 +191,13 @@ class CaseListSerializer(serializers.ModelSerializer):
     client_name = serializers.ReadOnlyField()
     lawyer_name = serializers.ReadOnlyField()
     case_title = serializers.CharField(source='title', read_only=True)
-    timeline = CaseTimelineSerializer(many=True, read_only=True)
-    documents = CaseDocumentSerializer(many=True, read_only=True)
+    timeline_count = serializers.IntegerField(read_only=True)
+    document_count = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Case
         fields = [
             'id', 'title', 'case_title', 'case_number', 'court_name',
             'status', 'next_hearing_date', 'client_name', 'lawyer_name',
-            'timeline', 'documents'
+            'timeline_count', 'document_count'
         ]

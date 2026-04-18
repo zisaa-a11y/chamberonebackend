@@ -46,6 +46,10 @@ class Invoice(models.Model):
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
         ordering = ['-issue_date']
+        indexes = [
+            models.Index(fields=['client', '-issue_date']),
+            models.Index(fields=['status', 'due_date']),
+        ]
 
     def __str__(self):
         return f"{self.invoice_number} - {self.client.full_name}"
@@ -153,6 +157,11 @@ class Payment(models.Model):
         verbose_name = 'Payment'
         verbose_name_plural = 'Payments'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['client', '-created_at']),
+            models.Index(fields=['status', '-created_at']),
+            models.Index(fields=['invoice', 'status']),
+        ]
 
     def __str__(self):
         return f"{self.payment_id} - {self.amount}"

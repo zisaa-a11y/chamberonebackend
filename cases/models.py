@@ -51,6 +51,11 @@ class Case(models.Model):
         verbose_name = 'Case'
         verbose_name_plural = 'Cases'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['client', '-created_at']),
+            models.Index(fields=['lawyer', '-created_at']),
+            models.Index(fields=['status', '-created_at']),
+        ]
 
     def __str__(self):
         return f"{self.case_number} - {self.title}"
@@ -108,6 +113,9 @@ class CaseDocument(models.Model):
         verbose_name = 'Case Document'
         verbose_name_plural = 'Case Documents'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['case', '-created_at']),
+        ]
 
     def __str__(self):
         return f"{self.case.case_number} - {self.title}"
@@ -138,6 +146,9 @@ class CaseTimeline(models.Model):
         verbose_name = 'Case Timeline Event'
         verbose_name_plural = 'Case Timeline Events'
         ordering = ['-date']
+        indexes = [
+            models.Index(fields=['case', '-date']),
+        ]
 
     def __str__(self):
         return f"{self.case.case_number} - {self.event}"

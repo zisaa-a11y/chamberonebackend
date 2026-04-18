@@ -3,6 +3,7 @@ Custom middleware for The Chamber One backend.
 """
 
 import logging
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,9 @@ class ApiRequestLogMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path.startswith('/api/'):
+        should_log = bool(getattr(settings, 'API_REQUEST_LOGGING_ENABLED', False))
+
+        if should_log and request.path.startswith('/api/'):
             user_id = None
             request_user = getattr(request, 'user', None)
             if request_user is not None:
@@ -29,7 +32,7 @@ class ApiRequestLogMiddleware:
 
         response = self.get_response(request)
 
-        if request.path.startswith('/api/'):
+        if should_log and request.path.startswith('/api/'):
             logger.info(
                 'API response: method=%s path=%s status=%s',
                 request.method,

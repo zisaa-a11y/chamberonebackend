@@ -2,8 +2,7 @@ from rest_framework import generics, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
-from django.db.models import Sum
-import logging
+from django.db.models import Sum, Count
 from cases.models import Case
 from cases.serializers import CaseListSerializer
 
@@ -18,10 +17,6 @@ from ..serializers import (
     SubscriptionSerializer,
     SubscriptionCreateSerializer,
 )
-
-
-logger = logging.getLogger(__name__)
-
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     """Allow access only to invoice/payment owner or admin."""
@@ -55,21 +50,9 @@ class InvoiceListCreateView(generics.ListCreateAPIView):
         return queryset.filter(client=user)
 
     def create(self, request, *args, **kwargs):
-        logger.info(
-            'Invoice create requested: user=%s payload=%s',
-            request.user.id,
-            dict(request.data),
-        )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         invoice = serializer.save()
-
-        logger.info(
-            'Invoice created: db_id=%s invoice_number=%s client_id=%s',
-            invoice.id,
-            invoice.invoice_number,
-            invoice.client_id,
-        )
 
         response_serializer = InvoiceSerializer(
             invoice,
@@ -151,28 +134,10 @@ class PaymentListCreateView(generics.ListCreateAPIView):
         return queryset.filter(client=user)
 
     def create(self, request, *args, **kwargs):
-        logger.info(
-            'Payment create requested: user=%s payload_keys=%s',
-            request.user.id,
-            sorted(list(request.data.keys())),
-        )
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            logger.warning(
-                'Payment create rejected: user=%s payload=%s errors=%s',
-                request.user.id,
-                dict(request.data),
-                serializer.errors,
-            )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         payment = serializer.save()
-        logger.info(
-            'Payment created: db_id=%s payment_id=%s invoice_id=%s client_id=%s',
-            payment.id,
-            payment.payment_id,
-            payment.invoice_id,
-            payment.client_id,
-        )
         response_serializer = PaymentSerializer(payment, context=self.get_serializer_context())
         headers = self.get_success_headers(response_serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -250,7 +215,10 @@ class PaymentCaseListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Case.objects.select_related('client', 'lawyer', 'lawyer__user').all()
+        queryset = Case.objects.select_related('client', 'lawyer', 'lawyer__user').annotate(
+            timeline_count=Count('timeline', distinct=True),
+            document_count=Count('documents', distinct=True),
+        )
 
         if user.is_staff:
             return queryset
