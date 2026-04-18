@@ -236,3 +236,61 @@ class BlogCrudContractTests(APITestCase):
         delete_response = self.client.delete(f'/api/blog/articles/{created_id}/')
         self.assertIn(delete_response.status_code, [status.HTTP_200_OK, status.HTTP_204_NO_CONTENT])
         self.assertFalse(BlogPost.objects.filter(pk=created_id).exists())
+
+
+class BlogPublicVisibilityTests(APITestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.admin = user_model.objects.create_user(
+            email='blog-public-admin@example.com',
+            password='StrongPass123!',
+            first_name='Blog',
+            last_name='Admin',
+            role='admin',
+            is_staff=True,
+        )
+        self.category, _ = Category.objects.get_or_create(name='Corporate Law')
+
+    def test_public_list_includes_only_published_posts(self):
+        published = BlogPost.objects.create(
+            title='Published blog post',
+            content='Published content',
+            excerpt='Published excerpt',
+            author=self.admin,
+            category=self.category,
+            status=BlogPost.Status.PUBLISHED,
+        )
+        BlogPost.objects.create(
+            title='Draft blog post',
+            content='Draft content',
+            excerpt='Draft excerpt',
+            author=self.admin,
+            category=self.category,
+            status=BlogPost.Status.DRAFT,
+        )
+
+        response = self.client.get('/api/blog/posts/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = response.data
+        results = payload['results'] if isinstance(payload, dict) else payload
+        returned_ids = {item['id'] for item in results}
+
+        self.assertIn(published.id, returned_ids)
+        self.assertEqual(len(results), 1)
+
+    def test_admin_can_read_post_by_numeric_id_endpoint(self):
+        self.client.force_authenticate(user=self.admin)
+        post = BlogPost.objects.create(
+            title='Numeric ID detail endpoint',
+            content='Detail content',
+            excerpt='Detail excerpt',
+            author=self.admin,
+            category=self.category,
+            status=BlogPost.Status.PUBLISHED,
+        )
+
+        response = self.client.get(f'/api/blog/posts/{post.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], post.id)
+        self.assertEqual(response.data['title'], 'Numeric ID detail endpoint')

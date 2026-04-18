@@ -104,8 +104,8 @@ class BlogPostListView(generics.ListCreateAPIView):
         featured = self.request.query_params.get('featured')
         if featured and featured.lower() == 'true':
             queryset = queryset.filter(is_featured=True)
-        
-        return queryset
+
+        return queryset.distinct()
 
 
 class BlogPostWriteDetailView(generics.RetrieveUpdateDestroyAPIView):

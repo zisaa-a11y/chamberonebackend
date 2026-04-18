@@ -107,6 +107,7 @@ class BlogPostListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'excerpt',
             'author_name', 'category_name', 'image_url', 'external_image_url',
+            'status',
             'is_featured', 'views_count',
             'published_date'
         ]
@@ -169,6 +170,21 @@ class BlogPostCreateSerializer(serializers.ModelSerializer):
         value = (value or '').strip()
         if self.instance is None and not value:
             raise serializers.ValidationError('Excerpt is required.')
+        return value
+
+    def validate_featured_image(self, value):
+        if not value:
+            return value
+
+        max_size_bytes = 10 * 1024 * 1024
+        if value.size > max_size_bytes:
+            raise serializers.ValidationError('Featured image must be 10MB or smaller.')
+
+        content_type = (getattr(value, 'content_type', '') or '').lower()
+        allowed_types = {'image/jpeg', 'image/png', 'image/webp', 'image/gif'}
+        if content_type and content_type not in allowed_types:
+            raise serializers.ValidationError('Unsupported image format. Use JPG, PNG, WEBP, or GIF.')
+
         return value
 
     def validate(self, attrs):
