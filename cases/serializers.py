@@ -18,7 +18,7 @@ class CaseTimelineSerializer(serializers.ModelSerializer):
             'id', 'case', 'date', 'event', 'description',
             'created_by', 'created_by_name', 'created_at'
         ]
-        read_only_fields = ['id', 'created_at', 'created_by']
+        read_only_fields = ['id', 'case', 'created_at', 'created_by']
 
     def validate_event(self, value):
         value = value.strip()

@@ -4,7 +4,7 @@ from django.test import override_settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cases.models import Case, CaseDocument
+from cases.models import Case, CaseDocument, CaseTimeline
 
 
 class CaseApiTests(APITestCase):
@@ -248,4 +248,80 @@ class CaseDocumentApiTests(APITestCase):
     def test_unrelated_user_gets_forbidden_for_case_documents(self):
         self.client.force_authenticate(user=self.other_client)
         response = self.client.get(f'/api/cases/documents/?case_id={self.case.id}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class CaseTimelineApiTests(APITestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.client_user = user_model.objects.create_user(
+            email='timeline-client@example.com',
+            password='StrongPass123!',
+            first_name='Timeline',
+            last_name='Client',
+            role='client',
+        )
+        self.other_client = user_model.objects.create_user(
+            email='timeline-other@example.com',
+            password='StrongPass123!',
+            first_name='Other',
+            last_name='Timeline',
+            role='client',
+        )
+
+        self.case = Case.objects.create(
+            title='Timeline API case',
+            client_name='Timeline Client',
+            description='Timeline integration test',
+            court_name='District Court',
+            client=self.client_user,
+            status=Case.Status.OPEN,
+        )
+
+    def test_create_timeline_event_saves_and_links_to_case(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        response = self.client.post(
+            f'/api/cases/{self.case.id}/timeline/',
+            {
+                'date': '2026-04-18',
+                'event': 'Evidence submitted',
+                'description': 'Submitted certified documents to the court.',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        created = CaseTimeline.objects.get(pk=response.data['id'])
+        self.assertEqual(created.case_id, self.case.id)
+        self.assertEqual(created.created_by, self.client_user)
+        self.assertEqual(created.event, 'Evidence submitted')
+
+    def test_timeline_list_returns_created_event_for_case(self):
+        self.client.force_authenticate(user=self.client_user)
+
+        created = CaseTimeline.objects.create(
+            case=self.case,
+            date='2026-04-18',
+            event='First hearing held',
+            description='Court heard opening arguments.',
+            created_by=self.client_user,
+        )
+
+        response = self.client.get(f'/api/cases/{self.case.id}/timeline/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = response.data
+        results = payload.get('results', payload) if isinstance(payload, dict) else payload
+        self.assertGreaterEqual(len(results), 1)
+
+        matched = next((item for item in results if item['id'] == created.id), None)
+        self.assertIsNotNone(matched)
+        self.assertEqual(matched['case'], self.case.id)
+        self.assertEqual(matched['event'], 'First hearing held')
+        self.assertIn('created_at', matched)
+
+    def test_unrelated_user_gets_forbidden_for_case_timeline(self):
+        self.client.force_authenticate(user=self.other_client)
+        response = self.client.get(f'/api/cases/{self.case.id}/timeline/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
