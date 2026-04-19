@@ -215,7 +215,9 @@ CORS_ALLOWED_ORIGINS = config(
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins
+# Keep strict origin allow-list in production. Set to true only for controlled
+# debugging scenarios.
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 
 # Allow all CORS headers and methods
 CORS_ALLOW_HEADERS = [
